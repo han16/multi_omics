@@ -1,7 +1,7 @@
-name: "multi_omics"
+name: multi_omics
 output_dir: ../docs
 navbar:
-  title: "multi_omics"
+  title: multi_omics
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/han16/multi_omics
 output:
   workflowr::wflow_html:
     toc: yes
