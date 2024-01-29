@@ -1,0 +1,64 @@
+---
+title: "SCZ genes list"
+output: html_document
+date: "2024-01-29"
+---
+
+
+```{r, echo=F, warning=F, message=F}
+rm(list=ls())
+set.seed(123)
+knitr::opts_chunk$set(autodep = TRUE)
+library(knitr)
+library(RSQLite)
+library(dplyr)
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
+library(kableExtra)
+library(RColorBrewer)
+library(gplots)
+library(tidyverse)
+library(gridExtra)
+library(ggpubr)
+library(DT)
+#library("devtools")
+#install.packages("Rtools")
+#install_github('xinhe-lab/mirage')
+library(mirage)
+
+multiplesheets <- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) <- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+
+pvalue_adjust=function(p_value)
+{
+  p_value_adjust=numeric()
+for (i in 1:length(p_value))
+{
+  if (is.na(p_value[i])==T)
+    p_value_adjust[i]=p_value[i]
+  if (is.na(p_value[i])==F & p_value[i]<1e-10)
+    p_value_adjust[i]="<1e-10"
+  if (is.na(p_value[i])==F & p_value[i]>1e-10)
+    p_value_adjust[i]=round(p_value[i],10)
+}
+  return(p_value_adjust)
+}
+
+```
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
+SCHEMA_data=as_tibble(read.table("C:\\han\\Dataset\\SCHEMA\\SCHEMA_variant_results_subset_20231025.tsv", header=T))
+```

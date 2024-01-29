@@ -8,4 +8,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+
+
+* [SCZ risk genes list](SCZ_gene_list.html) 
+
+* gene expression in the brain 
+
+* network construction 
