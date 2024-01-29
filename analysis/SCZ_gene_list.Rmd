@@ -59,6 +59,122 @@ for (i in 1:length(p_value))
 ```
 
 
-```{r, echo=F, message=F, warning=F, eval=F}
-SCHEMA_data=as_tibble(read.table("C:\\han\\Dataset\\SCHEMA\\SCHEMA_variant_results_subset_20231025.tsv", header=T))
+
+
+```{r, echo=F, message=F, warning=F, results=F}
+######## replicating the results 
+###https://github.com/linnykos/covarianceSelection
+rm(list=ls())
+set.seed(123)
+
+# install dependent packages 
+
+#install.packages("doMC", repos="http://R-Forge.R-project.org")
+library("doMC")
+
+# if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("org.Hs.eg.db")
+library("org.Hs.eg.db")
+
+#download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
+library(dequer)
+
+
+library("devtools")
+devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceSelection")
+
 ```
+
+
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
+# step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
+# step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
+
+#if(verbose) print("Start of step 0: Loading")
+
+#format the brainspan dataset
+#load("../../raw_data/newGenexp.RData")
+load("C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGenexp.RData")
+rownames(genexp) <- genexp[,1]
+genexp <- genexp[,-1]
+genexp <- t(genexp)
+genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? 
+
+#determine brain-expressed genes
+brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes????????  
+brain_genes <- brain_expression$Gene[brain_expression$Brain_expressed != 'No']
+idx <- which(colnames(genexp) %in% brain_genes)
+genexp <- genexp[,idx] # 1340 x 14370
+
+############ sample information is in covarianceSelection::brainspan_id
+
+
+#translate into synonyms
+vec <- covarianceSelection::symbol_synonyms(colnames(genexp), verbose = T)
+unknown_genes_idx <- which(is.na(vec))
+vec <- vec[-unknown_genes_idx]
+genexp <- genexp[-unknown_genes_idx] # 1340 x 14297
+colnames(genexp) <- vec
+
+#average non-unique genes
+genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+
+#remove samples from subregions that we don't have a region for
+region_subregion <- covarianceSelection::region_subregion
+vec <- rownames(genexp)
+subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)]
+idx <- which(subregion %in% region_subregion$subregion)
+genexp <- genexp[idx,] # 1294 x 14249
+
+################
+# explore the notations in row names 
+#sample_names=rownames(genexp)
+#comma_position=gregexpr(".", sample_names[1])
+#sample_names[grepl("VFC",sample_names)] # find samples having "VFC"
+################
+
+####
+
+#load tada dataset
+#tada <- covarianceSelection::tada
+
+# load SCZ gene 
+SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
+
+#match the order in both datasets
+#idx <- which(colnames(genexp) %in% tada$Gene)
+idx <- which(colnames(genexp) %in% SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`)
+genexp <- genexp[,idx] # 1294 x 13964
+idx <- which(tada$Gene %in% colnames(genexp))
+tada <- tada[idx,] # 13964 genes
+idx <- covarianceSelection::matching(tada$Gene, colnames(genexp))
+genexp <- genexp[,idx]
+
+dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
+dat_list <- lapply(dat_list, as.matrix, drop = F)
+
+# remove partitions too small
+idx <- which(sapply(dat_list, function(x){ifelse(nrow(x) >= 5, T, F)}))
+dat_list <- dat_list[idx] # 125 partitions
+dat_list <- lapply(dat_list, scale, scale = F)
+
+#if(verbose) print(paste0("Dimension of genexp is: ", paste0(dim(genexp), collapse = ", ")))
+
+#cleanup
+rm(list = c("brain_expression", "brain_genes", "idx", "vec", "region_subregion",
+            "subregion", "genexp", "unknown_genes_idx"))
+
+#save.image(file = paste0(save_filepath, "/step0_loading", filepath_suffix, ".RData"))
+
+```
+
+
+
+
+
+
+
