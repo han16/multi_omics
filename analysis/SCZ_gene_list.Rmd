@@ -27,6 +27,11 @@ library(DT)
 #install_github('xinhe-lab/mirage')
 library(mirage)
 
+```
+
+
+```{r, echo=F, message=F, warning=F}
+
 multiplesheets <- function(fname) {
    
   # getting info about all excel sheets
@@ -144,14 +149,18 @@ genexp <- genexp[idx,] # 1294 x 14249
 
 # load SCZ gene 
 SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
+scz=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`)
 
 #match the order in both datasets
 #idx <- which(colnames(genexp) %in% tada$Gene)
-idx <- which(colnames(genexp) %in% SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`)
+idx <- which(colnames(genexp) %in% scz$Gene)
 genexp <- genexp[,idx] # 1294 x 13964
-idx <- which(tada$Gene %in% colnames(genexp))
-tada <- tada[idx,] # 13964 genes
-idx <- covarianceSelection::matching(tada$Gene, colnames(genexp))
+#idx <- which(tada$Gene %in% colnames(genexp))
+idx <- which(scz$Gene %in% colnames(genexp))
+#tada <- tada[idx,] # 13964 genes
+scz=scz[idx,]
+#idx <- covarianceSelection::matching(tada$Gene, colnames(genexp))
+idx <- covarianceSelection::matching(scz$Gene, colnames(genexp))
 genexp <- genexp[,idx]
 
 dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
