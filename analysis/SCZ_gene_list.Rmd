@@ -300,7 +300,8 @@ set.seed(10)
 #report_pfc35 <- covarianceSelection::report_results(tada$Gene, 1-hmrf_pfc35$post, tada$pval.TADA, hmrf_pfc35$Iupdate)
 #genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
 
-hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = pthres)
+scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
+hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = pthres)  # pval must not be 0 or 1's, i.e between 0 and 1  
 
 report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
 genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
