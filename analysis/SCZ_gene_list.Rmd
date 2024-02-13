@@ -24,7 +24,7 @@ library(ggpubr)
 library(DT)
 
 #install_github("jdstorey/qvalue")   # install qvalue package 
-library(qvalue)
+#library(qvalue)
 #library("devtools")
 #install.packages("Rtools")
 #install_github('xinhe-lab/mirage')
@@ -136,7 +136,7 @@ region_subregion <- covarianceSelection::region_subregion
 vec <- rownames(genexp)
 subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)]
 idx <- which(subregion %in% region_subregion$subregion)
-genexp <- genexp[idx,] # 1294 x 14249
+genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 ################
 # explore the notations in row names 
@@ -144,7 +144,12 @@ genexp <- genexp[idx,] # 1294 x 14249
 #comma_position=gregexpr(".", sample_names[1])
 #sample_names[grepl("VFC",sample_names)] # find samples having "VFC"
 ################
+```
 
+
+
+
+```{r, echo=F, message=F, warning=F}
 ####
 
 #load tada dataset
@@ -162,7 +167,7 @@ scz=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated
 #unique_gene= unique(scz1$Gene)
 #scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates 
 
-#match the order in both datasets
+#match the order in both datasets ########## check this part 
 #idx <- which(colnames(genexp) %in% tada$Gene)
 idx <- which(colnames(genexp) %in% scz$Gene)
 genexp <- genexp[,idx] # 1294 x 13964
@@ -172,7 +177,7 @@ idx <- which(scz$Gene %in% colnames(genexp))
 scz=scz[idx,]
 #idx <- covarianceSelection::matching(tada$Gene, colnames(genexp))
 idx <- covarianceSelection::matching(scz$Gene, colnames(genexp))
-genexp <- genexp[,idx]
+genexp <- genexp[,idx]  # 1294 x 12879 
 
 dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
 dat_list <- lapply(dat_list, as.matrix, drop = F)
@@ -180,7 +185,7 @@ dat_list <- lapply(dat_list, as.matrix, drop = F)
 # remove partitions too small
 idx <- which(sapply(dat_list, function(x){ifelse(nrow(x) >= 5, T, F)}))
 dat_list <- dat_list[idx] # 125 partitions
-dat_list <- lapply(dat_list, scale, scale = F)
+dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions 
 
 #if(verbose) print(paste0("Dimension of genexp is: ", paste0(dim(genexp), collapse = ", ")))
 
@@ -229,7 +234,7 @@ for(i in 1:length(dat_list)){
   dat_list[[i]] <- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
 }
 #tada <- tada[c(screening_res$primary, screening_res$secondary),]
- scz=scz[c(screening_res$primary, screening_res$secondary),]
+ scz=scz[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
                 
 if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
 
