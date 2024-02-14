@@ -138,6 +138,10 @@ subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)]
 idx <- which(subregion %in% region_subregion$subregion)
 genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
+####### check how mmany top SCHEMA genes are missing in genexp 
+#scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
+
+
 ################
 # explore the notations in row names 
 #sample_names=rownames(genexp)
