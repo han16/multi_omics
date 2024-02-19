@@ -310,12 +310,17 @@ set.seed(10)
 #genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
 
 scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
-hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = pthres)  # pval must not be 0 or 1's, i.e between 0 and 1  
+hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1  
 
 report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
 genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
+
+#scz1[which(scz1$Gene %in% genes_pfc35),]
+# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
+# scz1[which(scz1$Gene %in% fdr005_gene),]
+
 
 #rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
 
