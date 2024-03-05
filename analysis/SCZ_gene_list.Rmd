@@ -98,7 +98,7 @@ devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceS
 
 
 
-```{r, echo=F, message=F, warning=F, eval=F}
+```{r, echo=F, message=F, warning=F, eval=T}
 # step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
 # step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
 
@@ -153,7 +153,7 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 
 
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F, results=F}
 ####
 
 #load tada dataset
