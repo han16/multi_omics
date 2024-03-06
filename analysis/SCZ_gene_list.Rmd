@@ -317,6 +317,10 @@ genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
+library(igraph)
+network <- graph_from_incidence_matrix(adj_pfc35)
+plot(network)
+
 #scz1[which(scz1$Gene %in% genes_pfc35),]
 # fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
 # scz1[which(scz1$Gene %in% fdr005_gene),]
@@ -333,4 +337,24 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
 
 
+```{r, echo=F, message=F, warning=F}
+#png("../figures/figure_9.png", height = 1000, width = 2000, units = "px", res = 300)
+par(mar = c(0,0,3,0), mfrow = c(1,2))
+set.seed(10)
+igraph::plot.igraph(g_selected, vertex.label = NA, main = "Full graph")
+
+par(mar = c(3,3,3,0.5))
+# next plot the adjacency matrix
+image(.rotate(adj_tmp), asp = T, col = color_palatte, breaks = c(-.5,.5,1.5), xaxt = "n", yaxt = "n",
+      xlab = "", ylab = "", main = "Adjacency matrix (subgraph)", axes = F)
+title(ylab = "Index locations", mgp = c(1,1,0))
+title(xlab = "Index locations", mgp = c(1,1,0))
+
+# put in dashed lines
+x_width <- length(idx_our)/nrow(adj_tmp)
+y_height <- 1 - x_width
+lines(rep(x_width, 2), c(1,1-x_width), lwd = 2, lty = 2)
+lines(c(0,x_width), rep(y_height, 2), lwd = 2, lty = 2)
+#graphics.off()
+```
 
