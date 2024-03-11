@@ -194,8 +194,8 @@ dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions
 #if(verbose) print(paste0("Dimension of genexp is: ", paste0(dim(genexp), collapse = ", ")))
 
 #cleanup
-rm(list = c("brain_expression", "brain_genes", "idx", "vec", "region_subregion",
-            "subregion", "genexp", "unknown_genes_idx"))
+#rm(list = c("brain_expression", "brain_genes", "idx", "vec", "region_subregion",
+#            "subregion", "genexp", "unknown_genes_idx"))
 
 #save.image(file = paste0(save_filepath, "/step0_loading", filepath_suffix, ".RData"))
 
@@ -225,7 +225,7 @@ dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 128
 screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz$pval.meta, p_thres = p_thres_screening, 
                                              num_genes = num_genes)
 
-# 193 primary, 3307 secondary, total of 3500
+# 193 primary, 3307 secondary, total of 3500, they ranking correlations between primary genes and the rest to pick the top genes to have 3500 genes in total, don't use correlation threshold tau in Algorithm 1 of AOAS 2015
 
 # reorder which genes are primary and which are secondary
 all_idx <- sort(unique(c(screening_res$primary, screening_res$secondary)))
@@ -317,9 +317,9 @@ genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
-library(igraph)
-network <- graph_from_incidence_matrix(adj_pfc35)
-plot(network)
+#library(igraph)
+#network <- graph_from_incidence_matrix(adj_pfc35)
+#plot(network)
 
 #scz1[which(scz1$Gene %in% genes_pfc35),]
 # fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
@@ -334,6 +334,8 @@ plot(network)
 
  #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
 ```
+
+
 
 
 
