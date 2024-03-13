@@ -1,3 +1,64 @@
+#translate into synonyms
+#>covarianceSelection::symbol_synonyms
+function (vec, verbose = T) 
+{
+  dbCon <- org.Hs.eg.db::org.Hs.eg_dbconn()
+  sqlQuery <- "SELECT * FROM alias, gene_info WHERE alias._id == gene_info._id;"
+  aliasSymbol <- DBI::dbGetQuery(dbCon, sqlQuery) # Send query, retrieve results and then clear result set
+  sapply(1:length(vec), function(i) {
+    if (verbose & i%%max(floor(length(vec)/10), 1) == 0) 
+      cat("*")
+    res <- aliasSymbol[which(aliasSymbol[, 2] %in% vec[i]), 
+                       5]
+    if (length(res) == 0) # no matched gene 
+      return(NA)     
+    if (length(res) > 1) {
+      len_vec <- sapply(res, function(x) {
+        length(which(aliasSymbol[, 2] %in% x))
+      })
+      res_final <- res[which(len_vec == max(len_vec))]
+      if (length(res_final) > 1) {
+        res_final <- sort(res_final, decreasing = F)[1]
+      }
+      res <- res_final
+    }
+    res
+  })
+}
+
+#######################################################################################
+#average non-unique genes
+#> covarianceSelection:::average_same_columns
+function (dat) 
+{
+  col_vec <- colnames(dat)
+  tab_vec <- table(col_vec)
+  idx <- which(tab_vec > 1)  # find non-unique genes, i.e. genes with multiple appearances 
+  remove_idx <- numeric(0)
+  if (length(idx) > 0) {
+    for (i in idx) {
+      col_idx <- which(col_vec == names(tab_vec)[i])
+      dat[, col_idx[1]] <- rowMeans(dat[, col_idx])
+      remove_idx <- c(remove_idx, col_idx[-1])
+    }
+    dat <- dat[, -remove_idx]
+  }
+  dat
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/graphicalModel.R
 
 #' Graphical model estimate

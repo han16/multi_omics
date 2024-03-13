@@ -84,7 +84,7 @@ library("doMC")
 #    install.packages("BiocManager")
 
 #BiocManager::install("org.Hs.eg.db")
-library("org.Hs.eg.db")
+library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
 
 #download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
 library(dequer)
@@ -110,15 +110,14 @@ load("C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGe
 rownames(genexp) <- genexp[,1]
 genexp <- genexp[,-1]
 genexp <- t(genexp)
-genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? 
+genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
+#more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
 
 #determine brain-expressed genes
-brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes????????  
+brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
 brain_genes <- brain_expression$Gene[brain_expression$Brain_expressed != 'No']
 idx <- which(colnames(genexp) %in% brain_genes)
 genexp <- genexp[,idx] # 1340 x 14370
-
-############ sample information is in covarianceSelection::brainspan_id
 
 
 #translate into synonyms
@@ -132,9 +131,10 @@ colnames(genexp) <- vec
 genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
 
 #remove samples from subregions that we don't have a region for
-region_subregion <- covarianceSelection::region_subregion
+region_subregion <- covarianceSelection::region_subregion # https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
 vec <- rownames(genexp)
-subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)]
+# extract regions from colnames 
+subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)] # split string separated by "." https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
 idx <- which(subregion %in% region_subregion$subregion)
 genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
@@ -155,31 +155,22 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 ```{r, echo=F, message=F, warning=F, results=F}
 ####
-
-#load tada dataset
-#tada <- covarianceSelection::tada
-
 # load SCZ gene 
 SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
 scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
 scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
 scz1=scz1%>% drop_na()  # remove NA's  ######## this is important 
-#scz1=scz1%>% mutate(qval.meta=qvalue(scz1$pval.meta)$qvalues)
-# add one colum of q values of SCZ as in tada????????
 
 scz=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
 #unique_gene= unique(scz1$Gene)
 #scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates 
 
 #match the order in both datasets ########## check this part 
-#idx <- which(colnames(genexp) %in% tada$Gene)
 idx <- which(colnames(genexp) %in% scz$Gene)
 genexp <- genexp[,idx] # 1294 x 13964
-#idx <- which(tada$Gene %in% colnames(genexp))
 idx <- which(scz$Gene %in% colnames(genexp))
-#tada <- tada[idx,] # 13964 genes
 scz=scz[idx,]
-#idx <- covarianceSelection::matching(tada$Gene, colnames(genexp))
+
 idx <- covarianceSelection::matching(scz$Gene, colnames(genexp))
 genexp <- genexp[,idx]  # 1294 x 12879 
 
