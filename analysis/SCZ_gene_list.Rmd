@@ -216,7 +216,7 @@ dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 128
 screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz$pval.meta, p_thres = p_thres_screening, 
                                              num_genes = num_genes)
 
-# 193 primary, 3307 secondary, total of 3500, they ranking correlations between primary genes and the rest to pick the top genes to have 3500 genes in total, don't use correlation threshold tau in Algorithm 1 of AOAS 2015
+# 193 primary, 3307 secondary, total of 3500, they rank correlations between primary genes and the rest to pick the top genes to have 3500 genes in total, don't use correlation threshold tau in Algorithm 1 of AOAS 2015
 
 # reorder which genes are primary and which are secondary
 all_idx <- sort(unique(c(screening_res$primary, screening_res$secondary)))
