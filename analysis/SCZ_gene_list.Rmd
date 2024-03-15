@@ -23,6 +23,25 @@ library(gridExtra)
 library(ggpubr)
 library(DT)
 
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+# BiocManager::install("GO.db")
+library(GO.db)
+
+#install.packages('BiocManager')
+library(BiocManager)
+#BiocManager::install('WGCNA')
+BiocManager::install('flashClust')
+library(flashClust)
+
+install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
+
+install.packages("htmltools")
+#remotes::install_github("rstudio/htmltools")
+library(htmltools)
+library(WGCNA)
+
+
 #install_github("jdstorey/qvalue")   # install qvalue package 
 #library(qvalue)
 #library("devtools")
@@ -34,7 +53,6 @@ library(mirage)
 
 
 ```{r, echo=F, message=F, warning=F}
-
 multiplesheets <- function(fname) {
    
   # getting info about all excel sheets
@@ -47,21 +65,6 @@ multiplesheets <- function(fname) {
     
   # print data frame
   print(data_frame)
-}
-
-pvalue_adjust=function(p_value)
-{
-  p_value_adjust=numeric()
-for (i in 1:length(p_value))
-{
-  if (is.na(p_value[i])==T)
-    p_value_adjust[i]=p_value[i]
-  if (is.na(p_value[i])==F & p_value[i]<1e-10)
-    p_value_adjust[i]="<1e-10"
-  if (is.na(p_value[i])==F & p_value[i]>1e-10)
-    p_value_adjust[i]=round(p_value[i],10)
-}
-  return(p_value_adjust)
 }
 
 ```
@@ -154,6 +157,21 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 
 ```{r, echo=F, message=F, warning=F, results=F}
+
+multiplesheets <- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) <- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+
 ####
 # load SCZ gene 
 SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
@@ -200,7 +218,7 @@ dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions
 # https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
 p_thres_screening <- 0.01 
 p_primary <- 0.1
-num_genes <- 3500
+num_genes <- 3100 # constraint genes with pLI>0.9 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9805802/
 verbose=T
 
 ###
@@ -210,8 +228,6 @@ if(verbose) print(paste0(Sys.time(), "Start of step 1: Screening"))
 selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
 dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 12879  
 
-#screening_res <- covarianceSelection::screen(dat_pfc35, pv = tada$pval.TADA, p_thres = p_thres_screening, 
-#                                             num_genes = num_genes)
 
 screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz$pval.meta, p_thres = p_thres_screening, 
                                              num_genes = num_genes)
@@ -220,7 +236,6 @@ screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz$pval.meta, p_th
 
 # reorder which genes are primary and which are secondary
 all_idx <- sort(unique(c(screening_res$primary, screening_res$secondary)))
-#screening_res$primary <- all_idx[which(tada$pval.TADA[all_idx] < p_primary)]
 screening_res$primary <- all_idx[which(scz$pval.meta[all_idx] < p_primary)]
 screening_res$secondary <- setdiff(all_idx, screening_res$primary)
 
@@ -228,7 +243,7 @@ screening_res$secondary <- setdiff(all_idx, screening_res$primary)
 for(i in 1:length(dat_list)){
   dat_list[[i]] <- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
 }
-#tada <- tada[c(screening_res$primary, screening_res$secondary),]
+
  scz=scz[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
                 
 if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
@@ -237,6 +252,19 @@ if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, n
 
 #save.image(file = paste0(save_filepath, "/step1_screening", filepath_suffix, ".RData"))
 ```
+
+
+## gene co-expression by WGCNA  
+
+* [reference1](https://fuzzyatelin.github.io/bioanth-stats/module-F21-Group1/module-F21-Group1.html)
+* [reference2](https://rstudio-pubs-static.s3.amazonaws.com/687551_ed469310d8ea4652991a2e850b0018de.html)
+* [reference3](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html)
+
+
+```{r, echo=F, message=F, warning=F}
+
+```
+
 
 
 
@@ -249,7 +277,6 @@ verbose=T
 
 if(verbose) print(paste0(Sys.time(), "Start of step 2: No DAWN analysis"))
 
-#genes_nodawn <- sort(as.character(tada[which(tada$qvalue <= fdr_cutoff_alt),"Gene"]))
 genes_nodawn <- sort(as.character(scz[which(scz$qval.meta <= fdr_cutoff_alt),"Gene"]))
 
 #save.image(file = paste0(save_filepath, "/step2_nodawn_analysis", filepath_suffix, ".RData"))
@@ -332,7 +359,7 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
 
 
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F, eval=F}
 #png("../figures/figure_9.png", height = 1000, width = 2000, units = "px", res = 300)
 par(mar = c(0,0,3,0), mfrow = c(1,2))
 set.seed(10)
