@@ -21,7 +21,7 @@ library(gplots)
 library(tidyverse)
 library(gridExtra)
 library(ggpubr)
-library(DT)
+#library(DT)
 
 #if (!require("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -31,15 +31,15 @@ library(GO.db)
 #install.packages('BiocManager')
 library(BiocManager)
 #BiocManager::install('WGCNA')
-BiocManager::install('flashClust')
+#BiocManager::install('flashClust')
 library(flashClust)
 
-install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
+#install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
 
-install.packages("htmltools")
+#install.packages("htmltools")
 #remotes::install_github("rstudio/htmltools")
 library(htmltools)
-library(WGCNA)
+#library(WGCNA)
 
 
 #install_github("jdstorey/qvalue")   # install qvalue package 
