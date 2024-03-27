@@ -11,6 +11,8 @@ set.seed(123)
 knitr::opts_chunk$set(autodep = TRUE)
 library(knitr)
 library(RSQLite)
+#install.packages("vctrs")
+library(vctrs)
 library(dplyr)
 library(knitr)
 knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
@@ -30,16 +32,28 @@ library(GO.db)
 
 #install.packages('BiocManager')
 library(BiocManager)
-#BiocManager::install('WGCNA')
-#BiocManager::install('flashClust')
-library(flashClust)
 
 #install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
 
 #install.packages("htmltools")
 #remotes::install_github("rstudio/htmltools")
 library(htmltools)
-#library(WGCNA)
+
+#install package impute 
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("impute")
+library(impute)
+
+# install package preprocessCore
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("preprocessCore")
+library(preprocessCore)
+
+library(WGCNA)
 
 
 #install_github("jdstorey/qvalue")   # install qvalue package 
@@ -52,22 +66,6 @@ library(mirage)
 ```
 
 
-```{r, echo=F, message=F, warning=F}
-multiplesheets <- function(fname) {
-   
-  # getting info about all excel sheets
-  sheets <- readxl::excel_sheets(fname)
-  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
-  data_frame <- lapply(tibble, as.data.frame)
-    
-  # assigning names to data frames
-  names(data_frame) <- sheets
-    
-  # print data frame
-  print(data_frame)
-}
-
-```
 
 
 
@@ -75,9 +73,6 @@ multiplesheets <- function(fname) {
 ```{r, echo=F, message=F, warning=F, results=F}
 ######## replicating the results 
 ###https://github.com/linnykos/covarianceSelection
-rm(list=ls())
-set.seed(123)
-
 # install dependent packages 
 
 #install.packages("doMC", repos="http://R-Forge.R-project.org")
@@ -213,7 +208,7 @@ dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions
 
 
 
-```{r, echo=F, message=F, warning=F, eval=F}
+```{r, echo=F, message=F, warning=F, eval=T}
 # step1_screening.R screens the genes according to Liu et al. (2015). This is reported in Section 6.1.
 # https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
 p_thres_screening <- 0.01 
@@ -223,7 +218,7 @@ verbose=T
 
 ###
 
-if(verbose) print(paste0(Sys.time(), "Start of step 1: Screening"))
+#if(verbose) print(paste0(Sys.time(), "Start of step 1: Screening"))
 
 selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
 dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 12879  
@@ -246,7 +241,7 @@ for(i in 1:length(dat_list)){
 
  scz=scz[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
                 
-if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
+#if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
 
 #rm(list = c("selected_idx", "dat_pfc35", "i"))
 
@@ -262,9 +257,38 @@ if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, n
 
 
 ```{r, echo=F, message=F, warning=F}
-
+dat_pfc35_constraint_gene=dat_pfc35[,which(colnames(dat_pfc35) %in% scz$Gene)] # extract gene expression for 3100 genes at PFC
+gsg=goodSamplesGenes(dat_pfc35_constraint_gene) # identify outlier genes 
+summary(gsg) # no outlier genes 
 ```
 
+```{r, echo=F, message=F, warning=F}
+### identify outlier samples https://fuzzyatelin.github.io/bioanth-stats/module-F21-Group1/module-F21-Group1.html#Identifying_outlier_samples
+sampleTree <- hclust(dist(dat_pfc35_constraint_gene), method = "average") #Clustering samples based on distance 
+
+#Setting the graphical parameters
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+
+#Plotting the cluster dendrogram
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
+cex.axis = 1.5, cex.main = 2)
+
+
+
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
+cex.axis = 1.5, cex.main = 2)
+#draw on line to show cutoff height
+abline(h = 40, col = "red")
+
+
+cut.sampleTree <- cutreeStatic(sampleTree, cutHeight = 40, minSize = 10) #returns numeric vector
+#Remove outlier
+expression.data <- dat_pfc35_constraint_gene[cut.sampleTree==1, ]
+dim(expression.data)
+```
 
 
 
