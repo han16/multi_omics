@@ -96,7 +96,7 @@ devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceS
 
 
 
-```{r, echo=F, message=F, warning=F, eval=T}
+```{r, echo=F, message=F, warning=F, eval=F}
 # step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
 # step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
 
@@ -151,7 +151,7 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 
 
-```{r, echo=F, message=F, warning=F, results=F}
+```{r, echo=F, message=F, warning=F, results=F, eval=F}
 
 multiplesheets <- function(fname) {
    
@@ -208,7 +208,7 @@ dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions
 
 
 
-```{r, echo=F, message=F, warning=F, eval=T}
+```{r, echo=F, message=F, warning=F, eval=F}
 # step1_screening.R screens the genes according to Liu et al. (2015). This is reported in Section 6.1.
 # https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
 p_thres_screening <- 0.01 
@@ -246,6 +246,7 @@ for(i in 1:length(dat_list)){
 #rm(list = c("selected_idx", "dat_pfc35", "i"))
 
 #save.image(file = paste0(save_filepath, "/step1_screening", filepath_suffix, ".RData"))
+# save(dat_pfc35, scz, file="../data/dat_pfc35_20240328.RData")
 ```
 
 
@@ -257,6 +258,8 @@ for(i in 1:length(dat_list)){
 
 
 ```{r, echo=F, message=F, warning=F}
+#load("../data/dat_pfc35_20240328.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
 dat_pfc35_constraint_gene=dat_pfc35[,which(colnames(dat_pfc35) %in% scz$Gene)] # extract gene expression for 3100 genes at PFC
 gsg=goodSamplesGenes(dat_pfc35_constraint_gene) # identify outlier genes 
 summary(gsg) # no outlier genes 
@@ -289,6 +292,18 @@ cut.sampleTree <- cutreeStatic(sampleTree, cutHeight = 40, minSize = 10) #return
 expression.data <- dat_pfc35_constraint_gene[cut.sampleTree==1, ]
 dim(expression.data)
 ```
+```{r, echo=F, message=F, warning=F}
+spt <- pickSoftThreshold(expression.data)
+spt
+
+par(mar=c(1,1,1,1))
+plot(spt$fitIndices[,1],spt$fitIndices[,2],
+xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+main = paste("Scale independence"))
+text(spt$fitIndices[,1],spt$fitIndices[,2],col="red")
+abline(h=0.80,col="red")
+```
+
 
 
 
