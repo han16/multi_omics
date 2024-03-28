@@ -296,14 +296,21 @@ dim(expression.data)
 spt <- pickSoftThreshold(expression.data)
 spt
 
-par(mar=c(1,1,1,1))
+#par(mar=c(1,1,1,1))
 plot(spt$fitIndices[,1],spt$fitIndices[,2],
 xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
 main = paste("Scale independence"))
 text(spt$fitIndices[,1],spt$fitIndices[,2],col="red")
 abline(h=0.80,col="red")
+
+#par(mar=c(1,1,1,1))
+plot(spt$fitIndices[,1], spt$fitIndices[,5],
+xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+main = paste("Mean connectivity"))
+text(spt$fitIndices[,1], spt$fitIndices[,5], labels= spt$fitIndices[,1],col="red")
 ```
 
+* choose $\beta$ that maximizes $R^2$, and minimizes mean connectivity 
 
 
 
