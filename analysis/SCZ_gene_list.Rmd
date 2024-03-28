@@ -62,7 +62,7 @@ library(WGCNA)
 #install.packages("Rtools")
 #install_github('xinhe-lab/mirage')
 library(mirage)
-
+library(igraph)
 ```
 
 
@@ -311,6 +311,44 @@ text(spt$fitIndices[,1], spt$fitIndices[,5], labels= spt$fitIndices[,1],col="red
 ```
 
 * choose $\beta$ that maximizes $R^2$, and minimizes mean connectivity 
+
+
+
+```{r, echo=F, message=F, warning=F}
+softPower <- 8
+adjacency <- adjacency(expression.data, power = softPower)
+#dim(adjacency)
+
+plot(graph_from_adjacency_matrix(adjacency))
+```
+
+
+
+
+```{r, echo=F, message=F, warning=F}
+#https://fuzzyatelin.github.io/bioanth-stats/module-F21-Group1/module-F21-Group1.html#Network_Construction
+TOM <- TOMsimilarity(adjacency)
+TOM.dissimilarity <- 1-TOM
+#creating the dendrogram 
+geneTree <- hclust(as.dist(TOM.dissimilarity), method = "average")
+#plotting the dendrogram
+#sizeGrWindow(12,9)
+plot(geneTree, xlab="", sub="", main = "Gene clustering on TOM-based dissimilarity", 
+labels = FALSE, hang = 0.04)
+
+
+Modules <- cutreeDynamic(dendro = geneTree, distM = TOM.dissimilarity, deepSplit = 2, pamRespectsDendro = FALSE, minClusterSize = 30)
+table(Modules) #returns a table of the counts of factor levels in an object. In this case how many genes are assigned to each created module.
+
+ModuleColors <- labels2colors(Modules) #assigns each module number a color
+table(ModuleColors) #returns the counts for each color (aka the number of genes within each module)
+
+#plots the gene dendrogram with the module colors
+plotDendroAndColors(geneTree, ModuleColors,"Module",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05,
+main = "Gene dendrogram and module colors")
+```
 
 
 
