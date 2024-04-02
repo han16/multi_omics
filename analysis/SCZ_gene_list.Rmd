@@ -318,8 +318,34 @@ text(spt$fitIndices[,1], spt$fitIndices[,5], labels= spt$fitIndices[,1],col="red
 softPower <- 8
 adjacency <- adjacency(expression.data, power = softPower)
 #dim(adjacency)
+threshold=0.5
+adjacency_strong=matrix(nrow=nrow(adjacency), ncol=ncol(adjacency))
+k=0; row_sub=numeric()
+for(i in 1:nrow(adjacency))
+{
+  for (j in 1:ncol(adjacency))
+  {
+    if (abs(adjacency[i,j])<=threshold)
+         adjacency_strong[i,j]=0
+     if (abs(adjacency[i,j])>threshold)
+    adjacency_strong[i,j]=1
+  } 
+  if (sum(adjacency_strong[i,])==1)
+  {
+    k=k+1
+    row_sub[k]=i
+  }
+}  # end of for(i in 1:nrow(adjacency))
+library(statnet)
+adjacency_network=adjacency_strong[-row_sub, -row_sub]
+dim(adjacency_network)
+net=network(adjacency_network, directed=FALSE)
+plot(net)
 
-plot(graph_from_adjacency_matrix(adjacency))
+#install.packages("statnet")
+#library(statnet)
+#heatmap(adjacency)
+#plot(graph_from_adjacency_matrix(adjacency))
 ```
 
 
