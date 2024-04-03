@@ -294,7 +294,7 @@ dim(expression.data)
 ```
 ```{r, echo=F, message=F, warning=F}
 spt <- pickSoftThreshold(expression.data)
-spt
+#spt
 
 #par(mar=c(1,1,1,1))
 plot(spt$fitIndices[,1],spt$fitIndices[,2],
@@ -338,9 +338,22 @@ for(i in 1:nrow(adjacency))
 }  # end of for(i in 1:nrow(adjacency))
 library(statnet)
 adjacency_network=adjacency_strong[-row_sub, -row_sub]
+Gene_selected=colnames(adjacency)[-row_sub]
+rownames(adjacency_network)=Gene_selected
+colnames(adjacency_network)=Gene_selected
 dim(adjacency_network)
-net=network(adjacency_network, directed=FALSE)
-plot(net)
+net=network(adjacency_network, directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
+nodeColors<-ifelse(Gene_selected %in% Gene_selected,"red","red")
+plot(net, label=Gene_selected,vertex.col=nodeColors, vertex.size=10, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+
+
+
+#### overlap between 32 FDR genes and co-expressed genes 
+overlap_gene=intersect(scz[scz$qval.meta<0.05,]$Gene, Gene_selected)
+
+
+nodeColors<-ifelse(Gene_selected%in%overlap_gene,"yellow","red")
+plot(net,label=Gene_selected,vertex.col=nodeColors,  vertex.size=10, label.cex=0.5)
 
 #install.packages("statnet")
 #library(statnet)
