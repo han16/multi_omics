@@ -152,7 +152,6 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 
 
 ```{r, echo=F, message=F, warning=F, results=F, eval=F}
-
 multiplesheets <- function(fname) {
    
   # getting info about all excel sheets
@@ -174,17 +173,19 @@ scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`
 scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
 scz1=scz1%>% drop_na()  # remove NA's  ######## this is important 
 
-scz=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
+scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
 #unique_gene= unique(scz1$Gene)
 #scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates 
 
 #match the order in both datasets ########## check this part 
-idx <- which(colnames(genexp) %in% scz$Gene)
+idx <- which(colnames(genexp) %in% scz2$Gene)
 genexp <- genexp[,idx] # 1294 x 13964
-idx <- which(scz$Gene %in% colnames(genexp))
-scz=scz[idx,]
+idx <- which(scz2$Gene %in% colnames(genexp))
+scz3=scz2[idx,] # 4 risk genes not in gene expression data:  scz2$Gene[which(!scz2$Gene[1:32]%in%colnames(genexp))]
 
-idx <- covarianceSelection::matching(scz$Gene, colnames(genexp))
+
+
+idx <- covarianceSelection::matching(scz3$Gene, colnames(genexp))
 genexp <- genexp[,idx]  # 1294 x 12879 
 
 dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
@@ -220,18 +221,18 @@ verbose=T
 
 #if(verbose) print(paste0(Sys.time(), "Start of step 1: Screening"))
 
-selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
+selected_idx <- grep("PFC\\.[3-5]", names(dat_list)) # [3-5] should be early PC in Liu et.al 2015 (10-19 post conception week) 
 dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 12879  
 
 
-screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz$pval.meta, p_thres = p_thres_screening, 
+screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz3$pval.meta, p_thres = p_thres_screening, 
                                              num_genes = num_genes)
 
 # 193 primary, 3307 secondary, total of 3500, they rank correlations between primary genes and the rest to pick the top genes to have 3500 genes in total, don't use correlation threshold tau in Algorithm 1 of AOAS 2015
 
 # reorder which genes are primary and which are secondary
 all_idx <- sort(unique(c(screening_res$primary, screening_res$secondary)))
-screening_res$primary <- all_idx[which(scz$pval.meta[all_idx] < p_primary)]
+screening_res$primary <- all_idx[which(scz3$pval.meta[all_idx] < p_primary)]
 screening_res$secondary <- setdiff(all_idx, screening_res$primary)
 
 # apply the new gene list
@@ -239,7 +240,7 @@ for(i in 1:length(dat_list)){
   dat_list[[i]] <- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
 }
 
- scz=scz[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
+ scz=scz3[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
                 
 #if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
 
@@ -248,6 +249,123 @@ for(i in 1:length(dat_list)){
 #save.image(file = paste0(save_filepath, "/step1_screening", filepath_suffix, ".RData"))
 # save(dat_pfc35, scz, file="../data/dat_pfc35_20240328.RData")
 ```
+
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
+# https://github.com/linnykos/covarianceSelection/blob/master/main/step2_nodawn_analysis.R
+# step2_nodawn_analysis.R detects the risk genes only based on the TADA dataset.
+
+fdr_cutoff_alt <- 0.05
+verbose=T
+
+if(verbose) print(paste0(Sys.time(), "Start of step 2: No DAWN analysis"))
+
+genes_nodawn <- sort(as.character(scz[which(scz$qval.meta <= fdr_cutoff_alt),"Gene"]))
+length(genes_nodawn)
+
+#save.image(file = paste0(save_filepath, "/step2_nodawn_analysis", filepath_suffix, ".RData"))
+```
+
+
+```{r echo=F, message=F, warning=F, eval=F}
+# step3_pfc35_analysis.R implicates risk genes in the DAWN framework using the Window 1B partitions. This is reported in Section 6.4.
+# https://github.com/linnykos/covarianceSelection/blob/master/main/step3_pfc35_analysis.R
+fdr_cutoff <- 0.01
+pthres <- 0.05
+verbose=T
+
+#####
+set.seed(10)
+if(verbose) print(paste0(Sys.time(), "Start of step 3: Naive analysis"))
+
+selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
+dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 3065
+dat_pfc35 <- scale(dat_pfc35, scale = F)
+
+# estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
+ res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
+                                                  lambda_min = 0.01, lambda_max = 0.35, 
+                                                  lambda_length = 30, verbose = T) 
+# save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+# 
+ scale_vec_pfc35 <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))})
+# edges_vec_pfc35 <- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
+# # idx <- which.max(scale_vec_pfc35)
+# idx <- 27
+# adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
+
+#res <- covarianceSelection::graphicalModel(dat_pfc35, primary_idx = 1:length(screening_res$primary), lambda = seq(0.05, 0.1, length.out = 15)[1])
+#adj_pfc35 <- as.matrix(res$adj_mat)
+
+
+#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
+stopifnot(all(dim(adj_pfc35) == nrow(scz)))
+
+# run the HMRF
+set.seed(10)
+seedindex <- rep(0, ncol(adj_pfc35))
+#seedindex[which(tada$dn.LoF >= 3)] <- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
+seedindex[which(scz$dn_PTV >= 1)] <- 1
+
+if(verbose) print(paste0(Sys.time(), ": HMRF"))
+set.seed(10)
+#hmrf_pfc35 <- covarianceSelection::hmrf(tada$pval.TADA, adj_pfc35, seedindex, pthres = pthres)
+#report_pfc35 <- covarianceSelection::report_results(tada$Gene, 1-hmrf_pfc35$post, tada$pval.TADA, hmrf_pfc35$Iupdate)
+#genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
+
+scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
+hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1  
+
+report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
+genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
+
+adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
+
+#library(igraph)
+#network <- graph_from_incidence_matrix(adj_pfc35)
+#plot(network)
+
+#scz1[which(scz1$Gene %in% genes_pfc35),]
+# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
+# scz1[which(scz1$Gene %in% fdr005_gene),]
+
+
+#rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
+
+#save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+
+########################
+
+ #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
+```
+
+
+
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
+#png("../figures/figure_9.png", height = 1000, width = 2000, units = "px", res = 300)
+par(mar = c(0,0,3,0), mfrow = c(1,2))
+set.seed(10)
+igraph::plot.igraph(g_selected, vertex.label = NA, main = "Full graph")
+
+par(mar = c(3,3,3,0.5))
+# next plot the adjacency matrix
+image(.rotate(adj_tmp), asp = T, col = color_palatte, breaks = c(-.5,.5,1.5), xaxt = "n", yaxt = "n",
+      xlab = "", ylab = "", main = "Adjacency matrix (subgraph)", axes = F)
+title(ylab = "Index locations", mgp = c(1,1,0))
+title(xlab = "Index locations", mgp = c(1,1,0))
+
+# put in dashed lines
+x_width <- length(idx_our)/nrow(adj_tmp)
+y_height <- 1 - x_width
+lines(rep(x_width, 2), c(1,1-x_width), lwd = 2, lty = 2)
+lines(c(0,x_width), rep(y_height, 2), lwd = 2, lty = 2)
+#graphics.off()
+```
+
+
 
 
 ## gene co-expression by WGCNA  
@@ -387,119 +505,5 @@ plotDendroAndColors(geneTree, ModuleColors,"Module",
 dendroLabels = FALSE, hang = 0.03,
 addGuide = TRUE, guideHang = 0.05,
 main = "Gene dendrogram and module colors")
-```
-
-
-
-```{r, echo=F, message=F, warning=F, eval=F}
-# https://github.com/linnykos/covarianceSelection/blob/master/main/step2_nodawn_analysis.R
-# step2_nodawn_analysis.R detects the risk genes only based on the TADA dataset.
-
-fdr_cutoff_alt <- 0.05
-verbose=T
-
-if(verbose) print(paste0(Sys.time(), "Start of step 2: No DAWN analysis"))
-
-genes_nodawn <- sort(as.character(scz[which(scz$qval.meta <= fdr_cutoff_alt),"Gene"]))
-
-#save.image(file = paste0(save_filepath, "/step2_nodawn_analysis", filepath_suffix, ".RData"))
-```
-
-
-```{r echo=F, message=F, warning=F, eval=F}
-# step3_pfc35_analysis.R implicates risk genes in the DAWN framework using the Window 1B partitions. This is reported in Section 6.4.
-# https://github.com/linnykos/covarianceSelection/blob/master/main/step3_pfc35_analysis.R
-fdr_cutoff <- 0.01
-pthres <- 0.05
-verbose=T
-
-#####
-set.seed(10)
-if(verbose) print(paste0(Sys.time(), "Start of step 3: Naive analysis"))
-
-selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
-dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 3065
-dat_pfc35 <- scale(dat_pfc35, scale = F)
-
-# estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
- res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
-                                                  lambda_min = 0.01, lambda_max = 0.35, 
-                                                  lambda_length = 30, verbose = T) 
-# save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
-# 
- scale_vec_pfc35 <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))})
-# edges_vec_pfc35 <- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
-# # idx <- which.max(scale_vec_pfc35)
-# idx <- 27
-# adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
-
-#res <- covarianceSelection::graphicalModel(dat_pfc35, primary_idx = 1:length(screening_res$primary), lambda = seq(0.05, 0.1, length.out = 15)[1])
-#adj_pfc35 <- as.matrix(res$adj_mat)
-
-
-#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
-stopifnot(all(dim(adj_pfc35) == nrow(scz)))
-
-# run the HMRF
-set.seed(10)
-seedindex <- rep(0, ncol(adj_pfc35))
-#seedindex[which(tada$dn.LoF >= 3)] <- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
-seedindex[which(scz$dn_PTV >= 1)] <- 1
-
-if(verbose) print(paste0(Sys.time(), ": HMRF"))
-set.seed(10)
-#hmrf_pfc35 <- covarianceSelection::hmrf(tada$pval.TADA, adj_pfc35, seedindex, pthres = pthres)
-#report_pfc35 <- covarianceSelection::report_results(tada$Gene, 1-hmrf_pfc35$post, tada$pval.TADA, hmrf_pfc35$Iupdate)
-#genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
-
-scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
-hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1  
-
-report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
-genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
-
-adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
-
-#library(igraph)
-#network <- graph_from_incidence_matrix(adj_pfc35)
-#plot(network)
-
-#scz1[which(scz1$Gene %in% genes_pfc35),]
-# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
-# scz1[which(scz1$Gene %in% fdr005_gene),]
-
-
-#rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
-
-#save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
-
-########################
-
- #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
-```
-
-
-
-
-
-```{r, echo=F, message=F, warning=F, eval=F}
-#png("../figures/figure_9.png", height = 1000, width = 2000, units = "px", res = 300)
-par(mar = c(0,0,3,0), mfrow = c(1,2))
-set.seed(10)
-igraph::plot.igraph(g_selected, vertex.label = NA, main = "Full graph")
-
-par(mar = c(3,3,3,0.5))
-# next plot the adjacency matrix
-image(.rotate(adj_tmp), asp = T, col = color_palatte, breaks = c(-.5,.5,1.5), xaxt = "n", yaxt = "n",
-      xlab = "", ylab = "", main = "Adjacency matrix (subgraph)", axes = F)
-title(ylab = "Index locations", mgp = c(1,1,0))
-title(xlab = "Index locations", mgp = c(1,1,0))
-
-# put in dashed lines
-x_width <- length(idx_our)/nrow(adj_tmp)
-y_height <- 1 - x_width
-lines(rep(x_width, 2), c(1,1-x_width), lwd = 2, lty = 2)
-lines(c(0,x_width), rep(y_height, 2), lwd = 2, lty = 2)
-#graphics.off()
 ```
 

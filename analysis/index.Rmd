@@ -10,7 +10,7 @@ editor_options:
 
 
 
-* [SCZ risk genes list](SCZ_gene_list.html) 
+* [use pfc data](SCZ_gene_list.html) 
 
 * gene expression in the brain 
 
