@@ -410,3 +410,19 @@ function (dat, pv, p_thres = 0.1, num_genes = 3500)
   list(primary = sort(primary), secondary = sort(secondary), 
        cor_thres = cor_thres)
 }
+
+
+###############################
+#> covarianceSelection::compute_scale_free
+#> adj=as.matrix(res[[1]]$adj_mat)
+function (adj) 
+{
+  stopifnot(is.matrix(adj), is.numeric(adj), nrow(adj) == ncol(adj))
+  adj[which(adj != 0, arr.ind = TRUE)] <- 1  # arr.ind	
+ # logical; should array indices be returned when x is an array?
+  tmp <- apply(adj, 1, sum) # sum across rows https://ademos.people.uic.edu/Chapter4.html
+  x <- table(tmp) + 1  # build a contingency table of the counts at each combination of factor levels
+  y <- as.numeric(names(x)) + 1
+  x <- as.numeric(x)
+  stats::cor(log(x), log(y))^2
+}

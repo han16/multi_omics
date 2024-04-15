@@ -209,7 +209,7 @@ dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions
 
 
 
-```{r, echo=F, message=F, warning=F, eval=F}
+```{r, echo=F, message=F, warning=F, eval=T}
 # step1_screening.R screens the genes according to Liu et al. (2015). This is reported in Section 6.1.
 # https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
 p_thres_screening <- 0.01 
@@ -271,7 +271,7 @@ length(genes_nodawn)
 ```{r echo=F, message=F, warning=F, eval=F}
 # step3_pfc35_analysis.R implicates risk genes in the DAWN framework using the Window 1B partitions. This is reported in Section 6.4.
 # https://github.com/linnykos/covarianceSelection/blob/master/main/step3_pfc35_analysis.R
-fdr_cutoff <- 0.01
+fdr_cutoff <- 0.05
 pthres <- 0.05
 verbose=T
 
@@ -289,11 +289,11 @@ dat_pfc35 <- scale(dat_pfc35, scale = F)
                                                   lambda_length = 30, verbose = T) 
 # save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
 # 
- scale_vec_pfc35 <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))})
+ scale_vec_pfc35 <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))}) # equation  3.2 of AOAS paper 
 # edges_vec_pfc35 <- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
-# # idx <- which.max(scale_vec_pfc35)
+ idx <- which.max(scale_vec_pfc35) # choose tuning parameter lambda mmaximizing R^2 
 # idx <- 27
-# adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
+ adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
 
 #res <- covarianceSelection::graphicalModel(dat_pfc35, primary_idx = 1:length(screening_res$primary), lambda = seq(0.05, 0.1, length.out = 15)[1])
 #adj_pfc35 <- as.matrix(res$adj_mat)
@@ -319,6 +319,9 @@ hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pth
 
 report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
 genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
+#scz2$Gene[which(!scz2$Gene[1:32]%in%genes_pfc35)]  # of 32 risk genes, how many are missed by DAWN
+#scz3$Gene[which(!scz3$Gene[1:28]%in%genes_pfc35)]
+#new_genes_pfc35=setdiff(genes_pfc35,scz3$Gene[1:28])
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
@@ -340,6 +343,81 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
  #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
 ```
 
+
+
+```{r echo=F, message=F, warning=F, eval=F}
+# step3_pfc35_analysis.R implicates risk genes in the DAWN framework using the Window 1B partitions. This is reported in Section 6.4.
+# https://github.com/linnykos/covarianceSelection/blob/master/main/step3_pfc35_analysis.R
+fdr_cutoff <- 0.05
+pthres <- 0.05
+verbose=T
+
+#####
+set.seed(10)
+if(verbose) print(paste0(Sys.time(), "Start of step 3: Naive analysis"))
+
+selected_idx <- grep("PFC", names(dat_list))
+dat_pfc <- do.call(rbind, dat_list[selected_idx]) # 107 x 3065
+dat_pfc <- scale(dat_pfc, scale = F)
+
+# estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
+# res <- covarianceSelection::graphicalModel_range(dat_pfc, 1:length(screening_res$primary), 
+                                                  lambda_min = 0.01, lambda_max = 0.35, 
+                                                  lambda_length = 30, verbose = T) 
+# save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+# 
+# scale_vec_pfc <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))})
+# edges_vec_pfc35 <- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
+# # idx <- which.max(scale_vec_pfc35)
+# idx <- 27
+# adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
+
+res <- covarianceSelection::graphicalModel(dat_pfc, primary_idx = 1:length(screening_res$primary), lambda = seq(0.05, 0.1, length.out = 15)[1])
+adj_pfc <- as.matrix(res$adj_mat)
+
+
+#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
+stopifnot(all(dim(adj_pfc35) == nrow(scz)))
+
+# run the HMRF
+set.seed(10)
+seedindex <- rep(0, ncol(adj_pfc))
+#seedindex[which(tada$dn.LoF >= 3)] <- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
+seedindex[which(scz$dn_PTV >= 1)] <- 1
+
+if(verbose) print(paste0(Sys.time(), ": HMRF"))
+set.seed(10)
+#hmrf_pfc35 <- covarianceSelection::hmrf(tada$pval.TADA, adj_pfc35, seedindex, pthres = pthres)
+#report_pfc35 <- covarianceSelection::report_results(tada$Gene, 1-hmrf_pfc35$post, tada$pval.TADA, hmrf_pfc35$Iupdate)
+#genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
+
+scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
+hmrf_pfc <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1  
+
+report_pfc <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc$post, scz$pval.meta, hmrf_pfc$Iupdate)
+genes_pfc <- sort(as.character(report_pfc$Gene[which(report_pfc$FDR <= fdr_cutoff)]))
+#scz2$Gene[which(!scz2$Gene[1:32]%in%genes_pfc35)]  # of 32 risk genes, how many are missed by DAWN
+#scz3$Gene[which(!scz3$Gene[1:28]%in%genes_pfc)]
+
+adj_pfc <- Matrix::Matrix(adj_pfc, sparse = T)
+
+#library(igraph)
+#network <- graph_from_incidence_matrix(adj_pfc35)
+#plot(network)
+
+#scz1[which(scz1$Gene %in% genes_pfc35),]
+# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
+# scz1[which(scz1$Gene %in% fdr005_gene),]
+
+
+#rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
+
+#save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+
+########################
+
+ #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
+```
 
 
 
