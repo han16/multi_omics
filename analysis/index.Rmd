@@ -10,7 +10,7 @@ editor_options:
 
 
 
-* [use pfc data](SCZ_gene_list.html) 
+* [use pfc35 data](SCZ_gene_list.html) 
 
 * gene expression in the brain 
 
