@@ -378,6 +378,202 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 
 ### enrichment with other gene sets 
 
+
+```{r, echo=F, message=F, warning=F}
+Fu_gene_list=as_tibble(read.csv("C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv"))
+ASC_gene=Fu_gene_list %>% filter(ASD185=="TRUE") %>% dplyr::select(gene_gencodeV33) %>% pull
+neuro_disorers=SCHEMA_gene_results$`Table S11 - Genes from genome-w`
+
+
+x=list(
+  DAWN_gene=genes_pfc35,
+  #Autism_gene=as_tibble(neuro_disorers) %>% filter(Category=="ASD genes") %>% dplyr::select(`Gene name`) %>% pull(),
+  Autism_gene=ASC_gene,
+  DD_ID_gene=as_tibble(neuro_disorers) %>% filter(Category=="DD/ID genes") %>% dplyr::select(`Gene name`) %>% pull(),
+  SCZ_GWAS_gene=as_tibble(neuro_disorers) %>% filter(Category=="Schizophrenia GWAS genes") %>% dplyr::select(`Gene name`) %>% pull()
+  #SCZ_gene=SCHEMA_top_10_gene
+)
+library(VennDiagram)
+
+display_venn <- function(x, ...){
+  library(VennDiagram)
+  grid.newpage()
+  venn_object <- venn.diagram(x, filename = NULL, ...)
+  grid.draw(venn_object)
+}
+
+#png("C:\\Users\\hans\\OneDrive - Marquette University\\SCHEMA\\Fig_overlapping_genes.png")
+
+display_venn(
+        x,
+    #    category.names = c("MIRAGE FDR genes" , "Autism genes" , "DD/ID genes", "SCZ GWAS genes"),
+    category.names = c("DAWN genes" , "Autism genes" , "DD/ID genes", "SCZ GWAS genes"),
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+     #   fill = c("#999999", "#E69F00", "#56B4E9", "#009E73"),
+    fill = c("red", "blue", "green", "yellow"),
+        # Numbers
+        cex = 1.5,
+        fontface = "italic",
+        # Set names
+        cat.cex = 1.2,
+        cat.fontface = "bold",
+        cat.default.pos = "outer",
+       # cat.dist = c(0.055, 0.055, 0.1, 0.1, 0.3 )
+         cat.dist = c(0.055, 0.055, 0.1, 0.1 )
+)
+
+#dev.off()
+```
+
+
+```{r, echo=F, message=F, warning=F}
+# enrichment analysis 
+all_gene=scz1$Gene
+Autism_gene=ASC_gene
+DD_ID_gene=as_tibble(neuro_disorers) %>% filter(Category=="DD/ID genes") %>% dplyr::select(`Gene name`) %>% pull()
+SCZ_GWAS_gene=as_tibble(neuro_disorers) %>% filter(Category=="Schizophrenia GWAS genes") %>% dplyr::select(`Gene name`) %>% pull()
+SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
+dawn_new_gene=setdiff(genes_pfc35, SCHEMA_FDR_gene)
+
+OR=numeric(); pvalue=numeric(); pvalue_new_gene=numeric()
+dawn_percentage=numeric(); all_gene_percentage=numeric(); schema_fdr_percentage=numeric(); dawn_new_gene_percentage=numeric()
+####### overlapping with DD/ID_gene 
+overlap1=length(intersect(all_gene, DD_ID_gene))
+overlap2=length(intersect(genes_pfc35, DD_ID_gene))
+overlap3=length(intersect(SCHEMA_FDR_gene, DD_ID_gene))
+overlap4=length(intersect(dawn_new_gene, DD_ID_gene))
+
+fisher_test=fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
+OR[1]=fisher_test$estimate; pvalue[1]=fisher_test$p.value; pvalue_new_gene[1]=fisher.test(matrix(c(overlap4, overlap1, length(dawn_new_gene), length(all_gene)), nrow=2))$p.value
+
+dawn_percentage[1]=overlap2/length(genes_pfc35)
+all_gene_percentage[1]=overlap1/length(all_gene)
+schema_fdr_percentage[1]=overlap3/length(SCHEMA_FDR_gene)
+dawn_new_gene_percentage[1]=overlap4/length(dawn_new_gene)
+  
+####### overlapping with SCZ GWAS gene 
+overlap1=length(intersect(all_gene, SCZ_GWAS_gene))
+overlap2=length(intersect(genes_pfc35, SCZ_GWAS_gene))
+overlap3=length(intersect(SCHEMA_FDR_gene, SCZ_GWAS_gene))
+overlap4=length(intersect(dawn_new_gene, SCZ_GWAS_gene))
+
+fisher_test=fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
+OR[2]=fisher_test$estimate; pvalue[2]=fisher_test$p.value
+pvalue_new_gene[2]=fisher.test(matrix(c(overlap4, overlap1, length(dawn_new_gene), length(all_gene)), nrow=2))$p.value
+
+dawn_percentage[2]=overlap2/length(genes_pfc35)
+all_gene_percentage[2]=overlap1/length(all_gene)
+schema_fdr_percentage[2]=overlap3/length(SCHEMA_FDR_gene)
+dawn_new_gene_percentage[2]=overlap4/length(dawn_new_gene)
+
+####### overlapping with Autism gene 
+overlap1=length(intersect(all_gene, Autism_gene))
+overlap2=length(intersect(genes_pfc35, Autism_gene))
+overlap3=length(intersect(SCHEMA_FDR_gene, Autism_gene))
+overlap4=length(intersect(dawn_new_gene, Autism_gene))
+
+fisher_test=fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
+OR[3]=fisher_test$estimate; pvalue[3]=fisher_test$p.value
+pvalue_new_gene[3]=fisher.test(matrix(c(overlap4, overlap1, length(dawn_new_gene), length(all_gene)), nrow=2))$p.value
+
+dawn_percentage[3]=overlap2/length(genes_pfc35)
+all_gene_percentage[3]=overlap1/length(all_gene)
+schema_fdr_percentage[3]=overlap3/length(SCHEMA_FDR_gene)
+dawn_new_gene_percentage[3]=overlap4/length(dawn_new_gene)
+
+OR_pvalue=data.frame(OR=OR, pvalue=round(pvalue,4), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes"))
+
+ggplot(data=OR_pvalue, aes(x=gene_set, y=OR, fill=gene_set)) + 
+     geom_bar(position = 'dodge', stat='identity') +
+     xlab("")+ylab("odds ratio")+
+  theme(legend.position="none")+
+     geom_text(aes(label= pvalue), position=position_dodge(width=0.9), vjust=-0.25)
+
+percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage, schema_fdr_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
+topmirage_enrichment=
+  ggplot(percentage, aes(gene_set, prop)) + 
+   geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
+   theme_classic()+
+   xlab("")+ylab("Proportion of genes in the gene set")+
+  theme(axis.text.y = element_text(size = 10))+ # this is for numbers on y axis 
+   ylim(c(0, 0.35))+
+   theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
+   ggtitle("Enrichment of DAWN genes with other gene sets")+
+    theme(legend.title = element_blank())+
+   geom_signif(annotations ="0.007", y_position = 0.125  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=3.0)+ # textsize is for text over the bar; size is for width of lines 
+     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=3.0)+
+   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=3.0)+
+   theme(legend.position="bottom")+
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=13))+
+ theme(text = element_text(size=13))+ # size is for labels on x axis 
+  theme(axis.title = element_text(size = 13))+ # Font Size of Axis Titles
+ theme(legend.spacing.x = unit(1.0, 'cm')) # add space between symbols in legend 
+
+#png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
+topmirage_enrichment
+#dev.off()
+  
+
+percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes"), each=3))
+topmirage_enrichment=
+  ggplot(percentage, aes(gene_set, prop)) + 
+   geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
+   theme_classic()+
+   xlab("")+ylab("Proportion of genes in the gene set")+
+  theme(axis.text.y = element_text(size = 13))+ # this is for numbers on y axis 
+   ylim(c(0, 0.2))+
+   theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
+   ggtitle("Enrichment of DAWN genes with other gene sets")+
+    theme(legend.title = element_blank())+
+   geom_signif(annotations ="0.007", y_position = 0.125  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
+     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+   theme(legend.position="bottom")+
+  theme(legend.text=element_text(size=15))+
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
+ theme(text = element_text(size=15))+ # size is for labels on x axis 
+  theme(axis.title = element_text(size = 15))+ # Font Size of Axis Titles
+ theme(legend.spacing.x = unit(1.0, 'cm')) # add space between symbols in legend
+
+#png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
+topmirage_enrichment
+#dev.off()
+
+
+
+
+percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage, dawn_new_gene_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes", "DAWN new genes"), each=3))
+topmirage_enrichment=
+  ggplot(percentage, aes(gene_set, prop)) + 
+   geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
+   theme_classic()+
+   xlab("")+ylab("Proportion of genes in the gene set")+
+  theme(axis.text.y = element_text(size = 13))+ # this is for numbers on y axis 
+   ylim(c(0, 0.35))+
+   theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
+   ggtitle("Enrichment of DAWN genes with other gene sets")+
+    theme(legend.title = element_blank())+
+   geom_signif(annotations ="0.046", y_position = 0.165  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
+  geom_signif(annotations ="0.007", y_position = 0.125  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
+     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
+    geom_signif(annotations ="0.234", y_position = 0.22  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="0.543", y_position = 0.075  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+   theme(legend.position="bottom")+
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
+ theme(text = element_text(size=15))+ # size is for labels on x axis 
+  theme(axis.title = element_text(size = 15))+ # Font Size of Axis Titles
+ theme(legend.spacing.x = unit(0.5, 'cm')) # add space between symbols in legend 
+
+#png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
+topmirage_enrichment
+#dev.off()
+```
+
+
+
 ### GO enrichment analsysis 
 
 
