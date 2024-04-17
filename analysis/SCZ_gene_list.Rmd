@@ -1,5 +1,5 @@
 ---
-title: "SCZ genes list"
+title: "use PFC35 data"
 output: html_document
 date: "2024-01-29"
 ---
@@ -333,6 +333,9 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
 ## Enrichment of risk genes 
 
+### overlap with SCHEMA risk genes
+
+
 ```{r, echo=F, message=F, warning=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData")
 
@@ -368,8 +371,10 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 #dev.off()
 ```
 
+* 4 SCHEMA FDR genes are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
-### overlap with SCHEMA risk genes 
+
+
 
 ### enrichment with other gene sets 
 

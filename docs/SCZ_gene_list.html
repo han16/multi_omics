@@ -12,7 +12,7 @@
 
 <meta name="date" content="2024-01-29" />
 
-<title>SCZ genes list</title>
+<title>use PFC35 data</title>
 
 <script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -358,7 +358,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">SCZ genes list</h1>
+<h1 class="title toc-ignore">use PFC35 data</h1>
 <h4 class="date">2024-01-29</h4>
 
 </div>
@@ -525,6 +525,12 @@ unnamed-chunk-15
 unnamed-chunk-16
 </li>
 <li>
+unnamed-chunk-17
+</li>
+<li>
+unnamed-chunk-18
+</li>
+<li>
 unnamed-chunk-2
 </li>
 <li>
@@ -609,15 +615,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree5d4ed8d60b5d91dd9ba8b62c2c380a6dbb6d8462targetblank5d4ed8da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree3d0a1c0282e740d159f6d473969e0f2b8bd73412targetblank3d0a1c0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/5d4ed8d60b5d91dd9ba8b62c2c380a6dbb6d8462" target="_blank">5d4ed8d</a>
+<a href="https://github.com/han16/multi_omics/tree/3d0a1c0282e740d159f6d473969e0f2b8bd73412" target="_blank">3d0a1c0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree5d4ed8d60b5d91dd9ba8b62c2c380a6dbb6d8462targetblank5d4ed8da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree3d0a1c0282e740d159f6d473969e0f2b8bd73412targetblank3d0a1c0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -627,7 +633,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/5d4ed8d60b5d91dd9ba8b62c2c380a6dbb6d8462" target="_blank">5d4ed8d</a>.
+<a href="https://github.com/han16/multi_omics/tree/3d0a1c0282e740d159f6d473969e0f2b8bd73412" target="_blank">3d0a1c0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -692,6 +698,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/3d0a1c0282e740d159f6d473969e0f2b8bd73412/analysis/SCZ_gene_list.Rmd" target="_blank">3d0a1c0</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-04-17
+</td>
+<td>
+4/17/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/3d0a1c0282e740d159f6d473969e0f2b8bd73412/docs/SCZ_gene_list.html" target="_blank">3d0a1c0</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-04-17
+</td>
+<td>
+4/17/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1364,6 +1404,8 @@ han
 </div>
 <div id="enrichment-of-risk-genes" class="section level2">
 <h2>Enrichment of risk genes</h2>
+<div id="overlap-with-schema-risk-genes" class="section level3">
+<h3>overlap with SCHEMA risk genes</h3>
 <p><img src="figure/SCZ_gene_list.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
@@ -1403,8 +1445,10 @@ han
 </div>
 </div>
 <pre><code>(polygon[GRID.polygon.11], polygon[GRID.polygon.12], polygon[GRID.polygon.13], polygon[GRID.polygon.14], polygon[GRID.polygon.15], polygon[GRID.polygon.16], text[GRID.text.17], text[GRID.text.18], text[GRID.text.19], text[GRID.text.20], text[GRID.text.21], text[GRID.text.22], text[GRID.text.23], text[GRID.text.24]) </code></pre>
-<div id="overlap-with-schema-risk-genes" class="section level3">
-<h3>overlap with SCHEMA risk genes</h3>
+<ul>
+<li>4 SCHEMA FDR genes are missed by DAWN is because these 4 genes don’t
+have expression data in brain span.</li>
+</ul>
 </div>
 <div id="enrichment-with-other-gene-sets" class="section level3">
 <h3>enrichment with other gene sets</h3>
