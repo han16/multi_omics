@@ -290,8 +290,10 @@ dat_pfc35 <- scale(dat_pfc35, scale = F)
 ```
 
 
+
+
 ```{r, echo=F, message=F, warning=F, eval=F}
-load("../data/dat_pfc35_20240328.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
 # estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
  res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
                                                   lambda_min = 0.01, lambda_max = 0.35, 
@@ -342,11 +344,11 @@ load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData")
 SCHEMA_top_10_gene=scz1$Gene[1:10]
 SCHEMA_FDR_gene=scz1$Gene[1:32]
 
-X=list(
-SCHEMA_10_Risk_Gene=SCHEMA_top_10_gene,
-DAWN_gene=genes_pfc35,
-SCHEMA_FDR_gene=SCHEMA_FDR_gene
-  )
+#X=list(
+#SCHEMA_10_Risk_Gene=SCHEMA_top_10_gene,
+#DAWN_gene=genes_pfc35,
+#SCHEMA_FDR_gene=SCHEMA_FDR_gene
+#  )
 
 
 #library(ggvenn)
@@ -373,7 +375,23 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 
 * 4 SCHEMA FDR genes are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
+* 18 new genes are found 
 
+
+```{r, echo=F, message=F, warning=F}
+library(DT) # use datatable function 
+dawn_new_genes=setdiff(genes_pfc35,SCHEMA_FDR_gene) 
+dawn_new_genes_info=scz1[which(scz1$Gene %in% dawn_new_genes),]
+dawn_new_genes_info%>%
+datatable(extensions = 'Buttons',
+          caption = "", 
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+```
+
+* these new 18 genes have small p values in SCHEMA, but not reach FDR<5\% threshold. 
 
 
 ### enrichment with other gene sets 
@@ -429,29 +447,41 @@ display_venn(
 
 
 ```{r, echo=F, message=F, warning=F}
-# enrichment analysis 
-all_gene=scz1$Gene
+load("C:/han/Projects/Multi_Omics/multi_omics//data/dat_pfc35_20240328.RData")
+
+# enrichment analysis
+all_gene=colnames(dat_pfc35)
 Autism_gene=ASC_gene
 DD_ID_gene=as_tibble(neuro_disorers) %>% filter(Category=="DD/ID genes") %>% dplyr::select(`Gene name`) %>% pull()
 SCZ_GWAS_gene=as_tibble(neuro_disorers) %>% filter(Category=="Schizophrenia GWAS genes") %>% dplyr::select(`Gene name`) %>% pull()
 SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
 dawn_new_gene=setdiff(genes_pfc35, SCHEMA_FDR_gene)
 
+gene_set=list(all_gene=all_gene, Autism_gene=Autism_gene, DD_ID_gene=DD_ID_gene, SCZ_GWAS_gene=SCZ_GWAS_gene, SCHEMA_FDR_gene=SCHEMA_FDR_gene, DAWN_ngene=genes_pfc35, DAWN_new_gene=dawn_new_gene)
+
+
 OR=numeric(); pvalue=numeric(); pvalue_new_gene=numeric()
 dawn_percentage=numeric(); all_gene_percentage=numeric(); schema_fdr_percentage=numeric(); dawn_new_gene_percentage=numeric()
 ####### overlapping with DD/ID_gene 
-overlap1=length(intersect(all_gene, DD_ID_gene))
-overlap2=length(intersect(genes_pfc35, DD_ID_gene))
-overlap3=length(intersect(SCHEMA_FDR_gene, DD_ID_gene))
-overlap4=length(intersect(dawn_new_gene, DD_ID_gene))
 
-fisher_test=fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
-OR[1]=fisher_test$estimate; pvalue[1]=fisher_test$p.value; pvalue_new_gene[1]=fisher.test(matrix(c(overlap4, overlap1, length(dawn_new_gene), length(all_gene)), nrow=2))$p.value
+fisher_test=fisher.test(matrix(c(length(intersect(genes_pfc35, DD_ID_gene)), 
+                                 length(intersect(all_gene, DD_ID_gene)), 
+                                 length(genes_pfc35), 
+                                 length(all_gene)), nrow=2))
+OR[1]=fisher_test$estimate; pvalue[1]=fisher_test$p.value; 
+pvalue_new_gene[1]=fisher.test(matrix(c(length(intersect(dawn_new_gene, DD_ID_gene)), 
+                                        length(intersect(all_gene, DD_ID_gene)), 
+                                        length(dawn_new_gene), 
+                                        length(all_gene)), nrow=2))$p.value
 
-dawn_percentage[1]=overlap2/length(genes_pfc35)
-all_gene_percentage[1]=overlap1/length(all_gene)
-schema_fdr_percentage[1]=overlap3/length(SCHEMA_FDR_gene)
-dawn_new_gene_percentage[1]=overlap4/length(dawn_new_gene)
+dawn_percentage[1]=length(intersect(genes_pfc35, DD_ID_gene))/length(genes_pfc35)
+all_gene_percentage[1]=length(intersect(all_gene, DD_ID_gene))/length(all_gene)
+schema_fdr_percentage[1]=length(intersect(SCHEMA_FDR_gene, DD_ID_gene))/length(SCHEMA_FDR_gene)
+dawn_new_gene_percentage[1]=length(intersect(dawn_new_gene, DD_ID_gene))/length(dawn_new_gene)
+############ use for loops 
+
+
+
   
 ####### overlapping with SCZ GWAS gene 
 overlap1=length(intersect(all_gene, SCZ_GWAS_gene))
@@ -488,9 +518,17 @@ OR_pvalue=data.frame(OR=OR, pvalue=round(pvalue,4), gene_set=c("DD/ID genes", "S
 ggplot(data=OR_pvalue, aes(x=gene_set, y=OR, fill=gene_set)) + 
      geom_bar(position = 'dodge', stat='identity') +
      xlab("")+ylab("odds ratio")+
+  theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
+  ggtitle("OR of DAWN genes in different gene sets")+
   theme(legend.position="none")+
      geom_text(aes(label= pvalue), position=position_dodge(width=0.9), vjust=-0.25)
+```
 
+
+
+
+
+```{r, echo=F, message=F, warning=F}
 percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage, schema_fdr_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
 topmirage_enrichment=
   ggplot(percentage, aes(gene_set, prop)) + 
@@ -514,8 +552,11 @@ topmirage_enrichment=
 #png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
 #dev.off()
-  
+```
 
+
+  
+```{r, echo=F, message=F, warning=F}
 percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes"), each=3))
 topmirage_enrichment=
   ggplot(percentage, aes(gene_set, prop)) + 
@@ -523,7 +564,7 @@ topmirage_enrichment=
    theme_classic()+
    xlab("")+ylab("Proportion of genes in the gene set")+
   theme(axis.text.y = element_text(size = 13))+ # this is for numbers on y axis 
-   ylim(c(0, 0.2))+
+   ylim(c(0, 0.25))+
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
@@ -540,10 +581,13 @@ topmirage_enrichment=
 #png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
 #dev.off()
+```
 
 
 
 
+
+```{r, echo=F, message=F, warning=F}
 percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage, dawn_new_gene_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes", "DAWN new genes"), each=3))
 topmirage_enrichment=
   ggplot(percentage, aes(gene_set, prop)) + 
@@ -555,8 +599,8 @@ topmirage_enrichment=
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
-   geom_signif(annotations ="0.046", y_position = 0.165  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
-  geom_signif(annotations ="0.007", y_position = 0.125  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
+   geom_signif(annotations ="0.046", y_position = 0.175  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
+  geom_signif(annotations ="0.004", y_position = 0.135  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
      geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
     geom_signif(annotations ="0.234", y_position = 0.22  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
    geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
@@ -570,6 +614,12 @@ topmirage_enrichment=
 #png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
 #dev.off()
+########### calculate p values 
+overlap1=length(intersect(all_gene, Autism_gene))
+overlap2=length(intersect(genes_pfc35, Autism_gene))
+overlap3=length(intersect(SCHEMA_FDR_gene, Autism_gene))
+fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
+
 ```
 
 
