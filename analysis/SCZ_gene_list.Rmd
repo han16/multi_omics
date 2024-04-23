@@ -460,7 +460,7 @@ dawn_new_gene=setdiff(genes_pfc35, SCHEMA_FDR_gene)
 gene_set=list(all_gene=all_gene, Autism_gene=Autism_gene, DD_ID_gene=DD_ID_gene, SCZ_GWAS_gene=SCZ_GWAS_gene, SCHEMA_FDR_gene=SCHEMA_FDR_gene, DAWN_gene=genes_pfc35, DAWN_new_gene=dawn_new_gene)
 
 ##########################
-OR=numeric(); pvalue=numeric(); pvalue_new_gene=numeric()
+OR=numeric(); pvalue_dawn=numeric(); pvalue_dawn_new=numeric(); pvalue_schema=numeric()
 percentage=matrix(nrow=4, ncol=3)
 rownames(percentage)=c("dawn_gene", "all_gene", "schema_fdr", "dawn_new_gene")
 colnames(percentage)=names(gene_set)[2:4]
@@ -468,19 +468,19 @@ DAWN_overlap_matrix=list()
 DAWN_new_overlap_matrix=list()
 for (i in 2:4)
 {
-  dawn_matrix=matrix(c(length(intersect(gene_set$DAWN_gene, gene_set[[i]])), 
+dawn_matrix=matrix(c(length(intersect(gene_set$DAWN_gene, gene_set[[i]])), 
                                  length(intersect(gene_set$all_gene, gene_set[[i]])), 
                                  length(gene_set$DAWN_gene), 
                                  length(gene_set$all_gene)), nrow=2)
   fisher_test=fisher.test(dawn_matrix)
-  OR[i-1]=fisher_test$estimate; pvalue[i-1]=fisher_test$p.value; 
+  OR[i-1]=fisher_test$estimate; pvalue_dawn[i-1]=fisher_test$p.value; 
   DAWN_overlap_matrix[[i-1]]=dawn_matrix
   
   dawn_new_matrix=matrix(c(length(intersect(gene_set$DAWN_new_gene, gene_set[[i]])), 
                                         length(intersect(gene_set$all_gene, gene_set[[i]])), 
                                         length(gene_set$DAWN_new_gene), 
                                         length(gene_set$all_gene)), nrow=2)
-pvalue_new_gene[i-1]=fisher.test(dawn_new_matrix)$p.value
+pvalue_dawn_new[i-1]=fisher.test(dawn_new_matrix)$p.value
 DAWN_new_overlap_matrix[[i-1]]=dawn_new_matrix
   
  percentage[1,(i-1)]=length(intersect(gene_set$DAWN_gene, gene_set[[i]]))/length(gene_set$DAWN_gene)
@@ -488,13 +488,18 @@ DAWN_new_overlap_matrix[[i-1]]=dawn_new_matrix
  percentage[3,(i-1)]=length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]]))/length(gene_set$SCHEMA_FDR_gene)
  percentage[4,(i-1)]=length(intersect(gene_set$DAWN_new_gene, gene_set[[i]]))/length(gene_set$DAWN_new_gene)
   
+ pvalue_schema[i-1]=fisher.test(matrix(c(length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]])), 
+                                 length(intersect(gene_set$all_gene, gene_set[[i]])), 
+                                 length(gene_set$SCHEMA_FDR_gene), 
+                                 length(gene_set$all_gene)), nrow=2))$p.value
+ 
 }
 
 ```
 
 
 ```{r, echo=F, message=F, warning=F}
-OR_pvalue=data.frame(OR=OR, pvalue=round(pvalue,4), genes=c( "Autism genes", "DD/ID genes", "SCZ GWAS genes"))
+OR_pvalue=data.frame(OR=OR, pvalue=round(pvalue_dawn,4), genes=c( "Autism genes", "DD/ID genes", "SCZ GWAS genes"))
 
 ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) + 
      geom_bar(position = 'dodge', stat='identity') +
@@ -524,24 +529,16 @@ topmirage_enrichment=
     theme(legend.title = element_blank())+
    geom_signif(annotations ="0.004", y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=3.0)+ # textsize is for text over the bar; size is for width of lines 
   geom_signif(annotations ="0.020", y_position = 0.17  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=3.0)+ # textsize is for text over the bar; size is for width of lines
-     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=3.0)+
-   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=3.0)+
+     geom_signif(annotations ="6e-06", y_position = 0.325  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=3.0)+
+  geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=3.0)+
+   geom_signif(annotations ="0.002", y_position = 0.075  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=3.0)+
+  geom_signif(annotations ="0.033", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=3.0)+
    theme(legend.position="bottom")+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=13))+
  theme(text = element_text(size=13))+ # size is for labels on x axis 
   theme(axis.title = element_text(size = 13))+ # Font Size of Axis Titles
  theme(legend.spacing.x = unit(1.0, 'cm')) # add space between symbols in legend 
 ###################### compute p value 
-fisher.test(matrix(c(length(intersect(gene_set$DAWN_gene, gene_set$Autism_gene)), 
-                                 length(intersect(gene_set$all_gene, gene_set$Autism_gene)), 
-                                 length(gene_set$DAWN_gene), 
-                                 length(gene_set$all_gene)), nrow=2))$p.value
-fisher.test(matrix(c(length(intersect(gene_set$SCHEMA_FDR_gene, gene_set$Autism_gene)), 
-                                 length(intersect(gene_set$all_gene, gene_set$Autism_gene)), 
-                                 length(gene_set$SCHEMA_FDR_gene), 
-                                 length(gene_set$all_gene)), nrow=2))$p.value
-
-
 
 #png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
@@ -550,7 +547,7 @@ topmirage_enrichment
 
 
   
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F, eval=F}
 percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes"), each=3))
 
 
@@ -584,9 +581,9 @@ topmirage_enrichment
 
 
 ```{r, echo=F, message=F, warning=F}
-percentage=data.frame(prop=c(all_gene_percentage, dawn_percentage, dawn_new_gene_percentage), gene_set=c("DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes", "DD/ID genes", "SCZ GWAS genes", "Autism genes"), group=rep(c("all genes", "DAWN genes", "DAWN new genes"), each=3))
+percentage_plot=data.frame(prop=c(percentage[2,], percentage[1,], percentage[4,]), genes=rep(c("Autism genes", "DD/ID genes", "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "DAWN new genes"), each=3))
 topmirage_enrichment=
-  ggplot(percentage, aes(gene_set, prop)) + 
+  ggplot(percentage_plot, aes(genes, prop)) + 
    geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
    theme_classic()+
    xlab("")+ylab("Proportion of genes in the gene set")+
@@ -595,12 +592,12 @@ topmirage_enrichment=
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
-   geom_signif(annotations ="0.046", y_position = 0.175  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
+   geom_signif(annotations ="0.113", y_position = 0.175  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
   geom_signif(annotations ="0.004", y_position = 0.135  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
-     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
-    geom_signif(annotations ="0.234", y_position = 0.22  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
-   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
-     geom_signif(annotations ="0.543", y_position = 0.075  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
+    geom_signif(annotations ="0.541", y_position = 0.27  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations ="0.033", y_position = 0.06  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="1.000", y_position = 0.1  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
    theme(legend.position="bottom")+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
  theme(text = element_text(size=15))+ # size is for labels on x axis 
@@ -610,11 +607,8 @@ topmirage_enrichment=
 #png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
 #dev.off()
-########### calculate p values 
-overlap1=length(intersect(all_gene, Autism_gene))
-overlap2=length(intersect(genes_pfc35, Autism_gene))
-overlap3=length(intersect(SCHEMA_FDR_gene, Autism_gene))
-fisher.test(matrix(c(overlap2, overlap1, length(genes_pfc35), length(all_gene)), nrow=2))
+###########  p values are pvalue_dawn; pvalue_dawn_new
+
 
 ```
 
