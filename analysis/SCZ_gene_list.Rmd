@@ -448,6 +448,9 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, la
  #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
 ```
 
+* genes in red are candidate risk genes at FDR less than 5%
+
+* genes in black are their direct neighbors 
 
 
 
