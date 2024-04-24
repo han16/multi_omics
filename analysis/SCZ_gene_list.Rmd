@@ -394,6 +394,63 @@ datatable(extensions = 'Buttons',
 * these new 18 genes have small p values in SCHEMA, but not reach FDR<5\% threshold. 
 
 
+
+### candidate risk genes and their neighbors in network 
+
+```{r, echo=F, message=F, warning=F, eval=T}
+
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
+
+############# use igraph to draw graph
+#library(igraph)
+#network <- graph_from_incidence_matrix(adj_pfc35)
+#plot(network)
+
+
+
+library(statnet)
+adjacency_network=adj_pfc35
+Gene_selected=genes_pfc35
+rownames(adjacency_network)=colnames(dat_pfc35)
+colnames(adjacency_network)=colnames(dat_pfc35)
+
+Gene_selected_index=which(colnames(dat_pfc35)%in% genes_pfc35)  # risk gene index in original data
+
+neighbor_index=numeric()
+for(i in 1:length(Gene_selected_index))
+  neighbor_index=c(neighbor_index, which(adj_pfc35[i,]>0))
+
+risk_and_neighbor=c(Gene_selected_index, neighbor_index)
+risk_and_neighbor_adj=adjacency_network[risk_and_neighbor, risk_and_neighbor]
+rownames(risk_and_neighbor_adj)=colnames(dat_pfc35)[risk_and_neighbor]
+colnames(risk_and_neighbor_adj)=colnames(dat_pfc35)[risk_and_neighbor]
+risk_and_neighbor_gene=colnames(dat_pfc35)[risk_and_neighbor]
+
+
+#dim(adjacency_network)
+net=network(as.matrix(risk_and_neighbor_adj), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
+nodeColors<-ifelse(risk_and_neighbor_gene %in% Gene_selected,"red","black")
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+#plot(net, label=Gene, vertex.size=2, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+#plot(net, vertex.size=0.1, label.cex=0.01)
+
+#scz1[which(scz1$Gene %in% genes_pfc35),]
+# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
+# scz1[which(scz1$Gene %in% fdr005_gene),]
+
+
+#rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
+
+#save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+
+########################
+
+ #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
+```
+
+
+
+
 ### enrichment with other gene sets 
 
 
@@ -639,8 +696,8 @@ dim(adjacency_network)
 net=network(as.matrix(adjacency_network), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
 #nodeColors<-ifelse(Gene_selected %in% Gene_selected,"red","red")
 #plot(net, label=Gene_selected,vertex.col=nodeColors, vertex.size=10, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
-plot(net, label=seq(1:ncol(adjacency_network)), vertex.size=10, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
-
+plot(net, label=seq(1:ncol(adjacency_network)), vertex.size=2, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+plot(net, vertex.size=0.1, label.cex=0.01)
 
 #scz1[which(scz1$Gene %in% genes_pfc35),]
 # fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
