@@ -330,6 +330,10 @@ genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 #save(genes_pfc35, adj_pfc35, file="../data/gene_pfc35_20240416.RData")
+
+
+report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
+#saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20240425.rds")
 ```
 
 
@@ -401,6 +405,8 @@ datatable(extensions = 'Buttons',
 
 load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
 
+report_pfc_35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds")
+
 ############# use igraph to draw graph
 #library(igraph)
 #network <- graph_from_incidence_matrix(adj_pfc35)
@@ -430,7 +436,9 @@ risk_and_neighbor_gene=colnames(dat_pfc35)[risk_and_neighbor]
 #dim(adjacency_network)
 net=network(as.matrix(risk_and_neighbor_adj), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
 nodeColors<-ifelse(risk_and_neighbor_gene %in% Gene_selected,"red","black")
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.55) # https://statnet.org/workshop-intro-sna-tools/
 #plot(net, label=Gene, vertex.size=2, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
 #plot(net, vertex.size=0.1, label.cex=0.01)
 
@@ -446,6 +454,15 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, la
 ########################
 
  #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
+
+
+##################
+
+risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
+vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex size 
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
 ```
 
 * genes in red are candidate risk genes at FDR less than 5%
