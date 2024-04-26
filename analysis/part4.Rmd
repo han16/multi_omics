@@ -170,9 +170,10 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 ```{r, echo=F, message=F, warning=F}
 risk_and_neighbor_gene_pvalue=report_pfc_35_sort$p.value[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
 vertex.cex=log(1/risk_and_neighbor_gene_pvalue, base=100) # convert into to vertex size 
+vertex.sides=ifelse(risk_and_neighbor_gene %in% genes_pfc35[1:28],"circle","square")
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex) # how to add vertex shapes e.g. SCHEMA FDR genes in circle, DAWN new genes in square? 
 ```
 
 
