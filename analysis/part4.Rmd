@@ -1,0 +1,164 @@
+---
+title: "part4"
+output: html_document
+date: "2024-04-26"
+---
+
+```{r, echo=F, warning=F, message=F}
+rm(list=ls())
+set.seed(123)
+knitr::opts_chunk$set(autodep = TRUE)
+library(knitr)
+library(RSQLite)
+#install.packages("vctrs")
+library(vctrs)
+library(dplyr)
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
+library(kableExtra)
+library(RColorBrewer)
+library(gplots)
+library(tidyverse)
+library(gridExtra)
+library(ggpubr)
+#library(DT)
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+# BiocManager::install("GO.db")
+library(GO.db)
+
+#install.packages('BiocManager')
+library(BiocManager)
+
+#install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
+
+#install.packages("htmltools")
+#remotes::install_github("rstudio/htmltools")
+library(htmltools)
+
+#install package impute 
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("impute")
+library(impute)
+
+# install package preprocessCore
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("preprocessCore")
+library(preprocessCore)
+
+library(WGCNA)
+
+
+#install_github("jdstorey/qvalue")   # install qvalue package 
+#library(qvalue)
+#library("devtools")
+#install.packages("Rtools")
+#install_github('xinhe-lab/mirage')
+library(mirage)
+library(igraph)
+```
+
+
+
+
+
+
+```{r, echo=F, message=F, warning=F, results=F}
+######## replicating the results 
+###https://github.com/linnykos/covarianceSelection
+# install dependent packages 
+
+#install.packages("doMC", repos="http://R-Forge.R-project.org")
+library("doMC")
+
+# if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("org.Hs.eg.db")
+library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
+
+#download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
+library(dequer)
+
+
+library("devtools")
+devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceSelection")
+
+```
+
+### candidate risk genes and their neighbors in network 
+
+```{r, echo=F, message=F, warning=F, eval=T}
+
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load adj_pfc35
+
+report_pfc_35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds")
+
+############# use igraph to draw graph
+#library(igraph)
+#network <- graph_from_incidence_matrix(adj_pfc35)
+#plot(network)
+
+
+
+library(statnet)
+adjacency_network=adj_pfc35
+Gene_selected=genes_pfc35
+rownames(adjacency_network)=colnames(dat_pfc35)
+colnames(adjacency_network)=colnames(dat_pfc35)
+
+Gene_selected_index=which(colnames(dat_pfc35)%in% genes_pfc35)  # risk gene index in original data
+
+neighbor_index=numeric()
+for(i in 1:length(Gene_selected_index))
+  neighbor_index=c(neighbor_index, which(adj_pfc35[i,]>0))
+
+risk_and_neighbor=c(Gene_selected_index, neighbor_index)
+risk_and_neighbor_adj=adjacency_network[risk_and_neighbor, risk_and_neighbor]
+rownames(risk_and_neighbor_adj)=colnames(dat_pfc35)[risk_and_neighbor]
+colnames(risk_and_neighbor_adj)=colnames(dat_pfc35)[risk_and_neighbor]
+risk_and_neighbor_gene=colnames(dat_pfc35)[risk_and_neighbor]
+
+
+#dim(adjacency_network)
+net=network(as.matrix(risk_and_neighbor_adj), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
+nodeColors<-ifelse(risk_and_neighbor_gene %in% Gene_selected,"red","black")
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.55) # https://statnet.org/workshop-intro-sna-tools/
+#plot(net, label=Gene, vertex.size=2, label.cex=0.5) # https://statnet.org/workshop-intro-sna-tools/
+#plot(net, vertex.size=0.1, label.cex=0.01)
+
+#scz1[which(scz1$Gene %in% genes_pfc35),]
+# fdr005_gene=sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= 0.05)]))
+# scz1[which(scz1$Gene %in% fdr005_gene),]
+
+
+#rm(list = c("dat_pfc35", "seedindex", "idx", "res", "selected_idx"))
+
+#save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+
+########################
+
+ #plot(exp(seq(log(0.01), log(0.35), length.out = length(scale_vec_pfc35))), scale_vec_pfc35)
+
+
+##################
+
+risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
+vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex size 
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+```
+
+* genes in red are candidate risk genes at FDR less than 5%
+
+* genes in black are their direct neighbors 

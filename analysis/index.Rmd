@@ -9,9 +9,15 @@ editor_options:
 ---
 
 
+## pfc35 data 
 
-* [use pfc35 data](SCZ_gene_list.html) 
 
-* gene expression in the brain 
+* [run DAWN on pfc35 data](SCZ_gene_list.html) 
 
-* network construction 
+* [enrichment with SCHEMA risk genes](part2.html) 
+
+* [enrichment with other gene sets](part3.html)
+
+* [DAWN genes and their neighbors in the network](part4.html)
+
+* [co-expression analysis by  WGCNA](part5.html)
