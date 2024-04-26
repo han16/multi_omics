@@ -1,5 +1,5 @@
 ---
-title: "part4"
+title: "DAWN genes and their neighbors in the network"
 output: html_document
 date: "2024-04-26"
 ---
@@ -151,14 +151,29 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 
 
 ##################
-
-risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
-vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex size 
-set.seed(1)          # make the plot look the same as mine
-par(mar=rep(0,4))
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
 ```
 
 * genes in red are candidate risk genes at FDR less than 5%
 
 * genes in black are their direct neighbors 
+
+```{r, echo=F, message=F, warning=F}
+risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
+vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=100) # convert fdr to vertex size 
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+```
+
+* vertex size is proportional to -log(FDR,base=100)
+
+```{r, echo=F, message=F, warning=F}
+risk_and_neighbor_gene_pvalue=report_pfc_35_sort$p.value[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
+vertex.cex=log(1/risk_and_neighbor_gene_pvalue, base=100) # convert into to vertex size 
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+```
+
+
+* vertex size is proportional to -log(SCHEMA meta pvalue,base=100)

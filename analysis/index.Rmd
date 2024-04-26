@@ -21,3 +21,5 @@ editor_options:
 * [DAWN genes and their neighbors in the network](part4.html)
 
 * [co-expression analysis by  WGCNA](part5.html)
+
+* [GO enrichment analysis](part6.html)
