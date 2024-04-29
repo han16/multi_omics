@@ -122,6 +122,9 @@ scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicate
 ```
 
 
+## Venn diagrams of genes shared across different disorders 
+
+
 ```{r, echo=F, message=F, warning=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
 Fu_gene_list=as_tibble(read.csv("C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv"))
@@ -170,6 +173,8 @@ display_venn(
 
 #dev.off()
 ```
+
+## OR of DAWN genes in different gene sets 
 
 
 ```{r, echo=F, message=F, warning=F}
@@ -236,8 +241,11 @@ ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) +
      geom_text(aes(label= pvalue), position=position_dodge(width=0.9), vjust=-0.25)
 ```
 
+* numbers over bars are p values. 
 
 
+
+## enrichment of DAWN (new) genes with other gene sets  
 
 
 ```{r, echo=F, message=F, warning=F}
@@ -288,8 +296,8 @@ topmirage_enrichment=
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
    geom_signif(annotations ="0.007", y_position = 0.125  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
-     geom_signif(annotations ="0.003", y_position = 0.18  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
-   geom_signif(annotations ="0.083", y_position = 0.035  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="0.003", y_position = 0.16  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations ="0.083", y_position = 0.02  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
    theme(legend.position="bottom")+
   theme(legend.text=element_text(size=15))+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
@@ -320,10 +328,10 @@ topmirage_enrichment=
     theme(legend.title = element_blank())+
    geom_signif(annotations ="0.113", y_position = 0.175  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
   geom_signif(annotations ="0.004", y_position = 0.135  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
-     geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
-    geom_signif(annotations ="0.541", y_position = 0.27  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
-   geom_signif(annotations ="0.033", y_position = 0.06  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
-     geom_signif(annotations ="1.000", y_position = 0.1  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="8e-05", y_position = 0.225  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
+    geom_signif(annotations ="0.541", y_position = 0.26  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations ="0.033", y_position = 0.05  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations ="1.000", y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
    theme(legend.position="bottom")+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
  theme(text = element_text(size=15))+ # size is for labels on x axis 

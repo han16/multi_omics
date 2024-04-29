@@ -155,7 +155,9 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 
 * genes in red are candidate risk genes at FDR less than 5%
 
-* genes in black are their direct neighbors 
+* genes in black have FDR larger than 5%. 
+
+
 
 ```{r, echo=F, message=F, warning=F}
 risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
@@ -178,3 +180,18 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 
 
 * vertex size is proportional to -log(SCHEMA meta pvalue,base=100)
+
+
+
+```{r, echo=F, message=F, warning=F}
+net=network(as.matrix(adjacency_network), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
+nodeColors<-ifelse(rownames(adjacency_network) %in% Gene_selected,"red","black")
+set.seed(1)          # make the plot look the same as mine
+par(mar=rep(0,4))
+para_size=0.1
+vertex.size=ifelse(rownames(adjacency_network) %in% Gene_selected,10,para_size)
+label.size=ifelse(rownames(adjacency_network) %in% Gene_selected,0.5,para_size)
+vertex.cex=ifelse(rownames(adjacency_network) %in% Gene_selected,1,para_size)
+plot(net, vertex.col=nodeColors, vertex.size=vertex.size, label.cex=label.size, vertex.cex=vertex.cex) # vextex.cex control the vertex size
+```
+
