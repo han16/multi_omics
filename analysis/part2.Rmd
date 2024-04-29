@@ -159,6 +159,21 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 #dev.off()
 ```
 
+
+
 * 4 SCHEMA FDR genes are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
 * 18 new genes are found 
+
+* enrichment with 10 SCHEMA risk genes, significantly enriched because of p value of 3.17e-12. 
+
+```{r, echo=F, message=F, warning=F}
+fisher.test(matrix(c(3100, 46, 9, 9), nrow=2))
+```
+
+
+* enrichment with 32 SCHEMA FDR genes, significantly enriched because of p value less than 2.2e-16.
+
+```{r, echo=F, message=F, warning=F}
+fisher.test(matrix(c(3100, 46, 28, 28), nrow=2))
+```
