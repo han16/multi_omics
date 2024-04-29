@@ -182,6 +182,8 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 * vertex size is proportional to -log(SCHEMA meta pvalue,base=100)
 
 
+## inferred network of 3100 constraint genes 
+
 
 ```{r, echo=F, message=F, warning=F}
 net=network(as.matrix(adjacency_network), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
@@ -192,6 +194,9 @@ para_size=0.1
 vertex.size=ifelse(rownames(adjacency_network) %in% Gene_selected,10,para_size)
 label.size=ifelse(rownames(adjacency_network) %in% Gene_selected,0.5,para_size)
 vertex.cex=ifelse(rownames(adjacency_network) %in% Gene_selected,1,para_size)
-plot(net, vertex.col=nodeColors, vertex.size=vertex.size, label.cex=label.size, vertex.cex=vertex.cex) # vextex.cex control the vertex size
+labels=ifelse(rownames(adjacency_network) %in% Gene_selected, Gene_selected,"")
+plot(net, label=labels, vertex.col=nodeColors, label.col="blue", vertex.size=vertex.size, label.cex=label.size, vertex.cex=vertex.cex) # vextex.cex control the vertex size
 ```
+* 46 DAWN risk genes are highlighted in red and with blue lables  
+* 709 edges in total 
 
