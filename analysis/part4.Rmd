@@ -197,6 +197,6 @@ vertex.cex=ifelse(rownames(adjacency_network) %in% Gene_selected,1,para_size)
 labels=ifelse(rownames(adjacency_network) %in% Gene_selected, Gene_selected,"")
 plot(net, label=labels, vertex.col=nodeColors, label.col="blue", vertex.size=vertex.size, label.cex=label.size, vertex.cex=vertex.cex) # vextex.cex control the vertex size
 ```
-* 46 DAWN risk genes are highlighted in red and with blue lables  
+* 46 DAWN risk genes are highlighted in red and with blue labels  
 * 709 edges in total 
 
