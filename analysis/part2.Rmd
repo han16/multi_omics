@@ -160,6 +160,8 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 #write.table(genes_pfc35, file="C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\genes_pfc35.txt",row.names=F, col.names = F, quote = F) # output this gene list as input for GO enrichment analysis 
 
 #write.table(setdiff(genes_pfc35,SCHEMA_FDR_gene), file="C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\new_genes_pfc35.txt",row.names=F, col.names = F, quote = F) # output this gene list as input for GO enrichment analysis
+
+#write.table(intersect(genes_pfc35,SCHEMA_FDR_gene), file="C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\28SCHEMA_FDR_gene.txt",row.names=F, col.names = F, quote = F) # output this gene list as input for GO enrichment analysis
 ```
 
 

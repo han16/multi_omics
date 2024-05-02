@@ -149,7 +149,7 @@ display_venn <- function(x, ...){
   grid.draw(venn_object)
 }
 
-#png("C:\\Users\\hans\\OneDrive - Marquette University\\SCHEMA\\Fig_overlapping_genes.png")
+#png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\Fig_overlapping_genes.png")
 
 display_venn(
         x,
@@ -249,8 +249,9 @@ ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) +
 
 
 ```{r, echo=F, message=F, warning=F}
-percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(colnames(percentage),3), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
+percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(c("Autism genes", "DD/ID genes",    "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
 
+textsize=5
 topmirage_enrichment=
   ggplot(percentage_plot, aes(genes, prop)) + 
    geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
@@ -261,12 +262,12 @@ topmirage_enrichment=
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
-   geom_signif(annotations ="0.004", y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=3.0)+ # textsize is for text over the bar; size is for width of lines 
-  geom_signif(annotations ="0.020", y_position = 0.17  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=3.0)+ # textsize is for text over the bar; size is for width of lines
-     geom_signif(annotations ="6e-06", y_position = 0.325  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=3.0)+
-  geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=3.0)+
-   geom_signif(annotations ="0.002", y_position = 0.075  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=3.0)+
-  geom_signif(annotations ="0.033", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=3.0)+
+   geom_signif(annotations ="0.004", y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines 
+  geom_signif(annotations ="0.020", y_position = 0.18  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines
+     geom_signif(annotations ="6e-06", y_position = 0.325  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=textsize)+
+   geom_signif(annotations ="0.002", y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations ="0.033", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=textsize)+
    theme(legend.position="bottom")+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=13))+
  theme(text = element_text(size=13))+ # size is for labels on x axis 
@@ -274,7 +275,7 @@ topmirage_enrichment=
  theme(legend.spacing.x = unit(1.0, 'cm')) # add space between symbols in legend 
 ###################### compute p value 
 
-#png("C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png")
+#png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\Fig-enrichment_of_top_genes.png")
 topmirage_enrichment
 #dev.off()
 ```
