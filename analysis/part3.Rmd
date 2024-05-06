@@ -166,7 +166,7 @@ display_venn(
         cex = 1.5,
         fontface = "italic",
         # Set names
-        cat.cex = 1.2,
+        cat.cex = 1.5,
         cat.fontface = "bold",
         cat.default.pos = "outer",
        # cat.dist = c(0.055, 0.055, 0.1, 0.1, 0.3 )
@@ -242,7 +242,7 @@ DAWN_new_overlap_matrix[[i-1]]=dawn_new_matrix
  percentage[2,(i-1)]=length(intersect(gene_set$all_gene, gene_set[[i]]))/length(gene_set$all_gene)
  percentage[3,(i-1)]=length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]]))/length(gene_set$SCHEMA_FDR_gene)
  percentage[4,(i-1)]=length(intersect(gene_set$DAWN_new_gene, gene_set[[i]]))/length(gene_set$DAWN_new_gene)
-  
+                                                                                                                   
  pvalue_schema[i-1]=fisher.test(matrix(c(length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]])), 
                                  length(intersect(gene_set$all_gene, gene_set[[i]])), 
                                  length(gene_set$SCHEMA_FDR_gene), 
@@ -276,12 +276,13 @@ ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) +
 percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(c("Autism genes", "DD/ID genes",    "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
 
 textsize=5
+#                                                                                                 par(mar=rep(0,4))
 topmirage_enrichment=
   ggplot(percentage_plot, aes(genes, prop)) + 
    geom_bar(aes(fill = group), stat = "identity", position = "dodge")+
    theme_classic()+
-   xlab("")+ylab("Proportion of genes in the gene set")+
-  theme(axis.text.y = element_text(size = 10))+ # this is for numbers on y axis 
+   xlab("")+ylab("Proportion of overlapping genes in the gene set")+
+  theme(axis.text.y = element_text(size = 15))+ # this is for numbers on y axis 
    ylim(c(0, 0.35))+
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
@@ -293,8 +294,8 @@ topmirage_enrichment=
    geom_signif(annotations ="0.002", y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=textsize)+
   geom_signif(annotations ="0.033", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=textsize)+
    theme(legend.position="bottom")+
-   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=13))+
- theme(text = element_text(size=13))+ # size is for labels on x axis 
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
+ theme(text = element_text(size=20))+ # size is for labels on x axis and legend title 
   theme(axis.title = element_text(size = 13))+ # Font Size of Axis Titles
  theme(legend.spacing.x = unit(1.0, 'cm')) # add space between symbols in legend 
 ###################### compute p value 
