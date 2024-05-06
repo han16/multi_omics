@@ -127,18 +127,20 @@ scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicate
 
 ```{r, echo=F, message=F, warning=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData") # load data dat_pfc35
 Fu_gene_list=as_tibble(read.csv("C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv"))
 ASC_gene=Fu_gene_list %>% filter(ASD185=="TRUE") %>% dplyr::select(gene_gencodeV33) %>% pull
 neuro_disorers=SCHEMA_gene_results$`Table S11 - Genes from genome-w`
-
+DD_ID_gene=as_tibble(neuro_disorers) %>% filter(Category=="DD/ID genes") %>% dplyr::select(`Gene name`) %>% pull()
+SCZ_GWAS_gene=as_tibble(neuro_disorers) %>% filter(Category=="Schizophrenia GWAS genes") %>% dplyr::select(`Gene name`) %>% pull()
 
 x=list(
   DAWN_gene=genes_pfc35,
   #Autism_gene=as_tibble(neuro_disorers) %>% filter(Category=="ASD genes") %>% dplyr::select(`Gene name`) %>% pull(),
   Autism_gene=ASC_gene,
-  DD_ID_gene=as_tibble(neuro_disorers) %>% filter(Category=="DD/ID genes") %>% dplyr::select(`Gene name`) %>% pull(),
-  SCZ_GWAS_gene=as_tibble(neuro_disorers) %>% filter(Category=="Schizophrenia GWAS genes") %>% dplyr::select(`Gene name`) %>% pull()
-  #SCZ_gene=SCHEMA_top_10_gene
+  DD_ID_gene=DD_ID_gene,
+  SCZ_GWAS_gene=SCZ_GWAS_gene
+
 )
 library(VennDiagram)
 
@@ -174,11 +176,33 @@ display_venn(
 #dev.off()
 ```
 
+### DAWN genes overlpping with autism 
+
+```{r, echo=T, message=F, warning=F}
+intersect(genes_pfc35, ASC_gene)
+fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))
+```
+
+
+### DAWN genes overlpping with DD/ID 
+
+```{r, echo=T, message=F, warning=F}
+intersect(genes_pfc35, DD_ID_gene)
+fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow=2))
+```
+
+### DAWN genes overlpping with SCZ GWAS gene 
+
+```{r, echo=T, message=F, warning=F}
+intersect(genes_pfc35, SCZ_GWAS_gene)
+fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))
+```
+
+
 ## OR of DAWN genes in different gene sets 
 
 
 ```{r, echo=F, message=F, warning=F}
-load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
 
 # enrichment analysis
 all_gene=colnames(dat_pfc35)

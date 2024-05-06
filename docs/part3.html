@@ -388,7 +388,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-05-02
+<strong>Last updated:</strong> 2024-05-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -588,15 +588,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreefd1cce3c22e2419e308d3e7aa6c6bf464b93ddf5targetblankfd1cce3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreed03399058323a650ce5e7033a354fad4e67da857targetblankd033990a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/fd1cce3c22e2419e308d3e7aa6c6bf464b93ddf5" target="_blank">fd1cce3</a>
+<a href="https://github.com/han16/multi_omics/tree/d03399058323a650ce5e7033a354fad4e67da857" target="_blank">d033990</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreefd1cce3c22e2419e308d3e7aa6c6bf464b93ddf5targetblankfd1cce3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreed03399058323a650ce5e7033a354fad4e67da857targetblankd033990a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -606,7 +606,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/fd1cce3c22e2419e308d3e7aa6c6bf464b93ddf5" target="_blank">fd1cce3</a>.
+<a href="https://github.com/han16/multi_omics/tree/d03399058323a650ce5e7033a354fad4e67da857" target="_blank">d033990</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -631,11 +631,9 @@ Ignored files:
     Ignored:    analysis/part6_cache/
 
 Untracked files:
-    Untracked:  analysis/VennDiagram.2024-05-02_11-07-13.705257.log
-    Untracked:  analysis/VennDiagram.2024-05-02_11-16-31.848314.log
+    Untracked:  analysis/VennDiagram.2024-05-06_09-39-02.202413.log
 
 Unstaged changes:
-    Modified:   analysis/part2.Rmd
     Modified:   analysis/part3.Rmd
 
 </code></pre>
@@ -681,6 +679,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/d03399058323a650ce5e7033a354fad4e67da857/analysis/part3.Rmd" target="_blank">d033990</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-02
+</td>
+<td>
+5/2/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/d03399058323a650ce5e7033a354fad4e67da857/docs/part3.html" target="_blank">d033990</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-02
+</td>
+<td>
+5/2/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -797,93 +829,63 @@ han
 </table>
 </div>
 </div>
+<div id="dawn-genes-overlpping-with-autism" class="section level3">
+<h3>DAWN genes overlpping with autism</h3>
+<pre class="r"><code>intersect(genes_pfc35, ASC_gene)</code></pre>
+<pre><code>[1] &quot;ASH1L&quot;   &quot;CGREF1&quot;  &quot;FAM120A&quot; &quot;KDM6B&quot;   &quot;ZMYM2&quot;   &quot;ZMYND11&quot;</code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow = 2)
+p-value = 0.004104
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  1.51063 10.79097
+sample estimates:
+odds ratio 
+  4.438854 </code></pre>
+</div>
+<div id="dawn-genes-overlpping-with-ddid" class="section level3">
+<h3>DAWN genes overlpping with DD/ID</h3>
+<pre class="r"><code>intersect(genes_pfc35, DD_ID_gene)</code></pre>
+<pre><code> [1] &quot;ASH1L&quot;   &quot;CACNA1G&quot; &quot;GRIN2A&quot;  &quot;KDM6B&quot;   &quot;NR4A2&quot;   &quot;SRRM2&quot;   &quot;STAG1&quot;  
+ [8] &quot;TRIO&quot;    &quot;ZMYM2&quot;   &quot;ZMYND11&quot;</code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow=2))</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow = 2)
+p-value = 8.931e-05
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  2.295333 10.786560
+sample estimates:
+odds ratio 
+  5.218651 </code></pre>
+</div>
+<div id="dawn-genes-overlpping-with-scz-gwas-gene"
+class="section level3">
+<h3>DAWN genes overlpping with SCZ GWAS gene</h3>
+<pre class="r"><code>intersect(genes_pfc35, SCZ_GWAS_gene)</code></pre>
+<pre><code>[1] &quot;GRIN2A&quot; &quot;SP4&quot;   </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow = 2)
+p-value = 0.03269
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  0.8624537 34.9613068
+sample estimates:
+odds ratio 
+  7.913397 </code></pre>
+</div>
 </div>
 <div id="or-of-dawn-genes-in-different-gene-sets"
 class="section level2">
 <h2>OR of DAWN genes in different gene sets</h2>
-<p><img src="figure/part3.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
-Past versions of unnamed-chunk-6-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-6-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/afb290c8c6568bb701909941259b4265610c2b1b/docs/figure/part3.Rmd/unnamed-chunk-6-1.png" target="_blank">afb290c</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<ul>
-<li>numbers over bars are p values.</li>
-</ul>
-</div>
-<div id="enrichment-of-dawn-new-genes-with-other-gene-sets"
-class="section level2">
-<h2>enrichment of DAWN (new) genes with other gene sets</h2>
-<p><img src="figure/part3.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
-Past versions of unnamed-chunk-7-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-7-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/afb290c8c6568bb701909941259b4265610c2b1b/docs/figure/part3.Rmd/unnamed-chunk-7-1.png" target="_blank">afb290c</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <p><img src="figure/part3.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
@@ -933,6 +935,15 @@ han
 </table>
 </div>
 </div>
+<ul>
+<li>numbers over bars are p values.</li>
+</ul>
+</div>
+<div id="enrichment-of-dawn-new-genes-with-other-gene-sets"
+class="section level2">
+<h2>enrichment of DAWN (new) genes with other gene sets</h2>
+<p><img src="figure/part3.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/part3.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
