@@ -182,7 +182,10 @@ display_venn(
 intersect(genes_pfc35, ASC_gene)
 fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))
 ```
-
+```{r, echo=T, message=F, warning=F}
+SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
+intersect(SCHEMA_FDR_gene, ASC_gene)  # overlapping genes between SCHEMA and 185 autism genes 
+```
 
 ### DAWN genes overlpping with DD/ID 
 
