@@ -166,7 +166,7 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 
 
 
-* 4 SCHEMA FDR genes are missed by DAWN is because these 4 genes don't have expression data in brain span. 
+* 4 SCHEMA FDR genes ("SETD1A"  "FAM178A" "OR4P4"   "PCLO" ) are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
 * 18 new genes are found 
 
