@@ -4,53 +4,57 @@ output: html_document
 date: "2024-04-26"
 ---
 
-```{r, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F, eval=T}
 rm(list=ls())
 set.seed(123)
 knitr::opts_chunk$set(autodep = TRUE)
 library(knitr)
-library(RSQLite)
+#library(RSQLite)
 #install.packages("vctrs")
-library(vctrs)
-library(dplyr)
-library(knitr)
-knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
-                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
-library(kableExtra)
-library(RColorBrewer)
-library(gplots)
+#library(vctrs)
+#library(dplyr)
+#library(knitr)
+#knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+#                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
+#library(kableExtra)
+#library(RColorBrewer)
+#library(gplots)
 library(tidyverse)
 library(gridExtra)
 library(ggpubr)
+```
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
 #library(DT)
 
 #if (!require("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 # BiocManager::install("GO.db")
-library(GO.db)
+#library(GO.db)
 
 #install.packages('BiocManager')
-library(BiocManager)
+#library(BiocManager)
 
 #install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
 
 #install.packages("htmltools")
 #remotes::install_github("rstudio/htmltools")
-library(htmltools)
+#library(htmltools)
 
 #install package impute 
 #if (!require("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 
 #BiocManager::install("impute")
-library(impute)
+#library(impute)
 
 # install package preprocessCore
 #if (!require("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 
 #BiocManager::install("preprocessCore")
-library(preprocessCore)
+#library(preprocessCore)
 
 #library(WGCNA)
 
@@ -63,11 +67,6 @@ library(preprocessCore)
 #library(mirage)
 library(igraph)
 
-#install.packages("dequer")
-
-#remotes::install_github("wrathematics/dequer")
-
-#library(dequer)
 
 #library("devtools")
 #devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceSelection")
@@ -78,28 +77,6 @@ library(igraph)
 
 
 
-
-
-```{r, echo=F, message=F, warning=F, results=F, eval=F}
-######## replicating the results 
-###https://github.com/linnykos/covarianceSelection
-# install dependent packages 
-
-#install.packages("doMC", repos="http://R-Forge.R-project.org")
-#library("doMC")
-
-# if (!require("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-
-#BiocManager::install("org.Hs.eg.db")
-#library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
-
-
-
-#library("devtools")
-#devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceSelection")
-
-```
 
 ### candidate risk genes and their neighbors in network 
 
