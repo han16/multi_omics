@@ -192,7 +192,19 @@ intersect(SCHEMA_FDR_gene, ASC_gene)  # overlapping genes between SCHEMA and 185
 ```{r, echo=T, message=F, warning=F}
 intersect(genes_pfc35, DD_ID_gene)
 fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow=2))
+intersect(intersect(genes_pfc35, DD_ID_gene), ASC_gene)
+intersect(intersect(genes_pfc35, DD_ID_gene), SCZ_GWAS_gene)
 ```
+
+* 10 DD/ID genes shared with SCHEMA FDR genes: SETD1A, TRIO, CACNA1G, GRIN2A, SRRM2, ZMYM2, KDM6B, ASH1L, STAG1, HIST1H1E
+
+```{r, echo=F, message=F, warning=F}
+DD_ID_SCHEMA=c("SETD1A", "TRIO", "CACNA1G", "GRIN2A", "SRRM2", "ZMYM2", "KDM6B", "ASH1L", "STAG1", "HIST1H1E")
+setdiff(intersect(genes_pfc35, DD_ID_gene), DD_ID_SCHEMA)
+```
+* two new genes NR4A2, ZMYND11 overlapping with DD/ID, compared to SCHEMA results. 
+
+
 
 ### DAWN genes overlpping with SCZ GWAS gene 
 
