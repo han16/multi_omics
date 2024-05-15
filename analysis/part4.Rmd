@@ -155,7 +155,7 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 #dev.off()
 ```
 
-* vertex size is proportional to -log(FDR,base=100)
+* vertex size is proportional to -log(FDR,base=10)
 
 ```{r, echo=F, message=F, warning=F}
 risk_and_neighbor_gene_pvalue=report_pfc_35_sort$p.value[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
