@@ -147,10 +147,12 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 
 ```{r, echo=F, message=F, warning=F}
 risk_and_neighbor_gene_fdr=report_pfc_35_sort$FDR[which(report_pfc_35_sort$Gene%in%risk_and_neighbor_gene)]
-vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=100) # convert fdr to vertex size 
+vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex size 
+#png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\DAWN_genes_network2.png")
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
 plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+#dev.off()
 ```
 
 * vertex size is proportional to -log(FDR,base=100)
