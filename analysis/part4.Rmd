@@ -151,7 +151,7 @@ vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex si
 #png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\DAWN_genes_network2.png")
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.45, vertex.cex=vertex.cex)
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.55, vertex.cex=vertex.cex)
 #dev.off()
 ```
 
