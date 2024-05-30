@@ -70,7 +70,7 @@ library(igraph)
 
 
 
-```{r, echo=F, message=F, warning=F, results=F}
+```{r, echo=F, message=F, warning=F, results=F, eval=F}
 ######## replicating the results 
 ###https://github.com/linnykos/covarianceSelection
 # install dependent packages 
@@ -85,7 +85,7 @@ library("doMC")
 library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
 
 #download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
-library(dequer)
+#library(dequer)
 
 
 library("devtools")
@@ -342,12 +342,15 @@ report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
 
 ```{r, echo=F, message=F, warning=F}
 library(DT) # use datatable function
+report_pfc35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds") 
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
-SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
+SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, decreasing = F),]$`Gene Symbol`[1:32]
 
 dawn_new_genes=setdiff(genes_pfc35,SCHEMA_FDR_gene) 
 dawn_new_genes_info=scz1[which(scz1$Gene %in% dawn_new_genes),]
-dawn_new_genes_info%>%
+dawn_fdr=report_pfc_35_sort[which(report_pfc_35_sort$Gene %in% dawn_new_genes_info$Gene),]$FDR
+dawn_new_genes_info=dawn_new_genes_info %>% right_join(report_pfc_35_sort, by="Gene") %>% select(Gene, pval.meta, qval.meta, dn_PTV, FDR)
+dawn_new_genes_info[1:18,]%>%
 datatable(extensions = 'Buttons',
           caption = "18 DAWN new genes", 
             options = list(dom = 'Blfrtip',
