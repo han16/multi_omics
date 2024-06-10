@@ -52,7 +52,7 @@ library(impute)
 #BiocManager::install("preprocessCore")
 library(preprocessCore)
 
-library(WGCNA)
+#library(WGCNA)
 
 
 #install_github("jdstorey/qvalue")   # install qvalue package 
@@ -69,7 +69,7 @@ library(igraph)
 
 
 
-```{r, echo=F, message=F, warning=F, results=F}
+```{r, echo=F, message=F, warning=F, results=F, eval=F}
 ######## replicating the results 
 ###https://github.com/linnykos/covarianceSelection
 # install dependent packages 
@@ -82,9 +82,6 @@ library("doMC")
 
 #BiocManager::install("org.Hs.eg.db")
 library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
-
-#download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
-library(dequer)
 
 
 library("devtools")
@@ -116,7 +113,7 @@ scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`
 scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
 scz1=scz1%>% drop_na()  # remove NA's  ######## this is important 
 
-scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
+#scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
 #unique_gene= unique(scz1$Gene)
 #scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates 
 ```
