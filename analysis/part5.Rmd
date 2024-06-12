@@ -83,8 +83,6 @@ library("doMC")
 #BiocManager::install("org.Hs.eg.db")
 library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
 
-#download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
-library(dequer)
 
 
 library("devtools")
