@@ -21,14 +21,13 @@ ggplot(data = go_enrichment, aes(x = log2(fold_change), y = -log10(pvalue), labe
   xlim(c(0,7))+
          labs(color = 'Severe', #legend_title, 
        x = expression("log"[2]*" (fold change)"), y = expression("-log"[10]*"(p value)")) +
-  theme_set(
             theme(
-              axis.title.y = element_text(face = "bold", margin = margin(0,20,0,0), size = rel(1.5), color = 'black'),
-     #         axis.text=element_text(size=12), 
-              axis.title.x = element_text(hjust = 0.5, face = "bold", margin = margin(20,0,0,0), size = rel(1.5), color = 'black'),
+              axis.title.y = element_text(face = "bold",  size =14, color = 'black'),
+              axis.text.y =element_text(size=12), 
+              axis.title.x = element_text(hjust = 0.5, face = "bold",  size = 14, color = 'black'),
+              axis.text.x =element_text(size=12),
               plot.title = element_text(hjust = 0.5)
-            ))+
-  theme(axis.text=element_text(size=12))+
+            )+
     geom_text_repel(max.overlaps = Inf)
 ```
 
