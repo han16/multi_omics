@@ -613,15 +613,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeb7affa5c087556daf6f59a263096284a7ff366fetargetblankb7affa5a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree6af4748783776a4be9f7f93ae66036c522b26b64targetblank6af4748a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/b7affa5c087556daf6f59a263096284a7ff366fe" target="_blank">b7affa5</a>
+<a href="https://github.com/han16/multi_omics/tree/6af4748783776a4be9f7f93ae66036c522b26b64" target="_blank">6af4748</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeb7affa5c087556daf6f59a263096284a7ff366fetargetblankb7affa5a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree6af4748783776a4be9f7f93ae66036c522b26b64targetblank6af4748a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -631,7 +631,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/b7affa5c087556daf6f59a263096284a7ff366fe" target="_blank">b7affa5</a>.
+<a href="https://github.com/han16/multi_omics/tree/6af4748783776a4be9f7f93ae66036c522b26b64" target="_blank">6af4748</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -654,12 +654,6 @@ Ignored files:
     Ignored:    analysis/part4_cache/
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
-
-Untracked files:
-    Untracked:  VennDiagram.2024-06-24_09-27-42.33431.log
-    Untracked:  VennDiagram.2024-06-24_09-36-12.079392.log
-    Untracked:  analysis/VennDiagram.2024-06-24_09-29-18.644567.log
-    Untracked:  analysis/part3_old.Rmd
 
 Unstaged changes:
     Modified:   analysis/part3.Rmd
@@ -707,6 +701,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/6af4748783776a4be9f7f93ae66036c522b26b64/analysis/part3.Rmd" target="_blank">6af4748</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-24
+</td>
+<td>
+6/24/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/6af4748783776a4be9f7f93ae66036c522b26b64/docs/part3.html" target="_blank">6af4748</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-24
+</td>
+<td>
+6/24/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -990,6 +1018,43 @@ han
 class="section level2">
 <h2>Venn diagrams of genes shared across different disorders</h2>
 <p><img src="figure/part3.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/6af4748783776a4be9f7f93ae66036c522b26b64/docs/figure/part3.Rmd/unnamed-chunk-3-1.png" target="_blank">6af4748</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="dawn-genes-overlpping-with-autism" class="section level3">
 <h3>DAWN genes overlpping with autism</h3>
 <div id="overlapping-genes-between-dawn-46-genes-and-asc-genes"
@@ -1053,6 +1118,176 @@ table</li>
 <pre class="r"><code>DD_ID_SCHEMA=c(&quot;SETD1A&quot;, &quot;TRIO&quot;, &quot;CACNA1G&quot;, &quot;GRIN2A&quot;, &quot;SRRM2&quot;, &quot;ZMYM2&quot;, &quot;KDM6B&quot;, &quot;ASH1L&quot;, &quot;STAG1&quot;, &quot;HIST1H1E&quot;)
 setdiff(intersect(genes_pfc35, DD_ID_gene), DD_ID_SCHEMA)</code></pre>
 <pre><code>[1] &quot;NR4A2&quot;   &quot;ZMYND11&quot;</code></pre>
+<ul>
+<li>two new genes NR4A2, ZMYND11 overlapping with DD/ID, compared to
+SCHEMA results.</li>
+</ul>
+</div>
+<div id="dawn-genes-overlpping-with-scz-gwas-gene"
+class="section level3">
+<h3>DAWN genes overlpping with SCZ GWAS gene</h3>
+<pre class="r"><code>intersect(genes_pfc35, SCZ_GWAS_gene)</code></pre>
+<pre><code>[1] &quot;GRIN2A&quot; &quot;SP4&quot;   </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow = 2)
+p-value = 0.03269
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  0.8624537 34.9613068
+sample estimates:
+odds ratio 
+  7.913397 </code></pre>
+</div>
+</div>
+<div id="or-of-dawn-genes-in-different-gene-sets"
+class="section level2">
+<h2>OR of DAWN genes in different gene sets</h2>
+<p><img src="figure/part3.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/0ed733af7033119e0705eb4db3eb25581044fbc1/docs/figure/part3.Rmd/unnamed-chunk-11-1.png" target="_blank">0ed733a</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/1ab7c4d13e1d009450b46d704ef88a275e281b22/docs/figure/part3.Rmd/unnamed-chunk-11-1.png" target="_blank">1ab7c4d</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>numbers over bars are p values.</li>
+</ul>
+</div>
+<div id="enrichment-of-dawn-new-genes-with-other-gene-sets"
+class="section level2">
+<h2>enrichment of DAWN (new) genes with other gene sets</h2>
+<p><img src="figure/part3.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/0ed733af7033119e0705eb4db3eb25581044fbc1/docs/figure/part3.Rmd/unnamed-chunk-12-1.png" target="_blank">0ed733a</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-14
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/52ff0c059e151bf40d7d7f5677082a2127691fe2/docs/figure/part3.Rmd/unnamed-chunk-12-1.png" target="_blank">52ff0c0</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/part3.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/0ed733af7033119e0705eb4db3eb25581044fbc1/docs/figure/part3.Rmd/unnamed-chunk-14-1.png" target="_blank">0ed733a</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-05-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1096,25 +1331,24 @@ loaded via a namespace (and not attached):
  [4] rstatix_0.7.2        tzdb_0.4.0           vctrs_0.6.5         
  [7] tools_4.4.0          generics_0.1.3       fansi_1.0.6         
 [10] highr_0.10           blob_1.2.4           pkgconfig_2.0.3     
-[13] readxl_1.4.3         lifecycle_1.0.4      compiler_4.4.0      
-[16] git2r_0.33.0         munsell_0.5.1        carData_3.0-5       
-[19] httpuv_1.6.15        htmltools_0.5.8.1    sass_0.4.9          
-[22] yaml_2.3.8           later_1.3.2          pillar_1.9.0        
-[25] car_3.1-2            jquerylib_0.1.4      whisker_0.4.1       
-[28] cachem_1.0.8         abind_1.4-5          tidyselect_1.2.1    
-[31] digest_0.6.35        stringi_1.8.4        rprojroot_2.0.4     
-[34] fastmap_1.1.1        colorspace_2.1-0     cli_3.6.2           
-[37] magrittr_2.0.3       utf8_1.2.4           broom_1.0.5         
-[40] withr_3.0.0          scales_1.3.0         promises_1.3.0      
-[43] backports_1.4.1      bit64_4.0.5          timechange_0.3.0    
-[46] lambda.r_1.2.4       rmarkdown_2.26       bit_4.0.5           
-[49] cellranger_1.1.0     ggsignif_0.6.4       workflowr_1.7.1     
-[52] hms_1.1.3            memoise_2.0.1        evaluate_0.23       
-[55] futile.options_1.0.1 rlang_1.1.3          Rcpp_1.0.12         
-[58] glue_1.7.0           DBI_1.2.2            formatR_1.14        
-[61] rstudioapi_0.16.0    jsonlite_1.8.8       R6_2.5.1            
-[64] fs_1.6.4            </code></pre>
-</div>
+[13] readxl_1.4.3         lifecycle_1.0.4      farver_2.1.2        
+[16] compiler_4.4.0       git2r_0.33.0         munsell_0.5.1       
+[19] carData_3.0-5        httpuv_1.6.15        htmltools_0.5.8.1   
+[22] sass_0.4.9           yaml_2.3.8           later_1.3.2         
+[25] pillar_1.9.0         car_3.1-2            jquerylib_0.1.4     
+[28] whisker_0.4.1        cachem_1.0.8         abind_1.4-5         
+[31] tidyselect_1.2.1     digest_0.6.35        stringi_1.8.4       
+[34] labeling_0.4.3       rprojroot_2.0.4      fastmap_1.1.1       
+[37] colorspace_2.1-0     cli_3.6.2            magrittr_2.0.3      
+[40] utf8_1.2.4           broom_1.0.5          withr_3.0.0         
+[43] scales_1.3.0         promises_1.3.0       backports_1.4.1     
+[46] bit64_4.0.5          timechange_0.3.0     lambda.r_1.2.4      
+[49] rmarkdown_2.26       bit_4.0.5            cellranger_1.1.0    
+[52] ggsignif_0.6.4       workflowr_1.7.1      hms_1.1.3           
+[55] memoise_2.0.1        evaluate_0.23        futile.options_1.0.1
+[58] rlang_1.1.3          Rcpp_1.0.12          glue_1.7.0          
+[61] DBI_1.2.2            formatR_1.14         rstudioapi_0.16.0   
+[64] jsonlite_1.8.8       R6_2.5.1             fs_1.6.4            </code></pre>
 </div>
 </div>
 
