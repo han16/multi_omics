@@ -613,15 +613,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree6af4748783776a4be9f7f93ae66036c522b26b64targetblank6af4748a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree346185ddd373193a94c40c02e1177aaae1e2b445targetblank346185da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/6af4748783776a4be9f7f93ae66036c522b26b64" target="_blank">6af4748</a>
+<a href="https://github.com/han16/multi_omics/tree/346185ddd373193a94c40c02e1177aaae1e2b445" target="_blank">346185d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree6af4748783776a4be9f7f93ae66036c522b26b64targetblank6af4748a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree346185ddd373193a94c40c02e1177aaae1e2b445targetblank346185da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -631,7 +631,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/6af4748783776a4be9f7f93ae66036c522b26b64" target="_blank">6af4748</a>.
+<a href="https://github.com/han16/multi_omics/tree/346185ddd373193a94c40c02e1177aaae1e2b445" target="_blank">346185d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -701,6 +701,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/346185ddd373193a94c40c02e1177aaae1e2b445/analysis/part3.Rmd" target="_blank">346185d</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-24
+</td>
+<td>
+6/24/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/346185ddd373193a94c40c02e1177aaae1e2b445/docs/part3.html" target="_blank">346185d</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-24
+</td>
+<td>
+6/24/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1288,6 +1322,49 @@ han
 </table>
 </div>
 </div>
+</div>
+<div id="overlap-with-mirage-fdr-genes" class="section level2">
+<h2>overlap with MIRAGE FDR genes</h2>
+<pre class="r"><code>##############
+##########
+rm(&quot;BF.PP.gene&quot;)
+#BF.PP.gene=as_tibble(read.csv(&quot;C:\\han\\Dataset\\SCHEMA\\MIRAGE_on_meta_sample_estimate_delta_3vargroups_20231027.csv&quot;, header=T))
+load(&quot;C:\\han\\Dataset\\SCHEMA\\MIRAGE_on_meta_sample_estimate_delta_2vargroups_for_constraint_gene_20231120.RData&quot;)
+
+fdr_function=function(fdr_threshold, data)
+{
+tau=seq(0, 0.999, by=0.001)
+num_pred=NULL
+false_disc=NULL
+FDR=NULL
+for (i in 1:length(tau))
+{
+num_pred[i]=sum(ifelse(data$post_prob&gt;tau[i], 1, 0))
+false_disc[i]=sum((1-data$post_prob)*ifelse(data$post_prob&gt;tau[i], 1, 0))
+FDR[i]=false_disc[i]/num_pred[i]
+}
+tau_fdr=tibble(tau=tau, fdr=FDR)%&gt;%drop_na()  # drop rows with NA
+tau_at_threshold=tau_fdr%&gt;%filter(fdr&lt;=fdr_threshold)
+if (nrow(tau_at_threshold)==0)
+  return(&quot;No gene is selected&quot;)
+if (nrow(tau_at_threshold)&gt;0)
+{
+  tau_threshold=tau_at_threshold$tau[1]
+  return(data%&gt;% filter(post_prob&gt;tau_threshold))
+}
+
+}</code></pre>
+<pre class="r"><code>input_data=BF.PP.gene
+colnames(input_data)[3]=&quot;post_prob&quot;
+FDR_gene=fdr_function(fdr_threshold = 0.05, input_data)</code></pre>
+<pre class="r"><code>intersect(FDR_gene$Gene, genes_pfc35)  # overlapping genes between 110 MIRAGE FDR genes and 46 DAWN genes</code></pre>
+<pre><code> [1] &quot;AKAP11&quot;   &quot;TRAPPC10&quot; &quot;ANKRD12&quot;  &quot;ZMYM2&quot;    &quot;HERC1&quot;    &quot;HCN4&quot;    
+ [7] &quot;SP4&quot;      &quot;RB1CC1&quot;   &quot;SOBP&quot;     &quot;STAG1&quot;    &quot;GRIA3&quot;    &quot;DAGLA&quot;   
+[13] &quot;SCAF1&quot;    &quot;HMGCR&quot;    &quot;XPO7&quot;     &quot;GRIN2A&quot;   &quot;FAM120A&quot;  &quot;ZMYND11&quot; 
+[19] &quot;KDM6B&quot;    &quot;CUL1&quot;     &quot;TRIO&quot;     &quot;FYN&quot;      &quot;ASH1L&quot;    &quot;CACNA2D1&quot;
+[25] &quot;SRRM2&quot;    &quot;MAGI2&quot;    &quot;CACNA1G&quot; </code></pre>
+<pre class="r"><code>setdiff(intersect(FDR_gene$Gene, genes_pfc35), SCHEMA_FDR_gene)  # 18 new DAWN genes overlapping with 110 MIRAGE FDR genes </code></pre>
+<pre><code>[1] &quot;TRAPPC10&quot; &quot;SOBP&quot;     &quot;SCAF1&quot;    &quot;HMGCR&quot;    &quot;ZMYND11&quot;  &quot;FYN&quot;      &quot;CACNA2D1&quot;</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

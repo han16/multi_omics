@@ -333,3 +333,56 @@ topmirage_enrichment
 
 
 ```
+
+
+
+## overlap with MIRAGE FDR genes 
+
+
+```{r,message=F, warning=F, eval=T}
+
+##############
+##########
+rm("BF.PP.gene")
+#BF.PP.gene=as_tibble(read.csv("C:\\han\\Dataset\\SCHEMA\\MIRAGE_on_meta_sample_estimate_delta_3vargroups_20231027.csv", header=T))
+load("C:\\han\\Dataset\\SCHEMA\\MIRAGE_on_meta_sample_estimate_delta_2vargroups_for_constraint_gene_20231120.RData")
+
+fdr_function=function(fdr_threshold, data)
+{
+tau=seq(0, 0.999, by=0.001)
+num_pred=NULL
+false_disc=NULL
+FDR=NULL
+for (i in 1:length(tau))
+{
+num_pred[i]=sum(ifelse(data$post_prob>tau[i], 1, 0))
+false_disc[i]=sum((1-data$post_prob)*ifelse(data$post_prob>tau[i], 1, 0))
+FDR[i]=false_disc[i]/num_pred[i]
+}
+tau_fdr=tibble(tau=tau, fdr=FDR)%>%drop_na()  # drop rows with NA
+tau_at_threshold=tau_fdr%>%filter(fdr<=fdr_threshold)
+if (nrow(tau_at_threshold)==0)
+  return("No gene is selected")
+if (nrow(tau_at_threshold)>0)
+{
+  tau_threshold=tau_at_threshold$tau[1]
+  return(data%>% filter(post_prob>tau_threshold))
+}
+
+}
+```
+
+```{r,message=F, warning=F, eval=T}
+input_data=BF.PP.gene
+colnames(input_data)[3]="post_prob"
+FDR_gene=fdr_function(fdr_threshold = 0.05, input_data)
+```
+
+
+```{r, message=F, warning=F}
+intersect(FDR_gene$Gene, genes_pfc35)  # overlapping genes between 110 MIRAGE FDR genes and 46 DAWN genes
+setdiff(intersect(FDR_gene$Gene, genes_pfc35), SCHEMA_FDR_gene)  # 18 new DAWN genes overlapping with 110 MIRAGE FDR genes 
+```
+
+
+
