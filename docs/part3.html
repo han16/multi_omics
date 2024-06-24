@@ -10,7 +10,6 @@
 
 
 
-<meta name="date" content="2024-04-26" />
 
 <title>enrichment with other gene sets</title>
 
@@ -34,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -232,6 +232,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -356,10 +359,17 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">enrichment with other gene sets</h1>
-<h4 class="date">2024-04-26</h4>
 
 </div>
 
@@ -388,13 +398,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-06-10
+<strong>Last updated:</strong> 2024-06-24
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 4
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 2
+aria-hidden="true"></span> 3
 </p>
 <p>
 <strong>Knit directory:</strong> <code>multi_omics/</code> <span
@@ -417,18 +427,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -600,15 +613,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreef0d9535d72c589eff9b3082961851306d002f505targetblankf0d9535a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeb7affa5c087556daf6f59a263096284a7ff366fetargetblankb7affa5a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/f0d9535d72c589eff9b3082961851306d002f505" target="_blank">f0d9535</a>
+<a href="https://github.com/han16/multi_omics/tree/b7affa5c087556daf6f59a263096284a7ff366fe" target="_blank">b7affa5</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreef0d9535d72c589eff9b3082961851306d002f505targetblankf0d9535a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeb7affa5c087556daf6f59a263096284a7ff366fetargetblankb7affa5a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -618,7 +631,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/f0d9535d72c589eff9b3082961851306d002f505" target="_blank">f0d9535</a>.
+<a href="https://github.com/han16/multi_omics/tree/b7affa5c087556daf6f59a263096284a7ff366fe" target="_blank">b7affa5</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -642,8 +655,14 @@ Ignored files:
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
 
+Untracked files:
+    Untracked:  VennDiagram.2024-06-24_09-27-42.33431.log
+    Untracked:  VennDiagram.2024-06-24_09-36-12.079392.log
+    Untracked:  analysis/VennDiagram.2024-06-24_09-29-18.644567.log
+    Untracked:  analysis/part3_old.Rmd
+
 Unstaged changes:
-    Modified:   analysis/part2.Rmd
+    Modified:   analysis/part3.Rmd
 
 </code></pre>
 <p>
@@ -688,6 +707,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/08a59599d1ea69c570997989c078c06a9cfbd870/analysis/part3.Rmd" target="_blank">08a5959</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-12
+</td>
+<td>
+6/12/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/50f9687e1faf522773dc93384ec5ce3d62e20eba/docs/part3.html" target="_blank">50f9687</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-06-10
+</td>
+<td>
+6/10/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -936,46 +989,12 @@ han
 <div id="venn-diagrams-of-genes-shared-across-different-disorders"
 class="section level2">
 <h2>Venn diagrams of genes shared across different disorders</h2>
-<p><img src="figure/part3.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
-Past versions of unnamed-chunk-4-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/afb290c8c6568bb701909941259b4265610c2b1b/docs/figure/part3.Rmd/unnamed-chunk-4-1.png" target="_blank">afb290c</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/part3.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="dawn-genes-overlpping-with-autism" class="section level3">
 <h3>DAWN genes overlpping with autism</h3>
+<div id="overlapping-genes-between-dawn-46-genes-and-asc-genes"
+class="section level4">
+<h4>overlapping genes between DAWN 46 genes and ASC genes</h4>
 <pre class="r"><code>intersect(genes_pfc35, ASC_gene)</code></pre>
 <pre><code>[1] &quot;ASH1L&quot;   &quot;CGREF1&quot;  &quot;FAM120A&quot; &quot;KDM6B&quot;   &quot;ZMYM2&quot;   &quot;ZMYND11&quot;</code></pre>
 <pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))</code></pre>
@@ -990,9 +1009,20 @@ alternative hypothesis: true odds ratio is not equal to 1
 sample estimates:
 odds ratio 
   4.438854 </code></pre>
+</div>
+<div id="overlapping-genes-between-schema-fdr-genes-and-asc-genes"
+class="section level4">
+<h4>overlapping genes between SCHEMA FDR genes and ASC genes</h4>
 <pre class="r"><code>SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
 intersect(SCHEMA_FDR_gene, ASC_gene)  # overlapping genes between SCHEMA and 185 autism genes </code></pre>
 <pre><code>[1] &quot;FAM120A&quot; &quot;ASH1L&quot;   &quot;ZMYM2&quot;   &quot;KDM6B&quot;  </code></pre>
+</div>
+<div id="new-overlapping-genes-between-dawn-46-genes-and-asc-genes"
+class="section level4">
+<h4>new overlapping genes between DAWN 46 genes and ASC genes</h4>
+<pre class="r"><code>setdiff(intersect(genes_pfc35, ASC_gene),intersect(SCHEMA_FDR_gene, ASC_gene)) </code></pre>
+<pre><code>[1] &quot;CGREF1&quot;  &quot;ZMYND11&quot;</code></pre>
+</div>
 </div>
 <div id="dawn-genes-overlpping-with-ddid" class="section level3">
 <h3>DAWN genes overlpping with DD/ID</h3>
@@ -1017,120 +1047,12 @@ odds ratio
 <pre><code>[1] &quot;GRIN2A&quot;</code></pre>
 <ul>
 <li>10 DD/ID genes shared with SCHEMA FDR genes: SETD1A, TRIO, CACNA1G,
-GRIN2A, SRRM2, ZMYM2, KDM6B, ASH1L, STAG1, HIST1H1E</li>
+GRIN2A, SRRM2, ZMYM2, KDM6B, ASH1L, STAG1, HIST1H1E, from SCHEMA Supp
+table</li>
 </ul>
+<pre class="r"><code>DD_ID_SCHEMA=c(&quot;SETD1A&quot;, &quot;TRIO&quot;, &quot;CACNA1G&quot;, &quot;GRIN2A&quot;, &quot;SRRM2&quot;, &quot;ZMYM2&quot;, &quot;KDM6B&quot;, &quot;ASH1L&quot;, &quot;STAG1&quot;, &quot;HIST1H1E&quot;)
+setdiff(intersect(genes_pfc35, DD_ID_gene), DD_ID_SCHEMA)</code></pre>
 <pre><code>[1] &quot;NR4A2&quot;   &quot;ZMYND11&quot;</code></pre>
-<ul>
-<li>two new genes NR4A2, ZMYND11 overlapping with DD/ID, compared to
-SCHEMA results.</li>
-</ul>
-</div>
-<div id="dawn-genes-overlpping-with-scz-gwas-gene"
-class="section level3">
-<h3>DAWN genes overlpping with SCZ GWAS gene</h3>
-<pre class="r"><code>intersect(genes_pfc35, SCZ_GWAS_gene)</code></pre>
-<pre><code>[1] &quot;GRIN2A&quot; &quot;SP4&quot;   </code></pre>
-<pre class="r"><code>fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))</code></pre>
-<pre><code>
-    Fisher&#39;s Exact Test for Count Data
-
-data:  matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow = 2)
-p-value = 0.03269
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
-  0.8624537 34.9613068
-sample estimates:
-odds ratio 
-  7.913397 </code></pre>
-</div>
-</div>
-<div id="or-of-dawn-genes-in-different-gene-sets"
-class="section level2">
-<h2>OR of DAWN genes in different gene sets</h2>
-<p><img src="figure/part3.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
-Past versions of unnamed-chunk-11-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-11-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/1ab7c4d13e1d009450b46d704ef88a275e281b22/docs/figure/part3.Rmd/unnamed-chunk-11-1.png" target="_blank">1ab7c4d</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-05-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<ul>
-<li>numbers over bars are p values.</li>
-</ul>
-</div>
-<div id="enrichment-of-dawn-new-genes-with-other-gene-sets"
-class="section level2">
-<h2>enrichment of DAWN (new) genes with other gene sets</h2>
-<p><img src="figure/part3.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/52ff0c059e151bf40d7d7f5677082a2127691fe2/docs/figure/part3.Rmd/unnamed-chunk-12-1.png" target="_blank">52ff0c0</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-05-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/part3.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1140,8 +1062,8 @@ Session information
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.3.1 (2023-06-16 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+<pre><code>R version 4.4.0 (2024-04-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
 Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
@@ -1158,63 +1080,41 @@ time zone: America/Chicago
 tzcode source: internal
 
 attached base packages:
- [1] grid      parallel  stats4    stats     graphics  grDevices utils    
- [8] datasets  methods   base     
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
 
 other attached packages:
- [1] VennDiagram_1.7.3     futile.logger_1.4.3   devtools_2.4.5       
- [4] usethis_2.2.3         dequer_2.0-2          org.Hs.eg.db_3.17.0  
- [7] doMC_1.3.5            iterators_1.0.14      foreach_1.5.2        
-[10] igraph_2.0.3          mirage_0.1.0.0        WGCNA_1.72-5         
-[13] fastcluster_1.2.6     dynamicTreeCut_1.63-1 preprocessCore_1.62.1
-[16] impute_1.74.1         htmltools_0.5.8       BiocManager_1.30.22  
-[19] GO.db_3.17.0          AnnotationDbi_1.62.2  IRanges_2.34.1       
-[22] S4Vectors_0.38.2      Biobase_2.60.0        BiocGenerics_0.46.0  
-[25] ggpubr_0.6.0          gridExtra_2.3         lubridate_1.9.3      
-[28] forcats_1.0.0         stringr_1.5.1         purrr_1.0.2          
-[31] readr_2.1.5           tidyr_1.3.1           tibble_3.2.1         
-[34] ggplot2_3.5.0         tidyverse_2.0.0       gplots_3.1.3.1       
-[37] RColorBrewer_1.1-3    kableExtra_1.4.0      dplyr_1.1.4          
-[40] vctrs_0.6.5           RSQLite_2.3.5         knitr_1.45           
+ [1] VennDiagram_1.7.3   futile.logger_1.4.3 ggpubr_0.6.0       
+ [4] gridExtra_2.3       lubridate_1.9.3     forcats_1.0.0      
+ [7] stringr_1.5.1       purrr_1.0.2         readr_2.1.5        
+[10] tidyr_1.3.1         tibble_3.2.1        ggplot2_3.5.1      
+[13] tidyverse_2.0.0     dplyr_1.1.4         RSQLite_2.3.6      
+[16] knitr_1.46         
 
 loaded via a namespace (and not attached):
-  [1] splines_4.3.1           later_1.3.2             bitops_1.0-7           
-  [4] rpart_4.1.23            lifecycle_1.0.4         rstatix_0.7.2          
-  [7] doParallel_1.0.17       rprojroot_2.0.4         lattice_0.22-6         
- [10] backports_1.4.1         magrittr_2.0.3          Hmisc_5.1-2            
- [13] sass_0.4.9              rmarkdown_2.26          jquerylib_0.1.4        
- [16] yaml_2.3.8              remotes_2.5.0           httpuv_1.6.15          
- [19] sessioninfo_1.2.2       pkgbuild_1.4.4          DBI_1.2.2              
- [22] abind_1.4-5             pkgload_1.3.4           zlibbioc_1.46.0        
- [25] RCurl_1.98-1.14         nnet_7.3-19             git2r_0.33.0           
- [28] GenomeInfoDbData_1.2.10 svglite_2.1.3           codetools_0.2-19       
- [31] xml2_1.3.6              tidyselect_1.2.1        farver_2.1.1           
- [34] matrixStats_1.2.0       base64enc_0.1-3         jsonlite_1.8.8         
- [37] ellipsis_0.3.2          Formula_1.2-5           survival_3.5-8         
- [40] systemfonts_1.0.6       tools_4.3.1             progress_1.2.3         
- [43] Rcpp_1.0.12             glue_1.7.0              xfun_0.43              
- [46] GenomeInfoDb_1.36.4     withr_3.0.0             formatR_1.14           
- [49] fastmap_1.1.1           fansi_1.0.6             caTools_1.18.2         
- [52] digest_0.6.35           timechange_0.3.0        R6_2.5.1               
- [55] mime_0.12               colorspace_2.1-0        gtools_3.9.5           
- [58] utf8_1.2.4              generics_0.1.3          data.table_1.15.2      
- [61] prettyunits_1.2.0       httr_1.4.7              htmlwidgets_1.6.4      
- [64] pkgconfig_2.0.3         gtable_0.3.4            blob_1.2.4             
- [67] workflowr_1.7.1         XVector_0.40.0          carData_3.0-5          
- [70] profvis_0.3.8           scales_1.3.0            png_0.1-8              
- [73] lambda.r_1.2.4          rstudioapi_0.16.0       tzdb_0.4.0             
- [76] checkmate_2.3.1         cachem_1.0.8            KernSmooth_2.23-22     
- [79] miniUI_0.1.1.1          foreign_0.8-86          pillar_1.9.0           
- [82] urlchecker_1.0.1        promises_1.2.1          car_3.1-2              
- [85] xtable_1.8-4            cluster_2.1.6           htmlTable_2.4.2        
- [88] evaluate_0.23           cli_3.6.1               compiler_4.3.1         
- [91] futile.options_1.0.1    rlang_1.1.3             crayon_1.5.2           
- [94] ggsignif_0.6.4          labeling_0.4.3          fs_1.6.3               
- [97] stringi_1.8.3           viridisLite_0.4.2       munsell_0.5.0          
-[100] Biostrings_2.68.1       Matrix_1.6-5            hms_1.1.3              
-[103] bit64_4.0.5             KEGGREST_1.40.1         shiny_1.8.1            
-[106] highr_0.10              broom_1.0.5             memoise_2.0.1          
-[109] bslib_0.6.2             bit_4.0.5              </code></pre>
+ [1] gtable_0.3.5         xfun_0.43            bslib_0.7.0         
+ [4] rstatix_0.7.2        tzdb_0.4.0           vctrs_0.6.5         
+ [7] tools_4.4.0          generics_0.1.3       fansi_1.0.6         
+[10] highr_0.10           blob_1.2.4           pkgconfig_2.0.3     
+[13] readxl_1.4.3         lifecycle_1.0.4      compiler_4.4.0      
+[16] git2r_0.33.0         munsell_0.5.1        carData_3.0-5       
+[19] httpuv_1.6.15        htmltools_0.5.8.1    sass_0.4.9          
+[22] yaml_2.3.8           later_1.3.2          pillar_1.9.0        
+[25] car_3.1-2            jquerylib_0.1.4      whisker_0.4.1       
+[28] cachem_1.0.8         abind_1.4-5          tidyselect_1.2.1    
+[31] digest_0.6.35        stringi_1.8.4        rprojroot_2.0.4     
+[34] fastmap_1.1.1        colorspace_2.1-0     cli_3.6.2           
+[37] magrittr_2.0.3       utf8_1.2.4           broom_1.0.5         
+[40] withr_3.0.0          scales_1.3.0         promises_1.3.0      
+[43] backports_1.4.1      bit64_4.0.5          timechange_0.3.0    
+[46] lambda.r_1.2.4       rmarkdown_2.26       bit_4.0.5           
+[49] cellranger_1.1.0     ggsignif_0.6.4       workflowr_1.7.1     
+[52] hms_1.1.3            memoise_2.0.1        evaluate_0.23       
+[55] futile.options_1.0.1 rlang_1.1.3          Rcpp_1.0.12         
+[58] glue_1.7.0           DBI_1.2.2            formatR_1.14        
+[61] rstudioapi_0.16.0    jsonlite_1.8.8       R6_2.5.1            
+[64] fs_1.6.4            </code></pre>
+</div>
 </div>
 </div>
 
@@ -1267,6 +1167,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
