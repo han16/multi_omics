@@ -1,23 +1,94 @@
 ---
-title: "part2"
-output:
-  workflowr::wflow_html:
-    code_folding: hide
-    toc: true
+title: "enrichment with SCHEMA risk genes"
+output: html_document
+date: "2024-04-26"
 ---
 
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, warning=F, message=F}
 rm(list=ls())
 set.seed(123)
 knitr::opts_chunk$set(autodep = TRUE)
 library(knitr)
 library(RSQLite)
+#install.packages("vctrs")
+library(vctrs)
 library(dplyr)
 library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
+library(kableExtra)
+library(RColorBrewer)
+library(gplots)
 library(tidyverse)
 library(gridExtra)
 library(ggpubr)
+#library(DT)
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+# BiocManager::install("GO.db")
+library(GO.db)
+
+#install.packages('BiocManager')
+library(BiocManager)
+
+#install.packages(c("matrixStats", "Hmisc", "splines", "foreach", "doParallel", "fastcluster", "dynamicTreeCut", "survival"))
+
+#install.packages("htmltools")
+#remotes::install_github("rstudio/htmltools")
+library(htmltools)
+
+#install package impute 
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("impute")
+library(impute)
+
+# install package preprocessCore
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("preprocessCore")
+library(preprocessCore)
+
+#library(WGCNA)
+
+
+#install_github("jdstorey/qvalue")   # install qvalue package 
+#library(qvalue)
+#library("devtools")
+#install.packages("Rtools")
+#install_github('xinhe-lab/mirage')
+library(mirage)
+library(igraph)
 ```
+
+
+
+
+
+
+```{r, echo=F, message=F, warning=F, results=F, eval=F}
+######## replicating the results 
+###https://github.com/linnykos/covarianceSelection
+# install dependent packages 
+
+#install.packages("doMC", repos="http://R-Forge.R-project.org")
+library("doMC")
+
+# if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("org.Hs.eg.db")
+library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
+
+
+library("devtools")
+devtools::install_github("linnylin92/covarianceSelection", subdir = "covarianceSelection")
+
+```
+
 
 
 ```{r, echo=F, message=F, warning=F, results=F, eval=T}
@@ -50,7 +121,7 @@ scz1=scz1%>% drop_na()  # remove NA's  ######## this is important
 
 
 
-```{r, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData")
 
 SCHEMA_top_10_gene=scz1$Gene[1:10]
@@ -90,7 +161,7 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 #write.table(intersect(genes_pfc35,SCHEMA_FDR_gene), file="C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\28SCHEMA_FDR_gene.txt",row.names=F, col.names = F, quote = F) # output this gene list as input for GO enrichment analysis
 ```
 
-* a better way to draw venn diagram might be using online tool [BioVenn](https://www.biovenn.nl/index.php)
+
 
 * 4 SCHEMA FDR genes ("SETD1A"  "FAM178A" "OR4P4"   "PCLO" ) are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
@@ -98,13 +169,13 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 
 * enrichment with 10 SCHEMA risk genes, significantly enriched because of p value of 3.17e-12. 
 
-```{r, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 fisher.test(matrix(c(3100, 46, 9, 9), nrow=2))
 ```
 
 
 * enrichment with 32 SCHEMA FDR genes, significantly enriched because of p value less than 2.2e-16.
 
-```{r, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 fisher.test(matrix(c(3100, 46, 28, 28), nrow=2))
 ```

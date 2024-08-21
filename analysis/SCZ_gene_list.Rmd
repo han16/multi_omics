@@ -53,7 +53,7 @@ library(impute)
 #BiocManager::install("preprocessCore")
 library(preprocessCore)
 
-library(WGCNA)
+#library(WGCNA)
 
 
 #install_github("jdstorey/qvalue")   # install qvalue package 
@@ -363,7 +363,15 @@ datatable(extensions = 'Buttons',
 
 
 
-
+```{r, echo=F, message=F, warning=F}
+SCHEMA_FDR_gene%>%
+datatable(extensions = 'Buttons',
+          caption = "32 SCHEMA FDR genes", 
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+```
 
 
 
