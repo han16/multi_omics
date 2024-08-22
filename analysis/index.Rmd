@@ -12,7 +12,7 @@ editor_options:
 ## pfc35 data 
 
 
-* [run DAWN on pfc35 data](SCZ_gene_list.html) 
+* [run DAWN on pfc35 data](part1.html) 
 
 * [enrichment with SCHEMA risk genes](part2.html) 
 

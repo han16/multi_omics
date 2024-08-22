@@ -71,6 +71,7 @@ library(igraph)
 
 
 ```{r, echo=F, message=F, warning=F, results=F, eval=F}
+############################ DO NOT RUN ##############################
 ######## replicating the results 
 ###https://github.com/linnykos/covarianceSelection
 # install dependent packages 
@@ -85,7 +86,8 @@ library("doMC")
 library("org.Hs.eg.db") # Genome wide annotation for Human https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
 
 #download gz file to local folder and install https://cran.r-project.org/src/contrib/Archive/dequer/
-#library(dequer)
+library(dequer)
+
 
 
 library("devtools")
@@ -110,9 +112,12 @@ genexp <- genexp[,-1]
 genexp <- t(genexp)
 genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
 #more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
+missed_genes=c("SETD1A","FAM178A","OR4P4","PCLO")  # these genes are missed, but supposed to be included, sum(colnames(genexp) %in% missed_genes)=0, two genes "SETD1A", and "PCLO" not in genexp   
+
 
 #determine brain-expressed genes
-brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+#brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brain_expression.rda")
 brain_genes <- brain_expression$Gene[brain_expression$Brain_expressed != 'No']
 idx <- which(colnames(genexp) %in% brain_genes)
 genexp <- genexp[,idx] # 1340 x 14370

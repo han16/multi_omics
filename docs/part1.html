@@ -11,7 +11,7 @@
 
 
 
-<title>Home</title>
+<title>part1-run DAWN</title>
 
 <script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -228,7 +232,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -238,6 +308,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -279,9 +359,17 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Home</h1>
+
+<h1 class="title toc-ignore">part1-run DAWN</h1>
 
 </div>
 
@@ -314,9 +402,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>multi_omics/</code> <span
@@ -348,12 +436,107 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240123code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240123)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240123code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240123)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
+</p>
+</div>
+<div id="strongCachestrongdetected" class="panel-collapse collapse">
+<div class="panel-body">
+The following chunks had caches available:
+<ul>
+<li>
+session-info-chunk-inserted-by-workflowr
+</li>
+<li>
+unnamed-chunk-2
+</li>
+</ul>
+<p>To ensure reproducibility of the results, delete the cache directory
+<code>part1_cache</code> and re-run the analysis. To have workflowr
+automatically delete the cache directory prior to building the file, set
+<code>delete_cache = TRUE</code> when running <code>wflow_build()</code>
+or <code>wflow_publish()</code>.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -396,6 +579,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/part1_cache/
     Ignored:    analysis/part2_cache/
     Ignored:    analysis/part3_cache/
     Ignored:    analysis/part4_cache/
@@ -422,293 +606,122 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/4ea46d18e00824917b080f324dc1586f20fdac61/docs/index.html" target="_blank">4ea46d1</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-06-13
-</td>
-<td>
-6/13/2024
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/9a67e4e237dd2378710d93f96847dd2d6597e9cd/analysis/index.Rmd" target="_blank">9a67e4e</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-<td>
-4/26/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/9a67e4e237dd2378710d93f96847dd2d6597e9cd/docs/index.html" target="_blank">9a67e4e</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-<td>
-4/26/2024
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/afb290c8c6568bb701909941259b4265610c2b1b/analysis/index.Rmd" target="_blank">afb290c</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-<td>
-4/26/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/afb290c8c6568bb701909941259b4265610c2b1b/docs/index.html" target="_blank">afb290c</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-26
-</td>
-<td>
-4/26/2024
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/4e7b8465816f06fe914e2de380536e9892b8099b/analysis/index.Rmd" target="_blank">4e7b846</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-16
-</td>
-<td>
-4/16/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/4e7b8465816f06fe914e2de380536e9892b8099b/docs/index.html" target="_blank">4e7b846</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-16
-</td>
-<td>
-4/16/2024
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/d09d79febbe9b0614f9d15aaf6966fb8e8f0b88b/analysis/index.Rmd" target="_blank">d09d79f</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-09
-</td>
-<td>
-4/9/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/d09d79febbe9b0614f9d15aaf6966fb8e8f0b88b/docs/index.html" target="_blank">d09d79f</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-04-09
-</td>
-<td>
-4/9/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/9ce069d1d4b8bfc64532b76b651f70e4cd4ea5c4/docs/index.html" target="_blank">9ce069d</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-03-27
-</td>
-<td>
-3/27/2024
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/2f79c1bd377a87fc587892ccb8ce3e9db33ebcb9/analysis/index.Rmd" target="_blank">2f79c1b</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-01-29
-</td>
-<td>
-1/29/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/2f79c1bd377a87fc587892ccb8ce3e9db33ebcb9/docs/index.html" target="_blank">2f79c1b</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-01-29
-</td>
-<td>
-1/29/2024
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/han16/multi_omics/86e5d9298167efaecfceb0055cb5bdd5696cd3bf/docs/index.html" target="_blank">86e5d92</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-01-23
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/han16/multi_omics/blob/9e48004b4b0005839b46f71059645347ef3b56c4/analysis/index.Rmd" target="_blank">9e48004</a>
-</td>
-<td>
-han
-</td>
-<td>
-2024-01-23
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<div id="pfc35-data" class="section level2">
-<h2>pfc35 data</h2>
-<ul>
-<li><p><a href="part1.html">run DAWN on pfc35 data</a></p></li>
-<li><p><a href="part2.html">enrichment with SCHEMA risk
-genes</a></p></li>
-<li><p><a href="part3.html">enrichment with other gene sets</a></p></li>
-<li><p><a href="part4.html">DAWN genes and their neighbors in the
-network</a></p></li>
-<li><p><a href="part5.html">co-expression analysis by WGCNA</a></p></li>
-<li><p><a href="part6.html">GO enrichment analysis</a></p></li>
-</ul>
+<pre class="r"><code># step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
+# step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
+
+#if(verbose) print(&quot;Start of step 0: Loading&quot;)
+
+#format the brainspan dataset
+#load(&quot;../../raw_data/newGenexp.RData&quot;)
+load(&quot;C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGenexp.RData&quot;)
+rownames(genexp) &lt;- genexp[,1]
+genexp &lt;- genexp[,-1]
+genexp &lt;- t(genexp)
+genexp &lt;- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
+#more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
+missed_genes=c(&quot;SETD1A&quot;,&quot;FAM178A&quot;,&quot;OR4P4&quot;,&quot;PCLO&quot;)  # these genes are missed, but supposed to be included, sum(colnames(genexp) %in% missed_genes)=0, two genes &quot;SETD1A&quot;, and &quot;PCLO&quot; not in genexp   
+
+
+#determine brain-expressed genes
+#brain_expression &lt;- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brain_expression.rda&quot;) # brain_expression has 4 missed genes sum(brain_expression$Gene %in% missed_genes)
+brain_genes &lt;- brain_expression$Gene[brain_expression$Brain_expressed != &#39;No&#39;]   ## &quot;OR4P4&quot; is not in brain_genes 
+idx &lt;- which(colnames(genexp) %in% brain_genes)
+genexp &lt;- genexp[,idx] # 1340 x 14370  # only FAM178A of 4 missed genes is in genexp now:  missed_genes %in% colnames(genexp)
+
+
+#translate into synonyms
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\cleaning.R&quot;)
+#vec &lt;- covarianceSelection::symbol_synonyms(colnames(genexp), verbose = T)
+vec &lt;- symbol_synonyms(colnames(genexp), verbose = T)
+unknown_genes_idx &lt;- which(is.na(vec))
+vec &lt;- vec[-unknown_genes_idx]
+genexp &lt;- genexp[-unknown_genes_idx] # 1340 x 14297
+colnames(genexp) &lt;- vec   ## now 4 missed genes are missed now 
+
+#average non-unique genes
+genexp &lt;- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+
+#remove samples from subregions that we don&#39;t have a region for
+region_subregion &lt;- covarianceSelection::region_subregion # https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+vec &lt;- rownames(genexp)
+# extract regions from colnames 
+subregion &lt;- unlist(strsplit(vec,&quot;\\.&quot;))[seq(2, length(vec)*4, 4)] # split string separated by &quot;.&quot; https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
+idx &lt;- which(subregion %in% region_subregion$subregion)
+genexp &lt;- genexp[idx,] # 1294 x 14249 --&gt; 1294 x 14238
+
+####### check how mmany top SCHEMA genes are missing in genexp 
+#scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
+
+
+################
+# explore the notations in row names 
+#sample_names=rownames(genexp)
+#comma_position=gregexpr(&quot;.&quot;, sample_names[1])
+#sample_names[grepl(&quot;VFC&quot;,sample_names)] # find samples having &quot;VFC&quot;
+################</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggpubr_0.6.0       gridExtra_2.3      lubridate_1.9.3    forcats_1.0.0     
+ [5] stringr_1.5.1      purrr_1.0.2        readr_2.1.5        tidyr_1.3.1       
+ [9] tibble_3.2.1       ggplot2_3.5.1      tidyverse_2.0.0    gplots_3.1.3.1    
+[13] RColorBrewer_1.1-3 kableExtra_1.4.0   dplyr_1.1.4        vctrs_0.6.5       
+[17] RSQLite_2.3.6      knitr_1.46        
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.5       xfun_0.43          bslib_0.7.0        caTools_1.18.2    
+ [5] rstatix_0.7.2      tzdb_0.4.0         tools_4.4.0        bitops_1.0-7      
+ [9] generics_0.1.3     fansi_1.0.6        blob_1.2.4         pkgconfig_2.0.3   
+[13] KernSmooth_2.23-22 lifecycle_1.0.4    compiler_4.4.0     git2r_0.33.0      
+[17] munsell_0.5.1      carData_3.0-5      httpuv_1.6.15      htmltools_0.5.8.1 
+[21] sass_0.4.9         yaml_2.3.8         car_3.1-2          later_1.3.2       
+[25] pillar_1.9.0       jquerylib_0.1.4    cachem_1.0.8       abind_1.4-5       
+[29] gtools_3.9.5       tidyselect_1.2.1   digest_0.6.35      stringi_1.8.4     
+[33] rprojroot_2.0.4    fastmap_1.1.1      grid_4.4.0         colorspace_2.1-0  
+[37] cli_3.6.2          magrittr_2.0.3     utf8_1.2.4         broom_1.0.5       
+[41] withr_3.0.0        backports_1.4.1    scales_1.3.0       promises_1.3.0    
+[45] bit64_4.0.5        timechange_0.3.0   rmarkdown_2.26     bit_4.0.5         
+[49] ggsignif_0.6.4     workflowr_1.7.1    hms_1.1.3          memoise_2.0.1     
+[53] evaluate_0.23      viridisLite_0.4.2  rlang_1.1.3        Rcpp_1.0.12       
+[57] glue_1.7.0         DBI_1.2.3          xml2_1.3.6         svglite_2.1.3     
+[61] rstudioapi_0.16.0  jsonlite_1.8.8     R6_2.5.1           systemfonts_1.0.6 
+[65] fs_1.6.4          </code></pre>
 </div>
 
 
@@ -727,6 +740,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -758,7 +773,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

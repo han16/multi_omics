@@ -1,0 +1,89 @@
+---
+title: "part1-run DAWN"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+---
+
+```{r, echo=F, warning=F, message=F}
+rm(list=ls())
+set.seed(123)
+knitr::opts_chunk$set(autodep = TRUE)
+library(knitr)
+library(RSQLite)
+#install.packages("vctrs")
+library(vctrs)
+library(dplyr)
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE) # avoid error of long vectors https://stackoverflow.com/questions/39417003/long-vectors-not-supported-yet-error-in-rmd-but-not-in-r-script 
+library(kableExtra)
+library(RColorBrewer)
+library(gplots)
+library(tidyverse)
+library(gridExtra)
+library(ggpubr)
+#library(DT)
+```
+
+
+
+```{r, message=F, warning=F, eval=F}
+# step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
+# step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
+
+#if(verbose) print("Start of step 0: Loading")
+
+#format the brainspan dataset
+#load("../../raw_data/newGenexp.RData")
+load("C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGenexp.RData")
+rownames(genexp) <- genexp[,1]
+genexp <- genexp[,-1]
+genexp <- t(genexp)
+genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
+#more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
+missed_genes=c("SETD1A","FAM178A","OR4P4","PCLO")  # these genes are missed, but supposed to be included, sum(colnames(genexp) %in% missed_genes)=0, two genes "SETD1A", and "PCLO" not in genexp   
+
+
+#determine brain-expressed genes
+#brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brain_expression.rda") # brain_expression has 4 missed genes sum(brain_expression$Gene %in% missed_genes)
+brain_genes <- brain_expression$Gene[brain_expression$Brain_expressed != 'No']   ## "OR4P4" is not in brain_genes 
+idx <- which(colnames(genexp) %in% brain_genes)
+genexp <- genexp[,idx] # 1340 x 14370  # only FAM178A of 4 missed genes is in genexp now:  missed_genes %in% colnames(genexp)
+
+
+#translate into synonyms
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\cleaning.R")
+#vec <- covarianceSelection::symbol_synonyms(colnames(genexp), verbose = T)
+vec <- symbol_synonyms(colnames(genexp), verbose = T)
+unknown_genes_idx <- which(is.na(vec))
+vec <- vec[-unknown_genes_idx]
+genexp <- genexp[-unknown_genes_idx] # 1340 x 14297
+colnames(genexp) <- vec   ## now 4 missed genes are missed now 
+
+#average non-unique genes
+genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+
+#remove samples from subregions that we don't have a region for
+region_subregion <- covarianceSelection::region_subregion # https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+vec <- rownames(genexp)
+# extract regions from colnames 
+subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)] # split string separated by "." https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
+idx <- which(subregion %in% region_subregion$subregion)
+genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
+
+####### check how mmany top SCHEMA genes are missing in genexp 
+#scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
+
+
+################
+# explore the notations in row names 
+#sample_names=rownames(genexp)
+#comma_position=gregexpr(".", sample_names[1])
+#sample_names[grepl("VFC",sample_names)] # find samples having "VFC"
+################
+```
+
+
