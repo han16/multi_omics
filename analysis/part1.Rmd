@@ -29,6 +29,8 @@ library(ggpubr)
 
 
 
+## data cleaning 
+
 ```{r, message=F, warning=F, eval=F}
 # step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
 # step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
@@ -64,15 +66,18 @@ genexp <- genexp[-unknown_genes_idx] # 1340 x 14297
 colnames(genexp) <- vec   ## now 4 missed genes are missed now 
 
 #average non-unique genes
-genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+#genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+genexp <- average_same_columns(genexp) # 1340 x 14237
 
 #remove samples from subregions that we don't have a region for
-region_subregion <- covarianceSelection::region_subregion # https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+#region_subregion <- covarianceSelection::region_subregion ##https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\region_subregion.rda")
+region_subregion <- region_subregion 
 vec <- rownames(genexp)
 # extract regions from colnames 
 subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)] # split string separated by "." https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
 idx <- which(subregion %in% region_subregion$subregion)
-genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
+genexp <- genexp[idx,] # 1294 X 14237
 
 ####### check how mmany top SCHEMA genes are missing in genexp 
 #scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
@@ -86,4 +91,201 @@ genexp <- genexp[idx,] # 1294 x 14249 --> 1294 x 14238
 ################
 ```
 
+## read into SCHEMA p values 
 
+```{r,  message=F, warning=F, results=F, eval=T}
+multiplesheets <- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) <- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+
+####
+# load SCZ gene 
+SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
+scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
+scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
+scz1=scz1%>% drop_na()  # remove NA's  ######## this is important 
+
+scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
+#unique_gene= unique(scz1$Gene)
+#scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates 
+```
+
+
+
+## find relevant spatio-temporal BrainSpan data 
+
+```{r, message=F, warning=F, eval=F}
+#match the order in both datasets ########## check this part 
+idx <- which(colnames(genexp) %in% scz2$Gene)
+genexp <- genexp[,idx] # 1294 x 13964
+idx <- which(scz2$Gene %in% colnames(genexp))
+scz3=scz2[idx,] # 4 risk genes not in gene expression data:  scz2$Gene[which(!scz2$Gene[1:32]%in%colnames(genexp))]
+
+
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\misc.R") # load functions downloaded in local folder 
+
+#idx <- covarianceSelection::matching(scz3$Gene, colnames(genexp))
+idx <- matching(scz3$Gene, colnames(genexp))
+genexp <- genexp[,idx]  # 1294 x 12879 
+
+extractor2=function(dat){
+  stopifnot(is.data.frame(dat))
+  id <- sapply(rownames(dat), .split_name)
+  id <- as.factor(apply(id, 2, function(x){paste0(x[1], ".", x[2], ".", x[3])}))
+  
+  split(dat, f = id, drop = F)
+}
+
+
+
+
+#dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
+dat_list <- extractor(genexp) # 212 partitions # extractor is a function in cleaning.R 
+dat_list <- lapply(dat_list, as.matrix, drop = F)
+
+# remove partitions too small
+idx <- which(sapply(dat_list, function(x){ifelse(nrow(x) >= 5, T, F)}))
+dat_list <- dat_list[idx] # 125 partitions
+dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions 
+
+#if(verbose) print(paste0("Dimension of genexp is: ", paste0(dim(genexp), collapse = ", ")))
+
+#cleanup
+#rm(list = c("brain_expression", "brain_genes", "idx", "vec", "region_subregion",
+#            "subregion", "genexp", "unknown_genes_idx"))
+
+#save.image(file = paste0(save_filepath, "/step0_loading", filepath_suffix, ".RData"))
+
+```
+
+
+
+## run screening step 
+
+```{r, message=F, warning=F, eval=F}
+# step1_screening.R screens the genes according to Liu et al. (2015). This is reported in Section 6.1.
+# https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
+p_thres_screening <- 0.01 
+p_primary <- 0.1
+num_genes <- 3100 # constraint genes with pLI>0.9 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9805802/
+verbose=T
+
+###
+
+#if(verbose) print(paste0(Sys.time(), "Start of step 1: Screening"))
+
+selected_idx <- grep("PFC\\.[3-5]", names(dat_list)) # [3-5] should be early PC in Liu et.al 2015 (10-19 post conception week) 
+dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --> 107 x 12879  
+
+
+#screening_res <- covarianceSelection::screen(dat_pfc35, pv = scz3$pval.meta, p_thres = p_thres_screening, 
+#                                             num_genes = num_genes)
+
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\screen.R") # load functions downloaded in local folder
+screening_res <- screen(dat_pfc35, pv = scz3$pval.meta, p_thres = p_thres_screening, 
+                                             num_genes = num_genes)
+
+# 193 primary, 3307 secondary, total of 3500, they rank correlations between primary genes and the rest to pick the top genes to have 3500 genes in total, don't use correlation threshold tau in Algorithm 1 of AOAS 2015
+
+# reorder which genes are primary and which are secondary
+all_idx <- sort(unique(c(screening_res$primary, screening_res$secondary)))
+screening_res$primary <- all_idx[which(scz3$pval.meta[all_idx] < p_primary)]
+screening_res$secondary <- setdiff(all_idx, screening_res$primary)
+
+# apply the new gene list
+for(i in 1:length(dat_list)){
+  dat_list[[i]] <- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
+}
+
+ scz=scz3[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
+                
+#if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
+
+#rm(list = c("selected_idx", "dat_pfc35", "i"))
+
+#save.image(file = paste0(save_filepath, "/step1_screening", filepath_suffix, ".RData"))
+# save(dat_pfc35, scz, file="../data/dat_pfc35_20240328.RData")
+```
+
+
+
+## run PNS, HMRF and FDR
+
+
+```{r, echo=F, message=F, warning=F, eval=F}
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
+# estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
+# res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
+#                                                  lambda_min = 0.01, lambda_max = 0.35, 
+#                                                  lambda_length = 30, verbose = T) 
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\graphicalModel.R")
+res <- graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
+                                                  lambda_min = 0.01, lambda_max = 0.35, 
+                                                  lambda_length = 30, verbose = T)
+
+# save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
+# 
+ 
+```
+
+
+## tuning parameters 
+
+```{r, message=F, warning=F, eval=F}
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\graph_functions.R")
+#scale_vec_pfc35 <- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))}) # equation  3.2 of AOAS paper 
+scale_vec_pfc35 <- sapply(res, function(x){compute_scale_free(as.matrix(x$adj_mat))})
+# edges_vec_pfc35 <- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
+ idx <- which.max(scale_vec_pfc35) # choose tuning parameter lambda maximizing R^2 
+# idx <- 27
+ adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
+
+
+
+#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
+stopifnot(all(dim(adj_pfc35) == nrow(scz)))
+```
+
+
+## HMRF
+
+```{r, message=F, warning=F, eval=F}
+fdr_cutoff <- 0.05
+# run the HMRF
+set.seed(10)
+seedindex <- rep(0, ncol(adj_pfc35))
+#seedindex[which(tada$dn.LoF >= 3)] <- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
+seedindex[which(scz$dn_PTV >= 1)] <- 1
+
+if(verbose) print(paste0(Sys.time(), ": HMRF"))
+set.seed(10)
+
+scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
+#hmrf_pfc35 <- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\hmrf.R")
+hmrf_pfc35 <- hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1's, i.e between 0 and 1
+
+#report_pfc35 <- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
+report_pfc35 <- report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
+genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr_cutoff)]))
+#scz2$Gene[which(!scz2$Gene[1:32]%in%genes_pfc35)]  # of 32 risk genes, how many are missed by DAWN
+#scz3$Gene[which(!scz3$Gene[1:28]%in%genes_pfc35)]
+#new_genes_pfc35=setdiff(genes_pfc35,scz3$Gene[1:28])
+
+adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
+#save(genes_pfc35, adj_pfc35, file="../data/gene_pfc35_20240416.RData")
+
+
+report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
+#saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20240425.rds")
+```

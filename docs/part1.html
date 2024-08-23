@@ -398,7 +398,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-22
+<strong>Last updated:</strong> 2024-08-23
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -436,10 +436,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -543,15 +543,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeba4870f4e1e118772da009e8f33e5f933f05be47targetblankba4870fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94targetblank3a3d84ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/ba4870f4e1e118772da009e8f33e5f933f05be47" target="_blank">ba4870f</a>
+<a href="https://github.com/han16/multi_omics/tree/3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94" target="_blank">3a3d84b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreeba4870f4e1e118772da009e8f33e5f933f05be47targetblankba4870fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94targetblank3a3d84ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -561,7 +561,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/ba4870f4e1e118772da009e8f33e5f933f05be47" target="_blank">ba4870f</a>.
+<a href="https://github.com/han16/multi_omics/tree/3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94" target="_blank">3a3d84b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -586,12 +586,8 @@ Ignored files:
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
 
-Untracked files:
-    Untracked:  analysis/part1.Rmd
-
 Unstaged changes:
-    Modified:   analysis/SCZ_gene_list.Rmd
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/part1.Rmd
 
 </code></pre>
 <p>
@@ -606,14 +602,79 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/part1.Rmd</code>) and HTML
+(<code>docs/part1.html</code>) files. If you’ve configured a remote Git
+repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
+in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94/analysis/part1.Rmd" target="_blank">3a3d84b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-22
+</td>
+<td>
+8/22/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/3a3d84b5e9c13cd1f48b11ff948aa8504cd1dd94/docs/part1.html" target="_blank">3a3d84b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-22
+</td>
+<td>
+8/22/2024
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
+<div id="data-cleaning" class="section level2">
+<h2>data cleaning</h2>
 <pre class="r"><code># step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
 # step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
 
@@ -648,15 +709,18 @@ genexp &lt;- genexp[-unknown_genes_idx] # 1340 x 14297
 colnames(genexp) &lt;- vec   ## now 4 missed genes are missed now 
 
 #average non-unique genes
-genexp &lt;- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+#genexp &lt;- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+genexp &lt;- average_same_columns(genexp) # 1340 x 14237
 
 #remove samples from subregions that we don&#39;t have a region for
-region_subregion &lt;- covarianceSelection::region_subregion # https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+#region_subregion &lt;- covarianceSelection::region_subregion ##https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\region_subregion.rda&quot;)
+region_subregion &lt;- region_subregion 
 vec &lt;- rownames(genexp)
 # extract regions from colnames 
 subregion &lt;- unlist(strsplit(vec,&quot;\\.&quot;))[seq(2, length(vec)*4, 4)] # split string separated by &quot;.&quot; https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
 idx &lt;- which(subregion %in% region_subregion$subregion)
-genexp &lt;- genexp[idx,] # 1294 x 14249 --&gt; 1294 x 14238
+genexp &lt;- genexp[idx,] # 1294 X 14237
 
 ####### check how mmany top SCHEMA genes are missing in genexp 
 #scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
@@ -668,6 +732,33 @@ genexp &lt;- genexp[idx,] # 1294 x 14249 --&gt; 1294 x 14238
 #comma_position=gregexpr(&quot;.&quot;, sample_names[1])
 #sample_names[grepl(&quot;VFC&quot;,sample_names)] # find samples having &quot;VFC&quot;
 ################</code></pre>
+</div>
+<div id="read-into-schema-p-values" class="section level2">
+<h2>read into SCHEMA p values</h2>
+<pre class="r"><code>multiplesheets &lt;- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets &lt;- readxl::excel_sheets(fname)
+  tibble &lt;- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame &lt;- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) &lt;- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+
+####
+# load SCZ gene 
+SCHEMA_gene_results=multiplesheets(&quot;C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx&quot;)
+scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
+scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
+scz1=scz1%&gt;% drop_na()  # remove NA&#39;s  ######## this is important 
+
+scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
+#unique_gene= unique(scz1$Gene)
+#scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -722,6 +813,7 @@ loaded via a namespace (and not attached):
 [57] glue_1.7.0         DBI_1.2.3          xml2_1.3.6         svglite_2.1.3     
 [61] rstudioapi_0.16.0  jsonlite_1.8.8     R6_2.5.1           systemfonts_1.0.6 
 [65] fs_1.6.4          </code></pre>
+</div>
 </div>
 
 
