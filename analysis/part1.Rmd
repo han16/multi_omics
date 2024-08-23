@@ -138,15 +138,6 @@ source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\misc.R") # load functions 
 idx <- matching(scz3$Gene, colnames(genexp))
 genexp <- genexp[,idx]  # 1294 x 12879 
 
-extractor2=function(dat){
-  stopifnot(is.data.frame(dat))
-  id <- sapply(rownames(dat), .split_name)
-  id <- as.factor(apply(id, 2, function(x){paste0(x[1], ".", x[2], ".", x[3])}))
-  
-  split(dat, f = id, drop = F)
-}
-
-
 
 
 #dat_list <- covarianceSelection::extractor(genexp) # 212 partitions
@@ -222,7 +213,7 @@ for(i in 1:length(dat_list)){
 ## run PNS, HMRF and FDR
 
 
-```{r, echo=F, message=F, warning=F, eval=F}
+```{r, message=F, warning=F, eval=F, results=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
 # estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
 # res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
@@ -288,4 +279,41 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
 report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
 #saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20240425.rds")
+```
+
+
+## DAWN new genes 
+
+
+```{r, message=F, warning=F}
+library(DT) # use datatable function
+report_pfc35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds") 
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
+SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, decreasing = F),]$`Gene Symbol`[1:32]
+
+dawn_new_genes=setdiff(genes_pfc35,SCHEMA_FDR_gene) 
+dawn_new_genes_info=scz1[which(scz1$Gene %in% dawn_new_genes),]
+dawn_fdr=report_pfc35_sort[which(report_pfc35_sort$Gene %in% dawn_new_genes_info$Gene),]$FDR
+dawn_new_genes_info=dawn_new_genes_info %>% right_join(report_pfc35_sort, by="Gene") %>% dplyr::select(Gene, pval.meta, qval.meta, dn_PTV, FDR)
+dawn_new_genes_info[1:18,]%>%
+datatable(extensions = 'Buttons',
+          caption = "18 DAWN new genes", 
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
+```
+
+* these new 18 genes have small p values in SCHEMA, but not reach FDR<5\% threshold. 
+
+
+
+```{r, echo=F, message=F, warning=F}
+data.frame(SCHEMA_FDR_gene)%>%
+datatable(extensions = 'Buttons',
+          caption = "32 SCHEMA FDR genes", 
+            options = list(dom = 'Blfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,"All"))))
 ```
