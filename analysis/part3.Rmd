@@ -54,8 +54,8 @@ scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicate
 
 
 ```{r, message=F, warning=F}
-load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
-load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData") # load data dat_pfc35
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData") # load gene_pfc35
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20241203.RData") # load data dat_pfc35
 Fu_gene_list=as_tibble(read.csv("C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv"))
 ASC_gene=Fu_gene_list %>% filter(ASD185=="TRUE") %>% dplyr::select(gene_gencodeV33) %>% pull
 neuro_disorers=SCHEMA_gene_results$`Table S11 - Genes from genome-w`
@@ -115,7 +115,7 @@ display_venn(
 
 ```{r,message=F, warning=F}
 intersect(genes_pfc35, ASC_gene)
-fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))
+fisher.test(matrix(c(3100, 47, length(intersect(colnames(dat_pfc35), ASC_gene)), length(intersect(genes_pfc35, ASC_gene))), nrow=2))
 ```
 #### overlapping genes between SCHEMA FDR genes and ASC genes 
 
@@ -137,7 +137,7 @@ setdiff(intersect(genes_pfc35, ASC_gene),intersect(SCHEMA_FDR_gene, ASC_gene))
 
 ```{r, message=F, warning=F}
 intersect(genes_pfc35, DD_ID_gene)
-fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow=2))
+fisher.test(matrix(c(3100, 47, length(intersect(colnames(dat_pfc35), DD_ID_gene)), length(intersect(genes_pfc35, DD_ID_gene))), nrow=2))
 intersect(intersect(genes_pfc35, DD_ID_gene), ASC_gene)
 intersect(intersect(genes_pfc35, DD_ID_gene), SCZ_GWAS_gene)
 ```
@@ -157,7 +157,7 @@ setdiff(intersect(genes_pfc35, DD_ID_gene), DD_ID_SCHEMA)
 
 ```{r, echo=T, message=F, warning=F}
 intersect(genes_pfc35, SCZ_GWAS_gene)
-fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))
+fisher.test(matrix(c(3100, 47, length(intersect(colnames(dat_pfc35), SCZ_GWAS_gene)), length(intersect(genes_pfc35, SCZ_GWAS_gene))), nrow=2))
 ```
 
 
@@ -235,6 +235,7 @@ ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) +
 
 
 ```{r, message=F, warning=F}
+
 percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(c("Autism genes", "DD/ID genes",    "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
 
 textsize=5
@@ -249,12 +250,12 @@ topmirage_enrichment=
    theme(plot.title = element_text(hjust = 0.5, size=15, face="bold"))+
    ggtitle("Enrichment of DAWN genes with other gene sets")+
     theme(legend.title = element_blank())+
-   geom_signif(annotations ="0.004", y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines 
+   geom_signif(annotations ="0.005", y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines 
   geom_signif(annotations ="0.020", y_position = 0.18  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines
      geom_signif(annotations ="6e-06", y_position = 0.325  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=textsize)+
-  geom_signif(annotations ="8e-05", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations ="1e-04", y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=textsize)+
    geom_signif(annotations ="0.002", y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=textsize)+
-  geom_signif(annotations ="0.033", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations ="0.034", y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=textsize)+
    theme(legend.position="bottom")+
    theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
  theme(text = element_text(size=20))+ # size is for labels on x axis and legend title 

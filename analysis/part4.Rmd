@@ -82,10 +82,10 @@ library(igraph)
 
 ```{r, echo=F, message=F, warning=F, eval=T}
 
-load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
-load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load adj_pfc35
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20241203.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData") # load adj_pfc35
 
-report_pfc_35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds")
+report_pfc_35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20241203.rds")
 
 ############# use igraph to draw graph
 #library(igraph)
@@ -104,7 +104,9 @@ Gene_selected_index=which(colnames(dat_pfc35)%in% genes_pfc35)  # risk gene inde
 
 neighbor_index=numeric()
 for(i in 1:length(Gene_selected_index))
-  neighbor_index=c(neighbor_index, which(adj_pfc35[i,]>0))
+  neighbor_index=c(neighbor_index, which(adj_pfc35[Gene_selected_index[i],]>0))
+
+neighbor_index=setdiff(unique(neighbor_index), Gene_selected_index)  # ensure no overlap between Gene_index and its neighbor 
 
 risk_and_neighbor=c(Gene_selected_index, neighbor_index)
 risk_and_neighbor_adj=adjacency_network[risk_and_neighbor, risk_and_neighbor]
@@ -151,7 +153,7 @@ vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex si
 #png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\DAWN_genes_network2.png")
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.55, vertex.cex=vertex.cex)
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, label.cex=0.45, vertex.cex=vertex.cex)
 #dev.off()
 ```
 
@@ -199,6 +201,6 @@ plot(net, label=labels, vertex.col=nodeColors, label.col="blue", vertex.size=ver
 
 #dev.off()
 ```
-* 46 DAWN risk genes are highlighted in red and with blue labels  
+* 47 DAWN risk genes are highlighted in red and with blue labels  
 * 709 edges in total 
 
