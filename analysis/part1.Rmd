@@ -149,13 +149,6 @@ idx <- which(sapply(dat_list, function(x){ifelse(nrow(x) >= 5, T, F)}))
 dat_list <- dat_list[idx] # 125 partitions
 dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions 
 
-#if(verbose) print(paste0("Dimension of genexp is: ", paste0(dim(genexp), collapse = ", ")))
-
-#cleanup
-#rm(list = c("brain_expression", "brain_genes", "idx", "vec", "region_subregion",
-#            "subregion", "genexp", "unknown_genes_idx"))
-
-#save.image(file = paste0(save_filepath, "/step0_loading", filepath_suffix, ".RData"))
 
 ```
 
@@ -198,14 +191,15 @@ for(i in 1:length(dat_list)){
   dat_list[[i]] <- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
 }
 
- scz=scz3[c(screening_res$primary, screening_res$secondary),]   # 3500 x 4 
+ scz=scz3[c(screening_res$primary, screening_res$secondary),]   # 3100 x 4 
                 
-#if(verbose) print(paste0("Dimension of dat_list is: ", unique(sapply(dat_list, ncol)), collapse = ", "))
-
-#rm(list = c("selected_idx", "dat_pfc35", "i"))
-
-#save.image(file = paste0(save_filepath, "/step1_screening", filepath_suffix, ".RData"))
-# save(dat_pfc35, scz, file="../data/dat_pfc35_20240328.RData")
+ 
+ ############## redefine dat_pfc
+selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
+dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 3100
+dat_pfc35 <- scale(dat_pfc35, scale = F)
+Y=dat_pfc35
+ #save(dat_pfc35, scz, file="../data/dat_pfc35_20241203.RData")
 ```
 
 
@@ -214,7 +208,8 @@ for(i in 1:length(dat_list)){
 
 
 ```{r, message=F, warning=F, eval=F, results=F}
-load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
+#load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20241203.RData") # use the new correct one 
 # estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
 # res <- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
 #                                                  lambda_min = 0.01, lambda_max = 0.35, 
@@ -224,8 +219,6 @@ res <- graphicalModel_range(dat_pfc35, 1:length(screening_res$primary),
                                                   lambda_min = 0.01, lambda_max = 0.35, 
                                                   lambda_length = 30, verbose = T)
 
-# save.image(file = paste0(save_filepath, "/step3_pfc35_analysis", filepath_suffix, ".RData"))
-# 
  
 ```
 
@@ -274,11 +267,11 @@ genes_pfc35 <- sort(as.character(report_pfc35$Gene[which(report_pfc35$FDR <= fdr
 #new_genes_pfc35=setdiff(genes_pfc35,scz3$Gene[1:28])
 
 adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
-#save(genes_pfc35, adj_pfc35, file="../data/gene_pfc35_20240416.RData")
+#save(genes_pfc35, adj_pfc35, file="../data/gene_pfc35_20241203.RData")
 
 
-report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
-#saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20240425.rds")
+#report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
+saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.rds")
 ```
 
 
@@ -287,8 +280,8 @@ report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
 
 ```{r, message=F, warning=F}
 library(DT) # use datatable function
-report_pfc35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20240425.rds") 
-load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
+report_pfc35_sort_old=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20241203.rds") 
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData") # load gene_pfc35
 SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, decreasing = F),]$`Gene Symbol`[1:32]
 
 dawn_new_genes=setdiff(genes_pfc35,SCHEMA_FDR_gene) 

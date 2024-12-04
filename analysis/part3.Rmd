@@ -53,7 +53,7 @@ scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicate
 ## Venn diagrams of genes shared across different disorders 
 
 
-```{r, echo=F, message=F, warning=F}
+```{r, message=F, warning=F}
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData") # load gene_pfc35
 load("C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData") # load data dat_pfc35
 Fu_gene_list=as_tibble(read.csv("C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv"))
@@ -164,7 +164,7 @@ fisher.test(matrix(c(3100, 46, length(intersect(colnames(dat_pfc35), SCZ_GWAS_ge
 ## OR of DAWN genes in different gene sets 
 
 
-```{r, echo=F, message=F, warning=F}
+```{r, message=F, warning=F}
 
 # enrichment analysis
 all_gene=colnames(dat_pfc35)
@@ -234,7 +234,7 @@ ggplot(data=OR_pvalue, aes(x=genes, y=OR, fill=genes)) +
 ## enrichment of DAWN (new) genes with other gene sets  
 
 
-```{r, echo=F, message=F, warning=F}
+```{r, message=F, warning=F}
 percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(c("Autism genes", "DD/ID genes",    "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "SCHEMA FDR genes"), each=3))
 
 textsize=5
@@ -302,7 +302,7 @@ topmirage_enrichment
 
 
 
-```{r, echo=F, message=F, warning=F}
+```{r,  message=F, warning=F}
 percentage_plot=data.frame(prop=c(percentage[2,], percentage[1,], percentage[4,]), genes=rep(c("Autism genes", "DD/ID genes", "SCZ GWAS genes"),3), group=rep(c("all genes", "DAWN genes", "DAWN new genes"), each=3))
 topmirage_enrichment=
   ggplot(percentage_plot, aes(genes, prop)) + 

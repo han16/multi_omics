@@ -398,7 +398,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-21
+<strong>Last updated:</strong> 2024-12-03
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -567,10 +567,10 @@ relative
 <tbody>
 <tr>
 <td style="text-align:left;">
-C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData
+C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData
 </td>
 <td style="text-align:left;">
-data/gene_pfc35_20240416.RData
+data/gene_pfc35_20241203.RData
 </td>
 </tr>
 </tbody>
@@ -581,15 +581,15 @@ data/gene_pfc35_20240416.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree1e0f797645aee1b17a729da8acc94753e226a2f0targetblank1e0f797a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree446a37d5f664df42bcf06ef4dda28981df4659fctargetblank446a37da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/1e0f797645aee1b17a729da8acc94753e226a2f0" target="_blank">1e0f797</a>
+<a href="https://github.com/han16/multi_omics/tree/446a37d5f664df42bcf06ef4dda28981df4659fc" target="_blank">446a37d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree1e0f797645aee1b17a729da8acc94753e226a2f0targetblank1e0f797a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree446a37d5f664df42bcf06ef4dda28981df4659fctargetblank446a37da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -599,7 +599,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/1e0f797645aee1b17a729da8acc94753e226a2f0" target="_blank">1e0f797</a>.
+<a href="https://github.com/han16/multi_omics/tree/446a37d5f664df42bcf06ef4dda28981df4659fc" target="_blank">446a37d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -617,6 +617,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/part1_cache/
     Ignored:    analysis/part2_cache/
     Ignored:    analysis/part3_cache/
     Ignored:    analysis/part4_cache/
@@ -624,13 +625,15 @@ Ignored files:
     Ignored:    analysis/part6_cache/
 
 Untracked files:
-    Untracked:  VennDiagram.2024-08-21_10-23-04.61687.log
-    Untracked:  VennDiagram.2024-08-21_11-46-54.950646.log
-    Untracked:  analysis/part2_old.Rmd
+    Untracked:  VennDiagram.2024-10-15_11-09-11.491855.log
+    Untracked:  data/dat_pfc35_20241203.RData
+    Untracked:  data/gene_pfc35_20241203.RData
+    Untracked:  data/gene_pfc35_sort_20241203.rds
 
 Unstaged changes:
-    Modified:   analysis/SCZ_gene_list.Rmd
+    Modified:   analysis/part1.Rmd
     Modified:   analysis/part2.Rmd
+    Modified:   analysis/part3.Rmd
 
 </code></pre>
 <p>
@@ -675,6 +678,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/bcc29e3af2865c112d1befed1a9416ab3115ad18/analysis/part2.Rmd" target="_blank">bcc29e3</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-21
+</td>
+<td>
+8/21/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/bcc29e3af2865c112d1befed1a9416ab3115ad18/docs/part2.html" target="_blank">bcc29e3</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-21
+</td>
+<td>
+8/21/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -903,7 +940,7 @@ han
 </div>
 </div>
 </div>
-<pre class="r"><code>load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData&quot;)
+<pre class="r"><code>load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData&quot;)
 
 SCHEMA_top_10_gene=scz1$Gene[1:10]
 SCHEMA_FDR_gene=scz1$Gene[1:32]
@@ -929,12 +966,49 @@ library(&quot;VennDiagram&quot;)
 grid.newpage() 
   
 # create Venn diagram with three sets 
-draw.triple.venn(area1=10,area2=46, area3 =32,  
+draw.triple.venn(area1=10,area2=47, area3 =32,  
                  n12=9, n23=28, n13=10, n123=9,  
                  category=c(&quot;SCHEMA 10 risk genes&quot;,&quot;DAWN genes&quot;,&quot;SCHEMA FDR genes&quot;), 
                  col=&quot;red&quot;,fill=c(&quot;Green&quot;,&quot;Orange&quot;,&quot;Blue&quot;), lty=&quot;solid&quot;, 
                  cat.cex = 1.3, cat.pos=c(0,0,180), cat.col=c(&quot;Green&quot;,&quot;Orange&quot;,&quot;Blue&quot;), cex=1.5, scaled = F) # cat.cex  the size of the category names; cex: A vector (length 7) giving the size of the areas&#39; labels; cat.pos: position of category names https://www.rdocumentation.org/packages/VennDiagram/versions/1.7.3/topics/draw.triple.venn</code></pre>
 <p><img src="figure/part2.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/bcc29e3af2865c112d1befed1a9416ab3115ad18/docs/figure/part2.Rmd/unnamed-chunk-3-1.png" target="_blank">bcc29e3</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>(polygon[GRID.polygon.1], polygon[GRID.polygon.2], polygon[GRID.polygon.3], polygon[GRID.polygon.4], polygon[GRID.polygon.5], polygon[GRID.polygon.6], text[GRID.text.7], text[GRID.text.8], text[GRID.text.9], text[GRID.text.10], text[GRID.text.11], text[GRID.text.12], text[GRID.text.13], text[GRID.text.14]) </code></pre>
 <pre class="r"><code>#dev.off()
 #write.table(genes_pfc35, file=&quot;C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\genes_pfc35.txt&quot;,row.names=F, col.names = F, quote = F) # output this gene list as input for GO enrichment analysis 
@@ -948,38 +1022,38 @@ href="https://www.biovenn.nl/index.php">BioVenn</a></p></li>
 <li><p>4 SCHEMA FDR genes (“SETD1A” “FAM178A” “OR4P4” “PCLO” ) are
 missed by DAWN is because these 4 genes don’t have expression data in
 brain span.</p></li>
-<li><p>18 new genes are found</p></li>
+<li><p>19 new genes are found</p></li>
 <li><p>enrichment with 10 SCHEMA risk genes, significantly enriched
-because of p value of 3.17e-12.</p></li>
+because of p value of 3.75e-12.</p></li>
 </ul>
-<pre class="r"><code>fisher.test(matrix(c(3100, 46, 9, 9), nrow=2))</code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 47, 9, 9), nrow=2))</code></pre>
 <pre><code>
     Fisher&#39;s Exact Test for Count Data
 
-data:  matrix(c(3100, 46, 9, 9), nrow = 2)
-p-value = 3.17e-12
+data:  matrix(c(3100, 47, 9, 9), nrow = 2)
+p-value = 3.757e-12
 alternative hypothesis: true odds ratio is not equal to 1
 95 percent confidence interval:
-  22.36187 199.65167
+  21.91244 195.29550
 sample estimates:
 odds ratio 
-  66.70428 </code></pre>
+  65.31747 </code></pre>
 <ul>
 <li>enrichment with 32 SCHEMA FDR genes, significantly enriched because
 of p value less than 2.2e-16.</li>
 </ul>
-<pre class="r"><code>fisher.test(matrix(c(3100, 46, 28, 28), nrow=2))</code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 47, 28, 28), nrow=2))</code></pre>
 <pre><code>
     Fisher&#39;s Exact Test for Count Data
 
-data:  matrix(c(3100, 46, 28, 28), nrow = 2)
+data:  matrix(c(3100, 47, 28, 28), nrow = 2)
 p-value &lt; 2.2e-16
 alternative hypothesis: true odds ratio is not equal to 1
 95 percent confidence interval:
-  35.21823 127.60036
+  34.51872 124.67471
 sample estimates:
 odds ratio 
-   66.8041 </code></pre>
+  65.41223 </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

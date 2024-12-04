@@ -398,13 +398,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-21
+<strong>Last updated:</strong> 2024-10-15
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 4
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 2
+aria-hidden="true"></span> 3
 </p>
 <p>
 <strong>Knit directory:</strong> <code>multi_omics/</code> <span
@@ -427,18 +427,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -610,15 +613,15 @@ data/dat_pfc35_20240328.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree1e0f797645aee1b17a729da8acc94753e226a2f0targetblank1e0f797a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree446a37d5f664df42bcf06ef4dda28981df4659fctargetblank446a37da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/1e0f797645aee1b17a729da8acc94753e226a2f0" target="_blank">1e0f797</a>
+<a href="https://github.com/han16/multi_omics/tree/446a37d5f664df42bcf06ef4dda28981df4659fc" target="_blank">446a37d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree1e0f797645aee1b17a729da8acc94753e226a2f0targetblank1e0f797a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree446a37d5f664df42bcf06ef4dda28981df4659fctargetblank446a37da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -628,7 +631,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/1e0f797645aee1b17a729da8acc94753e226a2f0" target="_blank">1e0f797</a>.
+<a href="https://github.com/han16/multi_omics/tree/446a37d5f664df42bcf06ef4dda28981df4659fc" target="_blank">446a37d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -646,18 +649,15 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/part1_cache/
     Ignored:    analysis/part2_cache/
     Ignored:    analysis/part3_cache/
     Ignored:    analysis/part4_cache/
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
 
-Untracked files:
-    Untracked:  VennDiagram.2024-08-21_10-23-04.61687.log
-
 Unstaged changes:
-    Modified:   analysis/SCZ_gene_list.Rmd
-    Modified:   analysis/part2.Rmd
+    Modified:   analysis/part3.Rmd
 
 </code></pre>
 <p>
@@ -702,6 +702,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/bcc29e3af2865c112d1befed1a9416ab3115ad18/docs/part3.html" target="_blank">bcc29e3</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-08-21
+</td>
+<td>
+8/21/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1086,6 +1103,52 @@ han
 <div id="venn-diagrams-of-genes-shared-across-different-disorders"
 class="section level2">
 <h2>Venn diagrams of genes shared across different disorders</h2>
+<pre class="r"><code>load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData&quot;) # load gene_pfc35
+load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData&quot;) # load data dat_pfc35
+Fu_gene_list=as_tibble(read.csv(&quot;C:/han/Dataset/20231221_PMID_35982160/Fu 2022 Suppl-41588_2022_1104_MOESM3_ESM.csv&quot;))
+ASC_gene=Fu_gene_list %&gt;% filter(ASD185==&quot;TRUE&quot;) %&gt;% dplyr::select(gene_gencodeV33) %&gt;% pull
+neuro_disorers=SCHEMA_gene_results$`Table S11 - Genes from genome-w`
+DD_ID_gene=as_tibble(neuro_disorers) %&gt;% filter(Category==&quot;DD/ID genes&quot;) %&gt;% dplyr::select(`Gene name`) %&gt;% pull()
+SCZ_GWAS_gene=as_tibble(neuro_disorers) %&gt;% filter(Category==&quot;Schizophrenia GWAS genes&quot;) %&gt;% dplyr::select(`Gene name`) %&gt;% pull()
+
+x=list(
+  DAWN_gene=genes_pfc35,
+  #Autism_gene=as_tibble(neuro_disorers) %&gt;% filter(Category==&quot;ASD genes&quot;) %&gt;% dplyr::select(`Gene name`) %&gt;% pull(),
+  Autism_gene=ASC_gene,
+  DD_ID_gene=DD_ID_gene,
+  SCZ_GWAS_gene=SCZ_GWAS_gene
+
+)
+library(VennDiagram)
+
+display_venn &lt;- function(x, ...){
+  library(VennDiagram)
+  grid.newpage()
+  venn_object &lt;- venn.diagram(x, filename = NULL, ...)
+  grid.draw(venn_object)
+}
+
+#png(&quot;C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\Fig_overlapping_genes.png&quot;)
+
+display_venn(
+        x,
+    #    category.names = c(&quot;MIRAGE FDR genes&quot; , &quot;Autism genes&quot; , &quot;DD/ID genes&quot;, &quot;SCZ GWAS genes&quot;),
+    category.names = c(&quot;DAWN genes&quot; , &quot;Autism genes&quot; , &quot;DD/ID genes&quot;, &quot;SCZ GWAS genes&quot;),
+        # Circles
+        lwd = 2,
+        lty = &#39;blank&#39;,
+     #   fill = c(&quot;#999999&quot;, &quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;),
+    fill = c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;yellow&quot;),
+        # Numbers
+        cex = 1.5,
+        fontface = &quot;italic&quot;,
+        # Set names
+        cat.cex = 1.5,
+        cat.fontface = &quot;bold&quot;,
+        cat.default.pos = &quot;outer&quot;,
+       # cat.dist = c(0.055, 0.055, 0.1, 0.1, 0.3 )
+         cat.dist = c(0.055, 0.055, 0.1, 0.1 )
+)</code></pre>
 <p><img src="figure/part3.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -1124,6 +1187,7 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>#dev.off()</code></pre>
 <div id="dawn-genes-overlpping-with-autism" class="section level3">
 <h3>DAWN genes overlpping with autism</h3>
 <div id="overlapping-genes-between-dawn-46-genes-and-asc-genes"
@@ -1214,6 +1278,51 @@ odds ratio
 <div id="or-of-dawn-genes-in-different-gene-sets"
 class="section level2">
 <h2>OR of DAWN genes in different gene sets</h2>
+<pre class="r"><code># enrichment analysis
+all_gene=colnames(dat_pfc35)
+Autism_gene=ASC_gene
+DD_ID_gene=as_tibble(neuro_disorers) %&gt;% filter(Category==&quot;DD/ID genes&quot;) %&gt;% dplyr::select(`Gene name`) %&gt;% pull()
+SCZ_GWAS_gene=as_tibble(neuro_disorers) %&gt;% filter(Category==&quot;Schizophrenia GWAS genes&quot;) %&gt;% dplyr::select(`Gene name`) %&gt;% pull()
+SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`P ca/co (comb)`, decreasing = F),]$`Gene Symbol`[1:32]
+dawn_new_gene=setdiff(genes_pfc35, SCHEMA_FDR_gene)
+
+gene_set=list(all_gene=all_gene, Autism_gene=Autism_gene, DD_ID_gene=DD_ID_gene, SCZ_GWAS_gene=SCZ_GWAS_gene, SCHEMA_FDR_gene=SCHEMA_FDR_gene, DAWN_gene=genes_pfc35, DAWN_new_gene=dawn_new_gene)
+
+##########################
+OR=numeric(); pvalue_dawn=numeric(); pvalue_dawn_new=numeric(); pvalue_schema=numeric()
+percentage=matrix(nrow=4, ncol=3)
+rownames(percentage)=c(&quot;dawn_gene&quot;, &quot;all_gene&quot;, &quot;schema_fdr&quot;, &quot;dawn_new_gene&quot;)
+colnames(percentage)=names(gene_set)[2:4]
+DAWN_overlap_matrix=list()
+DAWN_new_overlap_matrix=list()
+for (i in 2:4)
+{
+dawn_matrix=matrix(c(length(intersect(gene_set$DAWN_gene, gene_set[[i]])), 
+                                 length(intersect(gene_set$all_gene, gene_set[[i]])), 
+                                 length(gene_set$DAWN_gene), 
+                                 length(gene_set$all_gene)), nrow=2)
+  fisher_test=fisher.test(dawn_matrix)
+  OR[i-1]=fisher_test$estimate; pvalue_dawn[i-1]=fisher_test$p.value; 
+  DAWN_overlap_matrix[[i-1]]=dawn_matrix
+  
+  dawn_new_matrix=matrix(c(length(intersect(gene_set$DAWN_new_gene, gene_set[[i]])), 
+                                        length(intersect(gene_set$all_gene, gene_set[[i]])), 
+                                        length(gene_set$DAWN_new_gene), 
+                                        length(gene_set$all_gene)), nrow=2)
+pvalue_dawn_new[i-1]=fisher.test(dawn_new_matrix)$p.value
+DAWN_new_overlap_matrix[[i-1]]=dawn_new_matrix
+  
+ percentage[1,(i-1)]=length(intersect(gene_set$DAWN_gene, gene_set[[i]]))/length(gene_set$DAWN_gene)
+ percentage[2,(i-1)]=length(intersect(gene_set$all_gene, gene_set[[i]]))/length(gene_set$all_gene)
+ percentage[3,(i-1)]=length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]]))/length(gene_set$SCHEMA_FDR_gene)
+ percentage[4,(i-1)]=length(intersect(gene_set$DAWN_new_gene, gene_set[[i]]))/length(gene_set$DAWN_new_gene)
+                                                                                                                   
+ pvalue_schema[i-1]=fisher.test(matrix(c(length(intersect(gene_set$SCHEMA_FDR_gene, gene_set[[i]])), 
+                                 length(intersect(gene_set$all_gene, gene_set[[i]])), 
+                                 length(gene_set$SCHEMA_FDR_gene), 
+                                 length(gene_set$all_gene)), nrow=2))$p.value
+ 
+}</code></pre>
 <p><img src="figure/part3.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
@@ -1270,6 +1379,35 @@ han
 <div id="enrichment-of-dawn-new-genes-with-other-gene-sets"
 class="section level2">
 <h2>enrichment of DAWN (new) genes with other gene sets</h2>
+<pre class="r"><code>percentage_plot=data.frame(prop=c(percentage[2,],percentage[1,], percentage[3,]), genes=rep(c(&quot;Autism genes&quot;, &quot;DD/ID genes&quot;,    &quot;SCZ GWAS genes&quot;),3), group=rep(c(&quot;all genes&quot;, &quot;DAWN genes&quot;, &quot;SCHEMA FDR genes&quot;), each=3))
+
+textsize=5
+#                                                                                                 par(mar=rep(0,4))
+topmirage_enrichment=
+  ggplot(percentage_plot, aes(genes, prop)) + 
+   geom_bar(aes(fill = group), stat = &quot;identity&quot;, position = &quot;dodge&quot;)+
+   theme_classic()+
+   xlab(&quot;&quot;)+ylab(&quot;Proportion of overlapping genes in the gene set&quot;)+
+  theme(axis.text.y = element_text(size = 15))+ # this is for numbers on y axis 
+   ylim(c(0, 0.35))+
+   theme(plot.title = element_text(hjust = 0.5, size=15, face=&quot;bold&quot;))+
+   ggtitle(&quot;Enrichment of DAWN genes with other gene sets&quot;)+
+    theme(legend.title = element_blank())+
+   geom_signif(annotations =&quot;0.004&quot;, y_position = 0.14  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines 
+  geom_signif(annotations =&quot;0.020&quot;, y_position = 0.18  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=textsize)+ # textsize is for text over the bar; size is for width of lines
+     geom_signif(annotations =&quot;6e-06&quot;, y_position = 0.325  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations =&quot;8e-05&quot;, y_position = 0.23  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=textsize)+
+   geom_signif(annotations =&quot;0.002&quot;, y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=textsize)+
+  geom_signif(annotations =&quot;0.033&quot;, y_position = 0.052  ,xmin=2.7, xmax=3.0, size=1, vjust=-0.5, textsize=textsize)+
+   theme(legend.position=&quot;bottom&quot;)+
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
+ theme(text = element_text(size=20))+ # size is for labels on x axis and legend title 
+  theme(axis.title = element_text(size = 13))+ # Font Size of Axis Titles
+ theme(legend.spacing.x = unit(1.0, &#39;cm&#39;)) # add space between symbols in legend 
+###################### compute p value 
+
+#png(&quot;C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\Fig-enrichment_of_top_genes.png&quot;)
+topmirage_enrichment</code></pre>
 <p><img src="figure/part3.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
@@ -1319,6 +1457,32 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>#dev.off()</code></pre>
+<pre class="r"><code>percentage_plot=data.frame(prop=c(percentage[2,], percentage[1,], percentage[4,]), genes=rep(c(&quot;Autism genes&quot;, &quot;DD/ID genes&quot;, &quot;SCZ GWAS genes&quot;),3), group=rep(c(&quot;all genes&quot;, &quot;DAWN genes&quot;, &quot;DAWN new genes&quot;), each=3))
+topmirage_enrichment=
+  ggplot(percentage_plot, aes(genes, prop)) + 
+   geom_bar(aes(fill = group), stat = &quot;identity&quot;, position = &quot;dodge&quot;)+
+   theme_classic()+
+   xlab(&quot;&quot;)+ylab(&quot;Proportion of genes in the gene set&quot;)+
+  theme(axis.text.y = element_text(size = 13))+ # this is for numbers on y axis 
+   ylim(c(0, 0.35))+
+   theme(plot.title = element_text(hjust = 0.5, size=15, face=&quot;bold&quot;))+
+   ggtitle(&quot;Enrichment of DAWN genes with other gene sets&quot;)+
+    theme(legend.title = element_blank())+
+   geom_signif(annotations =&quot;0.113&quot;, y_position = 0.175  ,xmin=0.7, xmax=1.3, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines 
+  geom_signif(annotations =&quot;0.004&quot;, y_position = 0.135  ,xmin=0.7, xmax=1, size=1, vjust=-0.5, textsize=5.0)+ # textsize is for text over the bar; size is for width of lines
+     geom_signif(annotations =&quot;8e-05&quot;, y_position = 0.225  ,xmin=1.7, xmax=2, size=1, vjust=-0.5, textsize=5.0)+
+    geom_signif(annotations =&quot;0.541&quot;, y_position = 0.26  ,xmin=1.7, xmax=2.3, size=1, vjust=-0.5, textsize=5.0)+
+   geom_signif(annotations =&quot;0.033&quot;, y_position = 0.05  ,xmin=2.7, xmax=3, size=1, vjust=-0.5, textsize=5.0)+
+     geom_signif(annotations =&quot;1.000&quot;, y_position = 0.09  ,xmin=2.7, xmax=3.3, size=1, vjust=-0.5, textsize=5.0)+
+   theme(legend.position=&quot;bottom&quot;)+
+   theme(axis.text.x = element_text(angle = 0, vjust = 0.5, size=15))+
+ theme(text = element_text(size=15))+ # size is for labels on x axis 
+  theme(axis.title = element_text(size = 15))+ # Font Size of Axis Titles
+ theme(legend.spacing.x = unit(0.5, &#39;cm&#39;)) # add space between symbols in legend 
+
+#png(&quot;C:/Users/hans/OneDrive - Marquette University/SCHEMA/Fig-enrichment_of_top_genes.png&quot;)
+topmirage_enrichment</code></pre>
 <p><img src="figure/part3.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
@@ -1357,6 +1521,8 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>#dev.off()
+###########  p values are pvalue_dawn; pvalue_dawn_new</code></pre>
 </div>
 <div id="overlap-with-mirage-fdr-genes" class="section level2">
 <h2>overlap with MIRAGE FDR genes</h2>

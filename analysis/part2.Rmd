@@ -51,7 +51,7 @@ scz1=scz1%>% drop_na()  # remove NA's  ######## this is important
 
 
 ```{r, message=F, warning=F}
-load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20240416.RData")
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData")
 
 SCHEMA_top_10_gene=scz1$Gene[1:10]
 SCHEMA_FDR_gene=scz1$Gene[1:32]
@@ -77,7 +77,7 @@ library("VennDiagram")
 grid.newpage() 
   
 # create Venn diagram with three sets 
-draw.triple.venn(area1=10,area2=46, area3 =32,  
+draw.triple.venn(area1=10,area2=47, area3 =32,  
                  n12=9, n23=28, n13=10, n123=9,  
                  category=c("SCHEMA 10 risk genes","DAWN genes","SCHEMA FDR genes"), 
                  col="red",fill=c("Green","Orange","Blue"), lty="solid", 
@@ -94,17 +94,17 @@ draw.triple.venn(area1=10,area2=46, area3 =32,
 
 * 4 SCHEMA FDR genes ("SETD1A"  "FAM178A" "OR4P4"   "PCLO" ) are missed by DAWN is because these 4 genes don't have expression data in brain span. 
 
-* 18 new genes are found 
+* 19 new genes are found 
 
-* enrichment with 10 SCHEMA risk genes, significantly enriched because of p value of 3.17e-12. 
+* enrichment with 10 SCHEMA risk genes, significantly enriched because of p value of 3.75e-12. 
 
 ```{r, message=F, warning=F}
-fisher.test(matrix(c(3100, 46, 9, 9), nrow=2))
+fisher.test(matrix(c(3100, 47, 9, 9), nrow=2))
 ```
 
 
 * enrichment with 32 SCHEMA FDR genes, significantly enriched because of p value less than 2.2e-16.
 
 ```{r, message=F, warning=F}
-fisher.test(matrix(c(3100, 46, 28, 28), nrow=2))
+fisher.test(matrix(c(3100, 47, 28, 28), nrow=2))
 ```
