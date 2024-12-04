@@ -118,6 +118,8 @@ risk_and_neighbor_gene=colnames(dat_pfc35)[risk_and_neighbor]
 #dim(adjacency_network)
 net=network(as.matrix(risk_and_neighbor_adj), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
 nodeColors<-ifelse(risk_and_neighbor_gene %in% Gene_selected,"red","black")
+stopifnot(sum(nodeColors=="red")==length(Gene_selected_index))
+
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
 plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, label.cex=0.55) # https://statnet.org/workshop-intro-sna-tools/
@@ -153,7 +155,7 @@ vertex.cex=log(1/risk_and_neighbor_gene_fdr, base=10) # convert fdr to vertex si
 #png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\DAWN_genes_network2.png")
 set.seed(1)          # make the plot look the same as mine
 par(mar=rep(0,4))
-plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, label.cex=0.45, vertex.cex=vertex.cex)
+plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=10, label.cex=0.55, vertex.cex=vertex.cex)
 #dev.off()
 ```
 
@@ -185,7 +187,7 @@ plot(net, label=risk_and_neighbor_gene,vertex.col=nodeColors, vertex.size=15, la
 ```{r, echo=F, message=F, warning=F}
 net=network(as.matrix(adjacency_network), directed=FALSE) # https://web.stanford.edu/class/bios221/labs/networks/lab_7_networks.html
 nodeColors<-ifelse(rownames(adjacency_network) %in% Gene_selected,"red","black")
-
+stopifnot(sum(nodeColors=="red")==length(Gene_selected))
 #png("C:\\Users\\hans\\OneDrive - Marquette University\\SCZ-DAWN\\Figures\\Constraint_genes_network.png")
 
 set.seed(1)          # make the plot look the same as mine
