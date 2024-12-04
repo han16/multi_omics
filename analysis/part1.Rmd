@@ -272,6 +272,7 @@ adj_pfc35 <- Matrix::Matrix(adj_pfc35, sparse = T)
 
 #report_pfc35_sort=report_pfc35[order(report_pfc35$FDR),]
 saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.rds")
+#write.csv(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.csv")
 ```
 
 
@@ -280,17 +281,18 @@ saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.rds")
 
 ```{r, message=F, warning=F}
 library(DT) # use datatable function
-report_pfc35_sort_old=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20241203.rds") 
+report_pfc35_sort=readRDS("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_sort_20241203.rds") 
 load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData") # load gene_pfc35
 SCHEMA_FDR_gene=SCHEMA_gene_results$`Table S5 - Gene Results`[order(SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, decreasing = F),]$`Gene Symbol`[1:32]
 
 dawn_new_genes=setdiff(genes_pfc35,SCHEMA_FDR_gene) 
 dawn_new_genes_info=scz1[which(scz1$Gene %in% dawn_new_genes),]
-dawn_fdr=report_pfc35_sort[which(report_pfc35_sort$Gene %in% dawn_new_genes_info$Gene),]$FDR
+dawn_fdr=round(report_pfc35_sort[which(report_pfc35_sort$Gene %in% dawn_new_genes_info$Gene),]$FDR,4)
 dawn_new_genes_info=dawn_new_genes_info %>% right_join(report_pfc35_sort, by="Gene") %>% dplyr::select(Gene, pval.meta, qval.meta, dn_PTV, FDR)
-dawn_new_genes_info[1:18,]%>%
+
+dawn_new_genes_info[1:length(dawn_new_genes),]%>%
 datatable(extensions = 'Buttons',
-          caption = "18 DAWN new genes", 
+          caption = "19 DAWN new genes", 
             options = list(dom = 'Blfrtip',
                            buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
                            lengthMenu = list(c(10,25,50,-1),
