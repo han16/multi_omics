@@ -198,7 +198,6 @@ for(i in 1:length(dat_list)){
 selected_idx <- grep("PFC\\.[3-5]", names(dat_list))
 dat_pfc35 <- do.call(rbind, dat_list[selected_idx]) # 107 x 3100
 dat_pfc35 <- scale(dat_pfc35, scale = F)
-Y=dat_pfc35
  #save(dat_pfc35, scz, file="../data/dat_pfc35_20241203.RData")
 ```
 
@@ -235,9 +234,41 @@ scale_vec_pfc35 <- sapply(res, function(x){compute_scale_free(as.matrix(x$adj_ma
  adj_pfc35 <- as.matrix(res[[idx]]$adj_mat)
 
 
+ stopifnot(all(dim(adj_pfc35) == nrow(scz)))
 
-#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
-stopifnot(all(dim(adj_pfc35) == nrow(scz)))
+```
+
+
+```{r, message=F, warning=F}
+#Lambda=sapply(res, function(x){x$lambda_vec})
+Lambda=c(
+  0.01000000, 0.02172414, 0.03344828, 0.04517241, 0.05689655, 0.06862069, 0.08034483,
+  0.09206897, 0.10379310, 0.11551724, 0.12724138, 0.13896552, 0.15068966, 0.16241379,
+  0.17413793, 0.18586207, 0.19758621, 0.20931034, 0.22103448, 0.23275862, 0.24448276,
+  0.25620690, 0.26793103, 0.27965517, 0.29137931, 0.30310345, 0.31482759, 0.32655172,
+  0.33827586, 0.35000000)
+scale_vec_pfc35=c(
+  0.6543058, 0.6713939, 0.7101469, 0.7853114, 0.8399438, 0.8627579, 0.8978541, 0.9089963,
+  0.9312853, 0.9403278, 0.9443995, 0.9603441, 0.9693683, 0.9771879, 0.9763531, 0.9860094,
+  0.9865389, 0.9837975, 0.9730812, 0.9728590, 0.9874063, 0.9757852, 0.9754612, 0.9727552,
+  0.9427375, 0.9487821, 0.9471374, 0.9397654, 0.9380192, 0.9338605)
+
+line_plot <- ggplot(data.frame(Lambda=Lambda, scale_vec_pfc35=scale_vec_pfc35), aes(x = Lambda, y = scale_vec_pfc35)) +
+  geom_line(color = "blue", size = 1.2) + # Line properties
+  geom_point(color = "red", size = 3) +  # Optional: Add points to the line
+  labs(
+    title = "",
+    x = expression(paste(lambda)),
+    y = expression(paste(R^2))
+    
+  ) +
+  theme_minimal()+ # Apply a clean theme
+  theme(
+    axis.title = element_text(size = 16) # Adjust axis label size
+  )
+
+# Display the plot
+print(line_plot)
 ```
 
 
@@ -250,6 +281,7 @@ set.seed(10)
 seedindex <- rep(0, ncol(adj_pfc35))
 #seedindex[which(tada$dn.LoF >= 3)] <- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
 seedindex[which(scz$dn_PTV >= 1)] <- 1
+sum(scz$dn_PTV>=1)
 
 if(verbose) print(paste0(Sys.time(), ": HMRF"))
 set.seed(10)

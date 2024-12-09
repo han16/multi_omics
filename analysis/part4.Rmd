@@ -106,6 +106,18 @@ neighbor_index=numeric()
 for(i in 1:length(Gene_selected_index))
   neighbor_index=c(neighbor_index, which(adj_pfc35[Gene_selected_index[i],]>0))
 
+############# given a gene, find its direct neighbors 
+given_gene_neighbor=function(given_gene)
+{
+given_gene_index=which(colnames(dat_pfc35)%in% given_gene)
+given_gene_neighbor=colnames(dat_pfc35)[which(adj_pfc35[given_gene_index,]>0)]
+return(given_gene_neighbor)
+  
+}
+given_gene_neighbor("SOBP")
+
+
+
 neighbor_index=setdiff(unique(neighbor_index), Gene_selected_index)  # ensure no overlap between Gene_index and its neighbor 
 
 risk_and_neighbor=c(Gene_selected_index, neighbor_index)

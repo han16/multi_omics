@@ -23,3 +23,7 @@ editor_options:
 * [co-expression analysis by  WGCNA](part5.html)
 
 * [GO enrichment analysis](part6.html)
+
+## temporal spatial gene expression analysis
+
+* [gene expression analysis](part7.html)

@@ -415,7 +415,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-05
+<strong>Last updated:</strong> 2024-12-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,6 +534,9 @@ session-info-chunk-inserted-by-workflowr
 unnamed-chunk-10
 </li>
 <li>
+unnamed-chunk-11
+</li>
+<li>
 unnamed-chunk-2
 </li>
 <li>
@@ -634,15 +637,15 @@ data/gene_pfc35_20241203.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree663c7bc3a22c0538af519d9a9fa75c8d556f314etargetblank663c7bca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/663c7bc3a22c0538af519d9a9fa75c8d556f314e" target="_blank">663c7bc</a>
+<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree663c7bc3a22c0538af519d9a9fa75c8d556f314etargetblank663c7bca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -652,7 +655,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/663c7bc3a22c0538af519d9a9fa75c8d556f314e" target="_blank">663c7bc</a>.
+<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -677,8 +680,13 @@ Ignored files:
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
 
+Untracked files:
+    Untracked:  analysis/part7.Rmd
+
 Unstaged changes:
+    Modified:   analysis/index.Rmd
     Modified:   analysis/part1.Rmd
+    Modified:   analysis/part4.Rmd
 
 </code></pre>
 <p>
@@ -723,6 +731,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/09fa526775984bc16f98ab43efb2de7fd19bef5e/analysis/part1.Rmd" target="_blank">09fa526</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+12/5/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/09fa526775984bc16f98ab43efb2de7fd19bef5e/docs/part1.html" target="_blank">09fa526</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+12/5/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1040,7 +1082,6 @@ for(i in 1:length(dat_list)){
 selected_idx &lt;- grep(&quot;PFC\\.[3-5]&quot;, names(dat_list))
 dat_pfc35 &lt;- do.call(rbind, dat_list[selected_idx]) # 107 x 3100
 dat_pfc35 &lt;- scale(dat_pfc35, scale = F)
-Y=dat_pfc35
  #save(dat_pfc35, scz, file=&quot;../data/dat_pfc35_20241203.RData&quot;)</code></pre>
 </div>
 <div id="run-pns-hmrf-and-fdr" class="section level2">
@@ -1067,9 +1108,37 @@ scale_vec_pfc35 &lt;- sapply(res, function(x){compute_scale_free(as.matrix(x$adj
  adj_pfc35 &lt;- as.matrix(res[[idx]]$adj_mat)
 
 
+ stopifnot(all(dim(adj_pfc35) == nrow(scz)))</code></pre>
+<pre class="r"><code>#Lambda=sapply(res, function(x){x$lambda_vec})
+Lambda=c(
+  0.01000000, 0.02172414, 0.03344828, 0.04517241, 0.05689655, 0.06862069, 0.08034483,
+  0.09206897, 0.10379310, 0.11551724, 0.12724138, 0.13896552, 0.15068966, 0.16241379,
+  0.17413793, 0.18586207, 0.19758621, 0.20931034, 0.22103448, 0.23275862, 0.24448276,
+  0.25620690, 0.26793103, 0.27965517, 0.29137931, 0.30310345, 0.31482759, 0.32655172,
+  0.33827586, 0.35000000)
+scale_vec_pfc35=c(
+  0.6543058, 0.6713939, 0.7101469, 0.7853114, 0.8399438, 0.8627579, 0.8978541, 0.9089963,
+  0.9312853, 0.9403278, 0.9443995, 0.9603441, 0.9693683, 0.9771879, 0.9763531, 0.9860094,
+  0.9865389, 0.9837975, 0.9730812, 0.9728590, 0.9874063, 0.9757852, 0.9754612, 0.9727552,
+  0.9427375, 0.9487821, 0.9471374, 0.9397654, 0.9380192, 0.9338605)
 
-#stopifnot(all(dim(adj_pfc35) == nrow(tada)))
-stopifnot(all(dim(adj_pfc35) == nrow(scz)))</code></pre>
+line_plot &lt;- ggplot(data.frame(Lambda=Lambda, scale_vec_pfc35=scale_vec_pfc35), aes(x = Lambda, y = scale_vec_pfc35)) +
+  geom_line(color = &quot;blue&quot;, size = 1.2) + # Line properties
+  geom_point(color = &quot;red&quot;, size = 3) +  # Optional: Add points to the line
+  labs(
+    title = &quot;&quot;,
+    x = expression(paste(lambda)),
+    y = expression(paste(R^2))
+    
+  ) +
+  theme_minimal()+ # Apply a clean theme
+  theme(
+    axis.title = element_text(size = 16) # Adjust axis label size
+  )
+
+# Display the plot
+print(line_plot)</code></pre>
+<p><img src="figure/part1.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="hmrf" class="section level2">
 <h2>HMRF</h2>
@@ -1079,6 +1148,7 @@ set.seed(10)
 seedindex &lt;- rep(0, ncol(adj_pfc35))
 #seedindex[which(tada$dn.LoF &gt;= 3)] &lt;- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
 seedindex[which(scz$dn_PTV &gt;= 1)] &lt;- 1
+sum(scz$dn_PTV&gt;=1)
 
 if(verbose) print(paste0(Sys.time(), &quot;: HMRF&quot;))
 set.seed(10)
@@ -1151,8 +1221,8 @@ datatable(extensions = &#39;Buttons&#39;,
                            buttons = c(&#39;copy&#39;, &#39;csv&#39;, &#39;excel&#39;, &#39;pdf&#39;, &#39;print&#39;),
                            lengthMenu = list(c(10,25,50,-1),
                                              c(10,25,50,&quot;All&quot;))))</code></pre>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-9eceb20dc2a931752ae4" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-9eceb20dc2a931752ae4">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"caption":"<caption>32 SCHEMA FDR genes<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32"],["SETD1A","CUL1","XPO7","TRIO","CACNA1G","SP4","GRIA3","GRIN2A","HERC1","RB1CC1","HCN4","AKAP11","ZNF136","SRRM2","NR3C2","ZMYM2","FAM120A","FAM178A","KDM6B","DNM3","ASH1L","STAG1","HIST1H1E","PREP","MAGEC1","MAGI2","DAGLA","OR4P4","SLC22A11","ANKRD12","SV2A","EIF2S3"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>SCHEMA_FDR_gene<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Blfrtip","buttons":["copy","csv","excel","pdf","print"],"lengthMenu":[[10,25,50,-1],["10","25","50","All"]],"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"SCHEMA_FDR_gene","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b85bf888dc62471906a9" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b85bf888dc62471906a9">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"caption":"<caption>32 SCHEMA FDR genes<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32"],["SETD1A","CUL1","XPO7","TRIO","CACNA1G","SP4","GRIA3","GRIN2A","HERC1","RB1CC1","HCN4","AKAP11","ZNF136","SRRM2","NR3C2","ZMYM2","FAM120A","FAM178A","KDM6B","DNM3","ASH1L","STAG1","HIST1H1E","PREP","MAGEC1","MAGI2","DAGLA","OR4P4","SLC22A11","ANKRD12","SV2A","EIF2S3"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>SCHEMA_FDR_gene<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Blfrtip","buttons":["copy","csv","excel","pdf","print"],"lengthMenu":[[10,25,50,-1],["10","25","50","All"]],"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"SCHEMA_FDR_gene","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

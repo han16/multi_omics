@@ -1,0 +1,156 @@
+---
+title: "temporal spatial gene expression analysis"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2024-12-05"
+---
+
+```{r, message=F, warning=F}
+rm(list=ls())
+set.seed(123)
+```
+
+
+
+## data cleaning 
+
+```{r, message=F, warning=F, eval=T}
+# step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
+# step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
+
+#if(verbose) print("Start of step 0: Loading")
+
+#format the brainspan dataset
+#load("../../raw_data/newGenexp.RData")
+load("C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGenexp.RData")
+rownames(genexp) <- genexp[,1]
+genexp <- genexp[,-1]
+genexp <- t(genexp)
+genexp <- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
+#more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
+missed_genes=c("SETD1A","FAM178A","OR4P4","PCLO")  # these genes are missed, but supposed to be included, sum(colnames(genexp) %in% missed_genes)=0, two genes "SETD1A", and "PCLO" not in genexp   
+
+
+#determine brain-expressed genes
+#brain_expression <- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brain_expression.rda") # brain_expression has 4 missed genes sum(brain_expression$Gene %in% missed_genes)
+brain_genes <- brain_expression$Gene[brain_expression$Brain_expressed != 'No']   ## "OR4P4" is not in brain_genes 
+idx <- which(colnames(genexp) %in% brain_genes)
+genexp <- genexp[,idx] # 1340 x 14370  # only FAM178A of 4 missed genes is in genexp now:  missed_genes %in% colnames(genexp)
+
+
+#translate into synonyms
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\cleaning.R")
+#vec <- covarianceSelection::symbol_synonyms(colnames(genexp), verbose = T)
+vec <- symbol_synonyms(colnames(genexp), verbose = T)
+unknown_genes_idx <- which(is.na(vec))
+vec <- vec[-unknown_genes_idx]
+genexp <- genexp[-unknown_genes_idx] # 1340 x 14297
+colnames(genexp) <- vec   ## now 4 missed genes are missed now 
+
+#average non-unique genes
+#genexp <- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+genexp <- average_same_columns(genexp) # 1340 x 14237
+
+#remove samples from subregions that we don't have a region for
+#region_subregion <- covarianceSelection::region_subregion ##https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\region_subregion.rda")
+region_subregion <- region_subregion 
+vec <- rownames(genexp)
+# extract regions from colnames 
+subregion <- unlist(strsplit(vec,"\\."))[seq(2, length(vec)*4, 4)] # split string separated by "." https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
+idx <- which(subregion %in% region_subregion$subregion)
+genexp <- genexp[idx,] # 1294 X 14237
+
+####### check how many top SCHEMA genes are missing in genexp 
+#scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
+
+
+################
+# explore the notations in row names 
+#sample_names=rownames(genexp)
+#comma_position=gregexpr(".", sample_names[1])
+#sample_names[grepl("VFC",sample_names)] # find samples having "VFC"
+################
+```
+
+
+
+
+## find relevant spatio-temporal BrainSpan data 
+
+```{r, message=F, warning=F, eval=T}
+#match the order in both datasets ########## 
+load("C:/han/Projects/Multi_Omics/multi_omics/data/gene_pfc35_20241203.RData")
+
+idx <- which(colnames(genexp) %in% genes_pfc35)
+genexp <- genexp[,idx] # 1294 x 13964
+
+
+source("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\cleaning.R")
+dat_list <- extractor(genexp) # 212 partitions # extractor is a function in cleaning.R 
+dat_list <- lapply(dat_list, as.matrix, drop = F)
+
+# remove partitions too small
+idx <- which(sapply(dat_list, function(x){ifelse(nrow(x) >= 5, T, F)}))
+dat_list <- dat_list[idx] # 125 partitions
+dat_list <- lapply(dat_list, scale, scale = F)  # 125 partitions 
+
+##########
+load("C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brainspan_id.rda")
+
+
+
+
+###############
+selected_idx <- grep("PFC\\.[3-5]", names(dat_list)) # [3-5] should be early PC in Liu et.al 2015 (10-19 post conception week) 
+dat_pfc35_47riskgenes <- do.call(rbind, dat_list[selected_idx]) 
+
+selected_idx <- grep("PFC\\.[4-6]", names(dat_list)) # as defined in Fig 2 (c) in Willsey et al 2013 cell paper
+dat_pfc46_47riskgenes <- do.call(rbind, dat_list[selected_idx])
+
+selected_idx <- grep("PFC\\.[7-9]", names(dat_list)) # as defined in Fig 2 (c) in Willsey et al 2013 cell paper
+dat_pfc79_47riskgenes <- do.call(rbind, dat_list[selected_idx])
+
+selected_idx1 <- grep("PFC\\.[8-9]", names(dat_list)) # as defined in Fig 2 (c) in Willsey et al 2013 cell paper
+selected_idx2 <- grep("PFC\\.[10]", names(dat_list)) # as defined in Fig 2 (c) in Willsey et al 2013 cell paper
+dat_pfc810_47riskgenes <- do.call(rbind, dat_list[c(selected_idx1, selected_idx2)])
+
+
+selected_idx <- grep("PFC\\.[11-15]", names(dat_list)) # as defined in Fig 2 (c) in Willsey et al 2013 cell paper
+dat_pfc1115_47riskgenes <- do.call(rbind, dat_list[selected_idx])
+
+dat_47riskgenes=rbind(colMeans(dat_pfc35_47riskgenes), colMeans(dat_pfc46_47riskgenes), colMeans(dat_pfc79_47riskgenes), colMeans(dat_pfc810_47riskgenes), colMeans(dat_pfc1115_47riskgenes))
+rownames(dat_47riskgenes)=c("pfc3-5", "pfc4-6", "pfc7-9", "pfc8-10", "pfc11-15")
+```
+
+
+
+
+```{r, message=F, warning=F}
+# Convert to a data frame for ggplot2 visualization
+library(ggplot2)
+df <- as.data.frame(dat_47riskgenes)
+#df$Time <- rownames(dat_47riskgenes)
+df$Time <- seq(1,5)
+
+# Reshape the data for plotting
+library(reshape2)
+df_melt <- melt(df, id.vars = "Time", variable.name = "Gene", value.name = "Expression")
+df_melt$Time <- as.numeric(df_melt$Time)
+
+# Create a line plot
+ggplot(df_melt, aes(x = Time, y = Expression, color = Gene, group = Gene)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Gene Expression Over Time",
+       x = "Time",
+       y = "Expression Level") +
+  theme_minimal()+
+  theme(legend.position = "right")  # Remove the legend
+```
+
+
+
