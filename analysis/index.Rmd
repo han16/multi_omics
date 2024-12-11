@@ -27,3 +27,13 @@ editor_options:
 ## temporal spatial gene expression analysis
 
 * [gene expression analysis](part7.html)
+
+
+## risk genes for other time points 
+
+* [DAWN for pfc46](part8.html)
+* [DAWN for pfc79](part9.html)
+* [DAWN for pfc810](part10.html)
+* [DAWN for pfc1115](part11.html)
+
+## enrichment of risk genes across different time points 

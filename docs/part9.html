@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-12-11" />
+
+<title>part9-DAWN for pfc79</title>
+
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">multi_omics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/han16/multi_omics">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">part9-DAWN for pfc79</h1>
+<h4 class="date">2024-12-11</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-12-11
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>multi_omics/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240123code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240123)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240123code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240123)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData
+</td>
+<td style="text-align:left;">
+data/dat_pfc35_20240328.RData
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20241203.RData
+</td>
+<td style="text-align:left;">
+data/dat_pfc35_20241203.RData
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreebafa01016e43bb0aa27749ba59db5b46a65d6edctargetblankbafa010a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/han16/multi_omics/tree/bafa01016e43bb0aa27749ba59db5b46a65d6edc" target="_blank">bafa010</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreebafa01016e43bb0aa27749ba59db5b46a65d6edctargetblankbafa010a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/han16/multi_omics/tree/bafa01016e43bb0aa27749ba59db5b46a65d6edc" target="_blank">bafa010</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/part1_cache/
+    Ignored:    analysis/part2_cache/
+    Ignored:    analysis/part3_cache/
+    Ignored:    analysis/part4_cache/
+    Ignored:    analysis/part5_cache/
+    Ignored:    analysis/part6_cache/
+    Ignored:    analysis/part8_cache/
+
+Untracked files:
+    Untracked:  analysis/part8.Rmd
+    Untracked:  analysis/part9.Rmd
+    Untracked:  data/output_pfc46_20241211.csv
+    Untracked:  data/output_pfc79_20241211.csv
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="data-cleaning" class="section level2">
+<h2>data cleaning</h2>
+<pre class="r"><code># step0_loading.R  https://github.com/linnykos/covarianceSelection/blob/master/main/step0_loading.R
+# step0_loading.R loads the BrainSpan dataset and TADA dataset (i.e., matching the genes in both datasets, resolving gene synonyms, removing genes not expressed in the brain).
+
+#if(verbose) print(&quot;Start of step 0: Loading&quot;)
+
+#format the brainspan dataset
+#load(&quot;../../raw_data/newGenexp.RData&quot;)
+load(&quot;C:/han/Dataset/20231006_PMID_33731968/NIHMS1598069-supplement-Supp_1/newGenexp.RData&quot;)
+rownames(genexp) &lt;- genexp[,1]
+genexp &lt;- genexp[,-1]
+genexp &lt;- t(genexp)
+genexp &lt;- as.data.frame(genexp) # 1340 x 16947 ? what does row names indicate? sample information is in covarianceSelection::brainspan_id
+#more data information: https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R  
+missed_genes=c(&quot;SETD1A&quot;,&quot;FAM178A&quot;,&quot;OR4P4&quot;,&quot;PCLO&quot;)  # these genes are missed, but supposed to be included, sum(colnames(genexp) %in% missed_genes)=0, two genes &quot;SETD1A&quot;, and &quot;PCLO&quot; not in genexp   
+
+
+#determine brain-expressed genes
+#brain_expression &lt;- covarianceSelection::brain_expression # how these genes are known to be expressed genes???????? a data from Bernie Devlin   https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\brain_expression.rda&quot;) # brain_expression has 4 missed genes sum(brain_expression$Gene %in% missed_genes)
+brain_genes &lt;- brain_expression$Gene[brain_expression$Brain_expressed != &#39;No&#39;]   ## &quot;OR4P4&quot; is not in brain_genes 
+idx &lt;- which(colnames(genexp) %in% brain_genes)
+genexp &lt;- genexp[,idx] # 1340 x 14370  # only FAM178A of 4 missed genes is in genexp now:  missed_genes %in% colnames(genexp)
+
+
+#translate into synonyms
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\cleaning.R&quot;)
+#vec &lt;- covarianceSelection::symbol_synonyms(colnames(genexp), verbose = T)
+vec &lt;- symbol_synonyms(colnames(genexp), verbose = T)
+unknown_genes_idx &lt;- which(is.na(vec))
+vec &lt;- vec[-unknown_genes_idx]
+genexp &lt;- genexp[-unknown_genes_idx] # 1340 x 14297
+colnames(genexp) &lt;- vec   ## now 4 missed genes are missed now 
+
+#average non-unique genes
+#genexp &lt;- covarianceSelection:::average_same_columns(genexp) # 1340 x 14246
+genexp &lt;- average_same_columns(genexp) # 1340 x 14237
+
+#remove samples from subregions that we don&#39;t have a region for
+#region_subregion &lt;- covarianceSelection::region_subregion ##https://github.com/linnykos/covarianceSelection/blob/master/covarianceSelection/R/data.R
+load(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\region_subregion.rda&quot;)
+region_subregion &lt;- region_subregion 
+vec &lt;- rownames(genexp)
+# extract regions from colnames 
+subregion &lt;- unlist(strsplit(vec,&quot;\\.&quot;))[seq(2, length(vec)*4, 4)] # split string separated by &quot;.&quot; https://stackoverflow.com/questions/26665100/how-to-use-the-strsplit-function-with-a-period
+idx &lt;- which(subregion %in% region_subregion$subregion)
+genexp &lt;- genexp[idx,] # 1294 X 14237
+
+####### check how mmany top SCHEMA genes are missing in genexp 
+#scz1$Gene[which(scz1$Gene[1:200] %in% colnames(genexp)==F)]
+
+
+################
+# explore the notations in row names 
+#sample_names=rownames(genexp)
+#comma_position=gregexpr(&quot;.&quot;, sample_names[1])
+#sample_names[grepl(&quot;VFC&quot;,sample_names)] # find samples having &quot;VFC&quot;
+################</code></pre>
+</div>
+<div id="read-into-schema-p-values" class="section level2">
+<h2>read into SCHEMA p values</h2>
+<pre class="r"><code>multiplesheets &lt;- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets &lt;- readxl::excel_sheets(fname)
+  tibble &lt;- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame &lt;- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) &lt;- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+
+####
+# load SCZ gene 
+SCHEMA_gene_results=multiplesheets(&quot;C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx&quot;)
+scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
+scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
+scz1=scz1%&gt;% drop_na()  # remove NA&#39;s  ######## this is important 
+
+scz2=scz1[-c(9934,  9935,  9936, 13100),]   #  remove duplicates which(duplicated(scz1$Gene)==T)
+#unique_gene= unique(scz1$Gene)
+#scz=data.frame(Gene=unique_gene, pval.meta=scz1$pval.meta[which(scz1$Gene %in% unique_gene)])  # remove duplicates </code></pre>
+</div>
+<div id="find-relevant-spatio-temporal-brainspan-data"
+class="section level2">
+<h2>find relevant spatio-temporal BrainSpan data</h2>
+<pre class="r"><code>#match the order in both datasets ########## check this part 
+idx &lt;- which(colnames(genexp) %in% scz2$Gene)
+genexp &lt;- genexp[,idx] # 1294 x 13964
+idx &lt;- which(scz2$Gene %in% colnames(genexp))
+scz3=scz2[idx,] # 4 risk genes not in gene expression data:  scz2$Gene[which(!scz2$Gene[1:32]%in%colnames(genexp))]
+
+
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\misc.R&quot;) # load functions downloaded in local folder 
+
+#idx &lt;- covarianceSelection::matching(scz3$Gene, colnames(genexp))
+idx &lt;- matching(scz3$Gene, colnames(genexp))
+genexp &lt;- genexp[,idx]  # 1294 x 12879 
+
+
+
+#dat_list &lt;- covarianceSelection::extractor(genexp) # 212 partitions
+dat_list &lt;- extractor(genexp) # 212 partitions # extractor is a function in cleaning.R 
+dat_list &lt;- lapply(dat_list, as.matrix, drop = F)
+
+# remove partitions too small
+idx &lt;- which(sapply(dat_list, function(x){ifelse(nrow(x) &gt;= 5, T, F)}))
+dat_list &lt;- dat_list[idx] # 125 partitions
+dat_list &lt;- lapply(dat_list, scale, scale = F)  # 125 partitions </code></pre>
+</div>
+<div id="run-screening-step" class="section level2">
+<h2>run screening step</h2>
+<pre class="r"><code># step1_screening.R screens the genes according to Liu et al. (2015). This is reported in Section 6.1.
+# https://github.com/linnykos/covarianceSelection/blob/master/main/step1_screening.R
+p_thres_screening &lt;- 0.01 
+p_primary &lt;- 0.1
+num_genes &lt;- 3100 # constraint genes with pLI&gt;0.9 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9805802/
+verbose=T
+
+###
+
+#if(verbose) print(paste0(Sys.time(), &quot;Start of step 1: Screening&quot;))
+
+selected_idx &lt;- grep(&quot;PFC\\.[7-9]&quot;, names(dat_list))  
+dat_pfc79 &lt;- do.call(rbind, dat_list[selected_idx]) # 107 x 13964  --&gt; 107 x 12879  
+
+
+#screening_res &lt;- covarianceSelection::screen(dat_pfc35, pv = scz3$pval.meta, p_thres = p_thres_screening, 
+#                                             num_genes = num_genes)
+
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\screen.R&quot;) # load functions downloaded in local folder
+screening_res &lt;- screen(dat_pfc79, pv = scz3$pval.meta, p_thres = p_thres_screening, 
+                                             num_genes = num_genes)
+
+
+# reorder which genes are primary and which are secondary
+all_idx &lt;- sort(unique(c(screening_res$primary, screening_res$secondary)))
+screening_res$primary &lt;- all_idx[which(scz3$pval.meta[all_idx] &lt; p_primary)]
+screening_res$secondary &lt;- setdiff(all_idx, screening_res$primary)
+
+# apply the new gene list
+for(i in 1:length(dat_list)){
+  dat_list[[i]] &lt;- dat_list[[i]][,c(screening_res$primary, screening_res$secondary)]
+}
+
+ scz=scz3[c(screening_res$primary, screening_res$secondary),]   # 3100 x 4 
+                
+ 
+ ############## redefine dat_pfc
+selected_idx &lt;- grep(&quot;PFC\\.[7-9]&quot;, names(dat_list))
+dat_pfc79 &lt;- do.call(rbind, dat_list[selected_idx]) # 107 x 3100
+dat_pfc79 &lt;- scale(dat_pfc79, scale = F)
+ #save(dat_pfc35, scz, file=&quot;../data/dat_pfc35_20241203.RData&quot;)</code></pre>
+</div>
+<div id="run-pns-hmrf-and-fdr" class="section level2">
+<h2>run PNS, HMRF and FDR</h2>
+<pre class="r"><code>#load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData&quot;)
+load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20241203.RData&quot;) # use the new correct one 
+# estimate graphical model on PFC35 using cross-validated lasso for neighborhood selection
+# res &lt;- covarianceSelection::graphicalModel_range(dat_pfc35, 1:length(screening_res$primary), 
+#                                                  lambda_min = 0.01, lambda_max = 0.35, 
+#                                                  lambda_length = 30, verbose = T) 
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\graphicalModel.R&quot;)
+res &lt;- graphicalModel_range(dat_pfc79, 1:length(screening_res$primary), 
+                                                  lambda_min = 0.01, lambda_max = 0.35, 
+                                                  lambda_length = 30, verbose = T)</code></pre>
+</div>
+<div id="tuning-parameters" class="section level2">
+<h2>tuning parameters</h2>
+<pre class="r"><code>source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\graph_functions.R&quot;)
+#scale_vec_pfc35 &lt;- sapply(res, function(x){covarianceSelection::compute_scale_free(as.matrix(x$adj_mat))}) # equation  3.2 of AOAS paper 
+scale_vec_pfc79 &lt;- sapply(res, function(x){compute_scale_free(as.matrix(x$adj_mat))})
+# edges_vec_pfc35 &lt;- sapply(res, function(x){sum(as.matrix(x$adj_mat))/2})
+ idx &lt;- which.max(scale_vec_pfc79) # choose tuning parameter lambda maximizing R^2 
+# idx &lt;- 27
+ adj_pfc79 &lt;- as.matrix(res[[idx]]$adj_mat)
+
+
+ stopifnot(all(dim(adj_pfc79) == nrow(scz)))</code></pre>
+</div>
+<div id="hmrf" class="section level2">
+<h2>HMRF</h2>
+<pre class="r"><code>fdr_cutoff &lt;- 0.05
+# run the HMRF
+set.seed(10)
+seedindex &lt;- rep(0, ncol(adj_pfc79))
+#seedindex[which(tada$dn.LoF &gt;= 3)] &lt;- 1  ### seedindex: a (0,1) vector of length d, where 1 means the gene is in group 1
+seedindex[which(scz$dn_PTV &gt;= 1)] &lt;- 1
+sum(scz$dn_PTV&gt;=1)
+
+if(verbose) print(paste0(Sys.time(), &quot;: HMRF&quot;))
+set.seed(10)
+
+scz$pval.meta[which(scz$pval.meta==1)]=1-10^{-7}; # enforce 1 pvalues to be slightly less than 1  
+#hmrf_pfc35 &lt;- covarianceSelection::hmrf(scz$pval.meta, adj_pfc35, seedindex, pthres = 0.1)  # pval must not be 0 or 1&#39;s, i.e between 0 and 1
+source(&quot;C:\\han\\Projects\\Multi_Omics\\data_in_MOBS\\hmrf.R&quot;)
+hmrf_pfc79 &lt;- hmrf(scz$pval.meta, adj_pfc79, seedindex, pthres = 0.1)  # pval must not be 0 or 1&#39;s, i.e between 0 and 1
+
+#report_pfc35 &lt;- covarianceSelection::report_results(scz$Gene, 1-hmrf_pfc35$post, scz$pval.meta, hmrf_pfc35$Iupdate)
+report_pfc79 &lt;- report_results(scz$Gene, 1-hmrf_pfc79$post, scz$pval.meta, hmrf_pfc79$Iupdate)
+genes_pfc79 &lt;- sort(as.character(report_pfc79$Gene[which(report_pfc79$FDR &lt;= fdr_cutoff)]))
+#scz2$Gene[which(!scz2$Gene[1:32]%in%genes_pfc35)]  # of 32 risk genes, how many are missed by DAWN
+#scz3$Gene[which(!scz3$Gene[1:28]%in%genes_pfc35)]
+#new_genes_pfc35=setdiff(genes_pfc35,scz3$Gene[1:28])
+
+adj_pfc79 &lt;- Matrix::Matrix(adj_pfc79, sparse = T)
+#save(genes_pfc35, adj_pfc35, file=&quot;../data/gene_pfc35_20241203.RData&quot;)
+
+
+report_pfc79_sort=report_pfc79[order(report_pfc79$FDR),]
+report_pfc79_sort[1:length(genes_pfc79),]%&gt;%
+datatable(extensions = &#39;Buttons&#39;,
+          caption = &quot;DAWN risk genes&quot;, 
+            options = list(dom = &#39;Blfrtip&#39;,
+                           buttons = c(&#39;copy&#39;, &#39;csv&#39;, &#39;excel&#39;, &#39;pdf&#39;, &#39;print&#39;),
+                           lengthMenu = list(c(10,25,50,-1),
+                                             c(10,25,50,&quot;All&quot;))))
+#saveRDS(report_pfc35_sort, file=&quot;../data/gene_pfc35_sort_20241203.rds&quot;)
+seed.gene=ifelse(report_pfc79_sort$Gene %in% scz3$Gene[scz3$pval.meta&lt;0.01], &quot;YES&quot;, &quot;NO&quot;)
+DAWN.gene=ifelse(report_pfc79_sort$Gene %in% genes_pfc79, &quot;YES&quot;, &quot;NO&quot;)
+SCHEMA.FDR.gene=ifelse(report_pfc79_sort$Gene %in% scz1$Gene[scz1$qval.meta&lt;0.05], &quot;YES&quot;, &quot;NO&quot;)
+output_pfc79=data.frame(Gene=report_pfc79_sort$Gene, meta.pvalue=report_pfc79_sort$p.value, FDR=report_pfc79_sort$FDR, seed.gene=seed.gene, DAWN.gene=DAWN.gene, SCHEMA.FDR.gene=SCHEMA.FDR.gene)
+#write.csv(output_pfc79, file=&quot;../data/output_pfc79_20241211.csv&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggpubr_0.6.0       gridExtra_2.3      lubridate_1.9.3    forcats_1.0.0     
+ [5] stringr_1.5.1      purrr_1.0.2        readr_2.1.5        tidyr_1.3.1       
+ [9] tibble_3.2.1       ggplot2_3.5.1      tidyverse_2.0.0    gplots_3.1.3.1    
+[13] RColorBrewer_1.1-3 kableExtra_1.4.0   dplyr_1.1.4        vctrs_0.6.5       
+[17] RSQLite_2.3.6      knitr_1.46        
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.5       xfun_0.43          bslib_0.7.0        caTools_1.18.2    
+ [5] rstatix_0.7.2      tzdb_0.4.0         tools_4.4.0        bitops_1.0-7      
+ [9] generics_0.1.3     fansi_1.0.6        highr_0.10         blob_1.2.4        
+[13] pkgconfig_2.0.3    KernSmooth_2.23-22 readxl_1.4.3       lifecycle_1.0.4   
+[17] compiler_4.4.0     git2r_0.33.0       munsell_0.5.1      codetools_0.2-20  
+[21] carData_3.0-5      httpuv_1.6.15      htmltools_0.5.8.1  sass_0.4.9        
+[25] yaml_2.3.8         car_3.1-2          later_1.3.2        pillar_1.9.0      
+[29] jquerylib_0.1.4    cachem_1.0.8       abind_1.4-5        gtools_3.9.5      
+[33] tidyselect_1.2.1   digest_0.6.35      stringi_1.8.4      rprojroot_2.0.4   
+[37] fastmap_1.1.1      grid_4.4.0         colorspace_2.1-0   cli_3.6.2         
+[41] magrittr_2.0.3     utf8_1.2.4         broom_1.0.5        withr_3.0.0       
+[45] backports_1.4.1    scales_1.3.0       promises_1.3.0     bit64_4.0.5       
+[49] timechange_0.3.0   rmarkdown_2.26     bit_4.0.5          cellranger_1.1.0  
+[53] ggsignif_0.6.4     workflowr_1.7.1    hms_1.1.3          memoise_2.0.1     
+[57] evaluate_0.23      viridisLite_0.4.2  rlang_1.1.3        Rcpp_1.0.12       
+[61] glue_1.7.0         DBI_1.2.3          xml2_1.3.6         svglite_2.1.3     
+[65] rstudioapi_0.16.0  jsonlite_1.8.8     R6_2.5.1           systemfonts_1.0.6 
+[69] fs_1.6.4          </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
