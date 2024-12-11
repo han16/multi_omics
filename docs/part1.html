@@ -415,7 +415,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-06
+<strong>Last updated:</strong> 2024-12-11
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -637,15 +637,15 @@ data/gene_pfc35_20241203.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree877c931e793d9ac7f7013be577568934addc195dtargetblank877c931a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>
+<a href="https://github.com/han16/multi_omics/tree/877c931e793d9ac7f7013be577568934addc195d" target="_blank">877c931</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree877c931e793d9ac7f7013be577568934addc195dtargetblank877c931a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -655,7 +655,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>.
+<a href="https://github.com/han16/multi_omics/tree/877c931e793d9ac7f7013be577568934addc195d" target="_blank">877c931</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -681,12 +681,10 @@ Ignored files:
     Ignored:    analysis/part6_cache/
 
 Untracked files:
-    Untracked:  analysis/part7.Rmd
+    Untracked:  data/output_pfc35_20241210.csv
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
     Modified:   analysis/part1.Rmd
-    Modified:   analysis/part4.Rmd
 
 </code></pre>
 <p>
@@ -731,6 +729,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/877c931e793d9ac7f7013be577568934addc195d/analysis/part1.Rmd" target="_blank">877c931</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-09
+</td>
+<td>
+12/9/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/877c931e793d9ac7f7013be577568934addc195d/docs/part1.html" target="_blank">877c931</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-09
+</td>
+<td>
+12/9/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1084,6 +1116,14 @@ dat_pfc35 &lt;- do.call(rbind, dat_list[selected_idx]) # 107 x 3100
 dat_pfc35 &lt;- scale(dat_pfc35, scale = F)
  #save(dat_pfc35, scz, file=&quot;../data/dat_pfc35_20241203.RData&quot;)</code></pre>
 </div>
+<div id="naive-approach-without-dawn" class="section level2">
+<h2>naive approach without DAWN</h2>
+<pre class="r"><code>library(qvalue)
+length(scz1$Gene[scz1$qval.meta&lt;0.05])
+
+scz_qvalue=qvalue(scz$pval.meta)$qvalues  ### this is the wrong way to calculate q values, because these p values are calculated genome-wide and need to adjust all genes in the genome-wide.  
+sum(scz_qvalue&lt;0.05)</code></pre>
+</div>
 <div id="run-pns-hmrf-and-fdr" class="section level2">
 <h2>run PNS, HMRF and FDR</h2>
 <pre class="r"><code>#load(&quot;C:/han/Projects/Multi_Omics/multi_omics/data/dat_pfc35_20240328.RData&quot;)
@@ -1138,7 +1178,7 @@ line_plot &lt;- ggplot(data.frame(Lambda=Lambda, scale_vec_pfc35=scale_vec_pfc35
 
 # Display the plot
 print(line_plot)</code></pre>
-<p><img src="figure/part1.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/part1.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="hmrf" class="section level2">
 <h2>HMRF</h2>
@@ -1178,7 +1218,11 @@ datatable(extensions = &#39;Buttons&#39;,
                            lengthMenu = list(c(10,25,50,-1),
                                              c(10,25,50,&quot;All&quot;))))
 #saveRDS(report_pfc35_sort, file=&quot;../data/gene_pfc35_sort_20241203.rds&quot;)
-#write.csv(report_pfc35_sort, file=&quot;../data/gene_pfc35_sort_20241203.csv&quot;)</code></pre>
+seed.gene=ifelse(report_pfc35_sort$Gene %in% scz3$Gene[scz3$pval.meta&lt;0.01], &quot;YES&quot;, &quot;NO&quot;)
+DAWN.gene=ifelse(report_pfc35_sort$Gene %in% genes_pfc35, &quot;YES&quot;, &quot;NO&quot;)
+SCHEMA.FDR.gene=ifelse(report_pfc35_sort$Gene %in% scz1$Gene[scz1$qval.meta&lt;0.05], &quot;YES&quot;, &quot;NO&quot;)
+output_pfc35=data.frame(Gene=report_pfc35_sort$Gene, meta.pvalue=report_pfc35_sort$p.value, FDR=report_pfc35_sort$FDR, seed.gene=seed.gene, DAWN.gene=DAWN.gene, SCHEMA.FDR.gene=SCHEMA.FDR.gene)
+#write.csv(output_pfc35, file=&quot;../data/output_pfc35_20241210.csv&quot;)</code></pre>
 </div>
 <div id="dawn-new-genes" class="section level2">
 <h2>DAWN (new) genes</h2>

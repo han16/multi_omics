@@ -203,6 +203,21 @@ dat_pfc35 <- scale(dat_pfc35, scale = F)
 
 
 
+
+## naive approach without DAWN
+
+
+```{r, message=F, warning=F, eval=F}
+library(qvalue)
+length(scz1$Gene[scz1$qval.meta<0.05])
+
+scz_qvalue=qvalue(scz$pval.meta)$qvalues  ### this is the wrong way to calculate q values, because these p values are calculated genome-wide and need to adjust all genes in the genome-wide.  
+sum(scz_qvalue<0.05)
+```
+
+
+
+
 ## run PNS, HMRF and FDR
 
 
@@ -311,7 +326,11 @@ datatable(extensions = 'Buttons',
                            lengthMenu = list(c(10,25,50,-1),
                                              c(10,25,50,"All"))))
 #saveRDS(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.rds")
-#write.csv(report_pfc35_sort, file="../data/gene_pfc35_sort_20241203.csv")
+seed.gene=ifelse(report_pfc35_sort$Gene %in% scz3$Gene[scz3$pval.meta<0.01], "YES", "NO")
+DAWN.gene=ifelse(report_pfc35_sort$Gene %in% genes_pfc35, "YES", "NO")
+SCHEMA.FDR.gene=ifelse(report_pfc35_sort$Gene %in% scz1$Gene[scz1$qval.meta<0.05], "YES", "NO")
+output_pfc35=data.frame(Gene=report_pfc35_sort$Gene, meta.pvalue=report_pfc35_sort$p.value, FDR=report_pfc35_sort$FDR, seed.gene=seed.gene, DAWN.gene=DAWN.gene, SCHEMA.FDR.gene=SCHEMA.FDR.gene)
+#write.csv(output_pfc35, file="../data/output_pfc35_20241210.csv")
 ```
 
 
