@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -228,7 +232,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -238,6 +308,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -279,6 +359,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Home</h1>
@@ -310,13 +398,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-11
+<strong>Last updated:</strong> 2024-12-12
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>multi_omics/</code> <span
@@ -360,15 +448,125 @@ HTML.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreebafa01016e43bb0aa27749ba59db5b46a65d6edctargetblankbafa010a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240123code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240123)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240123code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240123)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C:\\han\\Projects\\Multi_Omics\\multi_omics
+</td>
+<td style="text-align:left;">
+.
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreecf589b886343043783ccb2b2ffd39f585de20453targetblankcf589b8a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/bafa01016e43bb0aa27749ba59db5b46a65d6edc" target="_blank">bafa010</a>
+<a href="https://github.com/han16/multi_omics/tree/cf589b886343043783ccb2b2ffd39f585de20453" target="_blank">cf589b8</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreebafa01016e43bb0aa27749ba59db5b46a65d6edctargetblankbafa010a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstreecf589b886343043783ccb2b2ffd39f585de20453targetblankcf589b8a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -378,7 +576,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/bafa01016e43bb0aa27749ba59db5b46a65d6edc" target="_blank">bafa010</a>.
+<a href="https://github.com/han16/multi_omics/tree/cf589b886343043783ccb2b2ffd39f585de20453" target="_blank">cf589b8</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -396,6 +594,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/figure/
     Ignored:    analysis/part10_cache/
     Ignored:    analysis/part11_cache/
     Ignored:    analysis/part1_cache/
@@ -406,16 +605,6 @@ Ignored files:
     Ignored:    analysis/part6_cache/
     Ignored:    analysis/part8_cache/
     Ignored:    analysis/part9_cache/
-
-Untracked files:
-    Untracked:  analysis/part10.Rmd
-    Untracked:  analysis/part11.Rmd
-    Untracked:  analysis/part8.Rmd
-    Untracked:  analysis/part9.Rmd
-    Untracked:  data/output_pfc1115_20241211.csv
-    Untracked:  data/output_pfc46_20241211.csv
-    Untracked:  data/output_pfc79_20241211.csv
-    Untracked:  data/output_pfc810_20241211.csv
 
 Unstaged changes:
     Modified:   analysis/index.Rmd
@@ -463,6 +652,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/cf589b886343043783ccb2b2ffd39f585de20453/analysis/index.Rmd" target="_blank">cf589b8</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-11
+</td>
+<td>
+12/11/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/cf589b886343043783ccb2b2ffd39f585de20453/docs/index.html" target="_blank">cf589b8</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-11
+</td>
+<td>
+12/11/2024
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -808,6 +1031,159 @@ class="section level2">
 <div id="enrichment-of-risk-genes-across-different-time-points"
 class="section level2">
 <h2>enrichment of risk genes across different time points</h2>
+<pre class="r"><code>library(tidyverse)
+setwd(&quot;C:\\han\\Projects\\Multi_Omics\\multi_omics&quot;)
+output_pfc35=as_tibble(read.csv(&quot;data/output_pfc35_20241210.csv&quot;))
+output_pfc46=as_tibble(read.csv(&quot;data/output_pfc46_20241211.csv&quot;))
+output_pfc79=as_tibble(read.csv(&quot;data/output_pfc79_20241211.csv&quot;))
+output_pfc810=as_tibble(read.csv(&quot;data/output_pfc810_20241211.csv&quot;))
+output_pfc1115=as_tibble(read.csv(&quot;data/output_pfc1115_20241211.csv&quot;))</code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 28, sum(output_pfc35$DAWN.gene==&quot;YES&quot;), length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene==&quot;YES&quot;], output_pfc35$Gene[output_pfc35$SCHEMA.FDR.gene==&quot;YES&quot;]))), nrow=2)) # pfc35</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 28, sum(output_pfc35$DAWN.gene == &quot;YES&quot;), length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene == &quot;YES&quot;], output_pfc35$Gene[output_pfc35$SCHEMA.FDR.gene == &quot;YES&quot;]))), nrow = 2)
+p-value &lt; 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  34.51872 124.67471
+sample estimates:
+odds ratio 
+  65.41223 </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 28, sum(output_pfc46$DAWN.gene==&quot;YES&quot;),  length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene==&quot;YES&quot;], output_pfc46$Gene[output_pfc46$SCHEMA.FDR.gene==&quot;YES&quot;]))), nrow=2)) # pfc46</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 28, sum(output_pfc46$DAWN.gene == &quot;YES&quot;), length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene == &quot;YES&quot;], output_pfc46$Gene[output_pfc46$SCHEMA.FDR.gene == &quot;YES&quot;]))), nrow = 2)
+p-value = 8.977e-05
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  3.865765 37.802914
+sample estimates:
+odds ratio 
+  13.46366 </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 28, sum(output_pfc79$DAWN.gene==&quot;YES&quot;),  length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene==&quot;YES&quot;], output_pfc79$Gene[output_pfc79$SCHEMA.FDR.gene==&quot;YES&quot;]))), nrow=2)) # pfc79</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 28, sum(output_pfc79$DAWN.gene == &quot;YES&quot;), length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene == &quot;YES&quot;], output_pfc79$Gene[output_pfc79$SCHEMA.FDR.gene == &quot;YES&quot;]))), nrow = 2)
+p-value = 5.772e-05
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  4.260672 42.167471
+sample estimates:
+odds ratio 
+  14.91253 </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 28, sum(output_pfc810$DAWN.gene==&quot;YES&quot;),  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene==&quot;YES&quot;], output_pfc810$Gene[output_pfc810$SCHEMA.FDR.gene==&quot;YES&quot;]))), nrow=2)) #pfc810</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 28, sum(output_pfc810$DAWN.gene == &quot;YES&quot;), length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene == &quot;YES&quot;], output_pfc810$Gene[output_pfc810$SCHEMA.FDR.gene == &quot;YES&quot;]))), nrow = 2)
+p-value &lt; 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  28.32044 125.19596
+sample estimates:
+odds ratio 
+  59.85375 </code></pre>
+<pre class="r"><code>fisher.test(matrix(c(3100, 28, sum(output_pfc1115$DAWN.gene==&quot;YES&quot;), length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene==&quot;YES&quot;], output_pfc1115$Gene[output_pfc1115$SCHEMA.FDR.gene==&quot;YES&quot;]))), nrow=2)) # pfc31115</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  matrix(c(3100, 28, sum(output_pfc1115$DAWN.gene == &quot;YES&quot;), length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene == &quot;YES&quot;], output_pfc1115$Gene[output_pfc1115$SCHEMA.FDR.gene == &quot;YES&quot;]))), nrow = 2)
+p-value = 0.001337
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  2.980368 60.660915
+sample estimates:
+odds ratio 
+    16.541 </code></pre>
+<pre class="r"><code>SCHEMA_FDR_gene_recovered=c(
+  length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene==&quot;YES&quot;], output_pfc35$Gene[output_pfc35$SCHEMA.FDR.gene==&quot;YES&quot;])),    length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene==&quot;YES&quot;], output_pfc46$Gene[output_pfc46$SCHEMA.FDR.gene==&quot;YES&quot;])),    length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene==&quot;YES&quot;], output_pfc79$Gene[output_pfc79$SCHEMA.FDR.gene==&quot;YES&quot;])),
+  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene==&quot;YES&quot;], output_pfc810$Gene[output_pfc810$SCHEMA.FDR.gene==&quot;YES&quot;])), 
+  length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene==&quot;YES&quot;], output_pfc1115$Gene[output_pfc1115$SCHEMA.FDR.gene==&quot;YES&quot;])))</code></pre>
+<pre class="r"><code>SCHEMA_gene_results=multiplesheets(&quot;C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx&quot;)
+scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
+scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
+scz1=scz1%&gt;% drop_na()  # remove NA&#39;s  ######## this is important 
+SCHEMA_top_10_gene=scz1$Gene[1:10]
+SCHEMA_top_9_gene=setdiff(SCHEMA_top_10_gene, &quot;SETD1A&quot;)</code></pre>
+<pre class="r"><code>SCHEMA_top_9_gene_recovered=c(
+  length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene==&quot;YES&quot;],SCHEMA_top_9_gene )),    length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene==&quot;YES&quot;], SCHEMA_top_9_gene)),    length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene==&quot;YES&quot;], SCHEMA_top_9_gene)),
+  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene==&quot;YES&quot;], SCHEMA_top_9_gene)), 
+  length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene==&quot;YES&quot;], SCHEMA_top_9_gene)))</code></pre>
+<pre class="r"><code>library(ggplot2)
+
+data_plot=data.frame(gene_set=rep(c(&quot;SCHEMA 10 risk genes&quot;, &quot;SCHEMA FDR genes&quot;), each=5), recovered_genes=c(SCHEMA_top_9_gene_recovered, SCHEMA_FDR_gene_recovered), time_point=rep(c(&quot;(1): 10-19 post-conception weeks&quot;, &quot;(2): 13-24 post-conception weeks&quot;, &quot;(3): 24 PCW-12 months&quot;, &quot;(4): 0 month-6 years&quot;, &quot;(5): 6 years-60+ years&quot;), 2))
+
+# Create Side-by-Side Bar Plot
+ggplot(data_plot, aes(x = time_point, y = recovered_genes, fill = gene_set)) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.8)) +
+  geom_text(aes(label = recovered_genes), 
+            position = position_dodge(width = 0.8), 
+            vjust = -0.5, 
+            size = 3) +
+  labs(title = &quot;Recovered genes in different stages&quot;,
+       x = &quot;&quot;, 
+       y = &quot;recovered genes&quot;) +
+  theme_minimal() +
+   theme(plot.title = element_text(hjust = 0.5, size=15))+  #center the title
+   theme(axis.text.x = element_text(angle = 15, vjust = 0.5, size=10))+
+   theme(legend.title = element_blank())+
+  scale_fill_manual(values = c(&quot;SCHEMA 10 risk genes&quot; = &quot;red&quot;, &quot;SCHEMA FDR genes&quot; = &quot;blue&quot;))+
+  geom_hline(yintercept = 9, color = &quot;red&quot;, linetype = &quot;dashed&quot;, size=1) + # First line
+  geom_hline(yintercept = 28, color = &quot;blue&quot;, linetype = &quot;dashed&quot;, size=1)  # Second line</code></pre>
+<p><img src="figure/index.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] lubridate_1.9.3 forcats_1.0.0   stringr_1.5.1   dplyr_1.1.4    
+ [5] purrr_1.0.2     readr_2.1.5     tidyr_1.3.1     tibble_3.2.1   
+ [9] ggplot2_3.5.1   tidyverse_2.0.0
+
+loaded via a namespace (and not attached):
+ [1] sass_0.4.9        utf8_1.2.4        generics_0.1.3    stringi_1.8.4    
+ [5] hms_1.1.3         digest_0.6.35     magrittr_2.0.3    timechange_0.3.0 
+ [9] evaluate_0.23     grid_4.4.0        fastmap_1.1.1     cellranger_1.1.0 
+[13] rprojroot_2.0.4   workflowr_1.7.1   jsonlite_1.8.8    whisker_0.4.1    
+[17] promises_1.3.0    fansi_1.0.6       scales_1.3.0      jquerylib_0.1.4  
+[21] cli_3.6.2         rlang_1.1.3       munsell_0.5.1     withr_3.0.0      
+[25] cachem_1.0.8      yaml_2.3.8        tools_4.4.0       tzdb_0.4.0       
+[29] colorspace_2.1-0  httpuv_1.6.15     vctrs_0.6.5       R6_2.5.1         
+[33] lifecycle_1.0.4   git2r_0.33.0      fs_1.6.4          pkgconfig_2.0.3  
+[37] pillar_1.9.0      bslib_0.7.0       later_1.3.2       gtable_0.3.5     
+[41] glue_1.7.0        Rcpp_1.0.12       xfun_0.43         tidyselect_1.2.1 
+[45] highr_0.10        rstudioapi_0.16.0 knitr_1.46        farver_2.1.2     
+[49] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.26    compiler_4.4.0   
+[53] readxl_1.4.3     </code></pre>
+</div>
 </div>
 
 
@@ -826,6 +1202,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -857,7 +1235,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

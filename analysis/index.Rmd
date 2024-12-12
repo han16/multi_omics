@@ -1,12 +1,28 @@
 ---
 title: "Home"
-site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
-    toc: false
-editor_options:
-  chunk_output_type: console
+    code_folding: hide
+    toc: true
 ---
+
+
+```{r, echo=F, message=F, warning=F, results=F, eval=T}
+multiplesheets <- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) <- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+```
+
 
 
 ## pfc35 data 
@@ -37,3 +53,81 @@ editor_options:
 * [DAWN for pfc1115](part11.html)
 
 ## enrichment of risk genes across different time points 
+
+
+```{r, message=F, warning=F}
+library(tidyverse)
+setwd("C:\\han\\Projects\\Multi_Omics\\multi_omics")
+output_pfc35=as_tibble(read.csv("data/output_pfc35_20241210.csv"))
+output_pfc46=as_tibble(read.csv("data/output_pfc46_20241211.csv"))
+output_pfc79=as_tibble(read.csv("data/output_pfc79_20241211.csv"))
+output_pfc810=as_tibble(read.csv("data/output_pfc810_20241211.csv"))
+output_pfc1115=as_tibble(read.csv("data/output_pfc1115_20241211.csv"))
+
+```
+
+
+
+```{r, message=F, warning=F}
+fisher.test(matrix(c(3100, 28, sum(output_pfc35$DAWN.gene=="YES"), length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene=="YES"], output_pfc35$Gene[output_pfc35$SCHEMA.FDR.gene=="YES"]))), nrow=2)) # pfc35
+fisher.test(matrix(c(3100, 28, sum(output_pfc46$DAWN.gene=="YES"),  length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene=="YES"], output_pfc46$Gene[output_pfc46$SCHEMA.FDR.gene=="YES"]))), nrow=2)) # pfc46
+fisher.test(matrix(c(3100, 28, sum(output_pfc79$DAWN.gene=="YES"),  length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene=="YES"], output_pfc79$Gene[output_pfc79$SCHEMA.FDR.gene=="YES"]))), nrow=2)) # pfc79
+fisher.test(matrix(c(3100, 28, sum(output_pfc810$DAWN.gene=="YES"),  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene=="YES"], output_pfc810$Gene[output_pfc810$SCHEMA.FDR.gene=="YES"]))), nrow=2)) #pfc810
+fisher.test(matrix(c(3100, 28, sum(output_pfc1115$DAWN.gene=="YES"), length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene=="YES"], output_pfc1115$Gene[output_pfc1115$SCHEMA.FDR.gene=="YES"]))), nrow=2)) # pfc31115
+```
+
+
+```{r, message=F, warning=F}
+SCHEMA_FDR_gene_recovered=c(
+  length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene=="YES"], output_pfc35$Gene[output_pfc35$SCHEMA.FDR.gene=="YES"])),    length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene=="YES"], output_pfc46$Gene[output_pfc46$SCHEMA.FDR.gene=="YES"])),    length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene=="YES"], output_pfc79$Gene[output_pfc79$SCHEMA.FDR.gene=="YES"])),
+  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene=="YES"], output_pfc810$Gene[output_pfc810$SCHEMA.FDR.gene=="YES"])), 
+  length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene=="YES"], output_pfc1115$Gene[output_pfc1115$SCHEMA.FDR.gene=="YES"])))
+
+```
+
+
+```{r, message=F, warning=F, results=F}
+SCHEMA_gene_results=multiplesheets("C:\\han\\Dataset\\SCHEMA\\41586_2022_4556_MOESM3_ESM.xlsx")
+scz1=data.frame(Gene=SCHEMA_gene_results$`Table S5 - Gene Results`$`Gene Symbol`, pval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`P meta`, qval.meta=SCHEMA_gene_results$`Table S5 - Gene Results`$`Q meta`, dn_PTV=SCHEMA_gene_results$`Table S5 - Gene Results`$`De novo PTV`) 
+scz1$dn_PTV[is.na(scz1$dn_PTV)]=0   # fill missing PTV with 0 
+scz1=scz1%>% drop_na()  # remove NA's  ######## this is important 
+SCHEMA_top_10_gene=scz1$Gene[1:10]
+SCHEMA_top_9_gene=setdiff(SCHEMA_top_10_gene, "SETD1A")
+```
+
+
+```{r, message=F, warning=F}
+SCHEMA_top_9_gene_recovered=c(
+  length(intersect(output_pfc35$Gene[output_pfc35$DAWN.gene=="YES"],SCHEMA_top_9_gene )),    length(intersect(output_pfc46$Gene[output_pfc46$DAWN.gene=="YES"], SCHEMA_top_9_gene)),    length(intersect(output_pfc79$Gene[output_pfc79$DAWN.gene=="YES"], SCHEMA_top_9_gene)),
+  length(intersect(output_pfc810$Gene[output_pfc810$DAWN.gene=="YES"], SCHEMA_top_9_gene)), 
+  length(intersect(output_pfc1115$Gene[output_pfc1115$DAWN.gene=="YES"], SCHEMA_top_9_gene)))
+
+```
+
+```{r, message=F, warning=F}
+library(ggplot2)
+
+data_plot=data.frame(gene_set=rep(c("SCHEMA 10 risk genes", "SCHEMA FDR genes"), each=5), recovered_genes=c(SCHEMA_top_9_gene_recovered, SCHEMA_FDR_gene_recovered), time_point=rep(c("(1): 10-19 post-conception weeks", "(2): 13-24 post-conception weeks", "(3): 24 PCW-12 months", "(4): 0 month-6 years", "(5): 6 years-60+ years"), 2))
+
+# Create Side-by-Side Bar Plot
+ggplot(data_plot, aes(x = time_point, y = recovered_genes, fill = gene_set)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  geom_text(aes(label = recovered_genes), 
+            position = position_dodge(width = 0.8), 
+            vjust = -0.5, 
+            size = 3) +
+  labs(title = "Recovered genes in different stages",
+       x = "", 
+       y = "recovered genes") +
+  theme_minimal() +
+   theme(plot.title = element_text(hjust = 0.5, size=15))+  #center the title
+   theme(axis.text.x = element_text(angle = 15, vjust = 0.5, size=10))+
+   theme(legend.title = element_blank())+
+  scale_fill_manual(values = c("SCHEMA 10 risk genes" = "red", "SCHEMA FDR genes" = "blue"))+
+  geom_hline(yintercept = 9, color = "red", linetype = "dashed", size=1) + # First line
+  geom_hline(yintercept = 28, color = "blue", linetype = "dashed", size=1)  # Second line
+
+```
+
+
+
