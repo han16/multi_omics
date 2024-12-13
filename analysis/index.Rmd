@@ -116,9 +116,9 @@ ggplot(data_plot, aes(x = time_point, y = recovered_genes, fill = gene_set)) +
             position = position_dodge(width = 0.8), 
             vjust = -0.5, 
             size = 3) +
-  labs(title = "Recovered genes in different stages",
+  labs(title = "Identified DAWN genes in different stages",
        x = "", 
-       y = "recovered genes") +
+       y = "") +
   theme_minimal() +
    theme(plot.title = element_text(hjust = 0.5, size=15))+  #center the title
    theme(axis.text.x = element_text(angle = 15, vjust = 0.5, size=10))+
