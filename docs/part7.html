@@ -401,7 +401,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-09
+<strong>Last updated:</strong> 2024-12-16
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -439,10 +439,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -561,15 +561,15 @@ data/gene_pfc35_20241203.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree804fa65725410894a1191385e2f7c53b688ded0atargetblank804fa65a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>
+<a href="https://github.com/han16/multi_omics/tree/804fa65725410894a1191385e2f7c53b688ded0a" target="_blank">804fa65</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree09fa526775984bc16f98ab43efb2de7fd19bef5etargetblank09fa526a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16multiomicstree804fa65725410894a1191385e2f7c53b688ded0atargetblank804fa65a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -579,7 +579,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/multi_omics/tree/09fa526775984bc16f98ab43efb2de7fd19bef5e" target="_blank">09fa526</a>.
+<a href="https://github.com/han16/multi_omics/tree/804fa65725410894a1191385e2f7c53b688ded0a" target="_blank">804fa65</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -597,20 +597,20 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.Rhistory
     Ignored:    analysis/SCZ_gene_list_cache/
+    Ignored:    analysis/figure/
+    Ignored:    analysis/part10_cache/
+    Ignored:    analysis/part11_cache/
     Ignored:    analysis/part1_cache/
     Ignored:    analysis/part2_cache/
     Ignored:    analysis/part3_cache/
     Ignored:    analysis/part4_cache/
     Ignored:    analysis/part5_cache/
     Ignored:    analysis/part6_cache/
-
-Untracked files:
-    Untracked:  analysis/part7.Rmd
+    Ignored:    analysis/part8_cache/
+    Ignored:    analysis/part9_cache/
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/part1.Rmd
-    Modified:   analysis/part4.Rmd
+    Modified:   analysis/part7.Rmd
 
 </code></pre>
 <p>
@@ -625,10 +625,73 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/part7.Rmd</code>) and HTML
+(<code>docs/part7.html</code>) files. If you’ve configured a remote Git
+repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
+in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/877c931e793d9ac7f7013be577568934addc195d/analysis/part7.Rmd" target="_blank">877c931</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-09
+</td>
+<td>
+12/9/2024
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/multi_omics/877c931e793d9ac7f7013be577568934addc195d/docs/part7.html" target="_blank">877c931</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-09
+</td>
+<td>
+12/9/2024
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -750,18 +813,56 @@ df$Time &lt;- seq(1,5)
 # Reshape the data for plotting
 library(reshape2)
 df_melt &lt;- melt(df, id.vars = &quot;Time&quot;, variable.name = &quot;Gene&quot;, value.name = &quot;Expression&quot;)
-df_melt$Time &lt;- as.numeric(df_melt$Time)
+df_melt$Time &lt;- paste(as.numeric(df_melt$Time), c(&quot;: 10-19 post-conception weeks&quot;, &quot;: 13-24 post-conception weeks&quot;, &quot;: 24 PCW-12 months&quot;, &quot;: 0 month-6 years&quot;, &quot;: 6 years-60+ years&quot;), sep=&quot;&quot;)
 
 # Create a line plot
 ggplot(df_melt, aes(x = Time, y = Expression, color = Gene, group = Gene)) +
   geom_line(size = 1) +
   geom_point(size = 2) +
-  labs(title = &quot;Gene Expression Over Time&quot;,
-       x = &quot;Time&quot;,
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
        y = &quot;Expression Level&quot;) +
   theme_minimal()+
+  theme(axis.text.x = element_text(angle = 20, vjust = 0.5, size=10))+
   theme(legend.position = &quot;right&quot;)  # Remove the legend</code></pre>
 <p><img src="figure/part7.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/multi_omics/blob/877c931e793d9ac7f7013be577568934addc195d/docs/figure/part7.Rmd/unnamed-chunk-4-1.png" target="_blank">877c931</a>
+</td>
+<td>
+han
+</td>
+<td>
+2024-12-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -806,20 +907,20 @@ loaded via a namespace (and not attached):
 [25] munsell_0.5.1           httpuv_1.6.15           GenomeInfoDb_1.40.0    
 [28] htmltools_0.5.8.1       sass_0.4.9              yaml_2.3.8             
 [31] later_1.3.2             pillar_1.9.0            crayon_1.5.2           
-[34] jquerylib_0.1.4         cachem_1.0.8            org.Hs.eg.db_3.19.1    
-[37] tidyselect_1.2.1        digest_0.6.35           stringi_1.8.4          
-[40] dplyr_1.1.4             labeling_0.4.3          rprojroot_2.0.4        
-[43] fastmap_1.1.1           grid_4.4.0              colorspace_2.1-0       
-[46] cli_3.6.2               magrittr_2.0.3          utf8_1.2.4             
-[49] withr_3.0.0             UCSC.utils_1.0.0        scales_1.3.0           
-[52] promises_1.3.0          bit64_4.0.5             rmarkdown_2.26         
-[55] XVector_0.44.0          httr_1.4.7              bit_4.0.5              
-[58] workflowr_1.7.1         png_0.1-8               memoise_2.0.1          
-[61] evaluate_0.23           knitr_1.46              IRanges_2.38.0         
-[64] rlang_1.1.3             Rcpp_1.0.12             glue_1.7.0             
-[67] DBI_1.2.3               BiocGenerics_0.50.0     rstudioapi_0.16.0      
-[70] jsonlite_1.8.8          plyr_1.8.9              R6_2.5.1               
-[73] fs_1.6.4                zlibbioc_1.50.0        </code></pre>
+[34] jquerylib_0.1.4         whisker_0.4.1           cachem_1.0.8           
+[37] org.Hs.eg.db_3.19.1     tidyselect_1.2.1        digest_0.6.35          
+[40] stringi_1.8.4           dplyr_1.1.4             labeling_0.4.3         
+[43] rprojroot_2.0.4         fastmap_1.1.1           grid_4.4.0             
+[46] colorspace_2.1-0        cli_3.6.2               magrittr_2.0.3         
+[49] utf8_1.2.4              withr_3.0.0             UCSC.utils_1.0.0       
+[52] scales_1.3.0            promises_1.3.0          bit64_4.0.5            
+[55] rmarkdown_2.26          XVector_0.44.0          httr_1.4.7             
+[58] bit_4.0.5               workflowr_1.7.1         png_0.1-8              
+[61] memoise_2.0.1           evaluate_0.23           knitr_1.46             
+[64] IRanges_2.38.0          rlang_1.1.3             Rcpp_1.0.12            
+[67] glue_1.7.0              DBI_1.2.3               BiocGenerics_0.50.0    
+[70] rstudioapi_0.16.0       jsonlite_1.8.8          plyr_1.8.9             
+[73] R6_2.5.1                fs_1.6.4                zlibbioc_1.50.0        </code></pre>
 </div>
 </div>
 

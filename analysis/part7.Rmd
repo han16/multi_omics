@@ -139,16 +139,17 @@ df$Time <- seq(1,5)
 # Reshape the data for plotting
 library(reshape2)
 df_melt <- melt(df, id.vars = "Time", variable.name = "Gene", value.name = "Expression")
-df_melt$Time <- as.numeric(df_melt$Time)
+df_melt$Time <- paste(as.numeric(df_melt$Time), c(": 10-19 post-conception weeks", ": 13-24 post-conception weeks", ": 24 PCW-12 months", ": 0 month-6 years", ": 6 years-60+ years"), sep="")
 
 # Create a line plot
 ggplot(df_melt, aes(x = Time, y = Expression, color = Gene, group = Gene)) +
   geom_line(size = 1) +
   geom_point(size = 2) +
-  labs(title = "Gene Expression Over Time",
-       x = "Time",
+  labs(title = "",
+       x = "",
        y = "Expression Level") +
   theme_minimal()+
+  theme(axis.text.x = element_text(angle = 20, vjust = 0.5, size=10))+
   theme(legend.position = "right")  # Remove the legend
 ```
 
